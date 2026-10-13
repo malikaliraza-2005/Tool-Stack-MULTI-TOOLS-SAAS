@@ -45,7 +45,10 @@ Run before pushing: `npm run typecheck && npm run lint && npm run format:check &
 ## 5. Styling
 
 - Tailwind utilities that resolve to design tokens (`bg-surface`, `text-fg-muted`, …). No hard-coded colors, sizes, radii, shadows, durations or easings ([design-system.md §12](../02-design/design-system.md#12-implementation-notes-tailwind-4)).
-- Tokens live in `src/styles/globals.css` (filled in Phase 2).
+- Tokens live in `src/styles/globals.css`. Tailwind's default palette, type sizes, radii, shadows and easings are removed, and the `sprigkit/no-hardcoded-design` ESLint rule rejects arbitrary values with literal colors, lengths or times, numeric `duration-*`, and literal values in `style` objects.
+- Don't pass classes that conflict with a component's own (e.g. `px-0` onto a button with `px-4`): `cn()` does not merge, so CSS order decides. Add a prop instead (`iconOnly`, `placement`, `width`).
+- Don't use Tailwind's `dark:` variant in components; tokens switch with the theme.
+- Radix uses boolean data attributes (`data-disabled`, `data-highlighted`): use `data-disabled:`. cmdk sets `"true"`/`"false"`: use `data-[disabled=true]:`.
 
 ## 6. Comments
 

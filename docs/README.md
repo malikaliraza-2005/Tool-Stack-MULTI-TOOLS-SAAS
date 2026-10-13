@@ -53,13 +53,13 @@ Status: ✅ Written · 📝 Planned · ➖ Not needed
 ### 02-design: identity, UI, motion, accessibility
 | File | Status | Purpose |
 |---|---|---|
-| brand-identity.md | 📝 | Name, logo, tagline, personality |
+| [brand-identity.md](02-design/brand-identity.md) | ✅ | Name, logo, tagline, personality |
 | [design-system.md](02-design/design-system.md) | ✅ | Tokens, typography, components, motion tokens, layout patterns |
-| ui-ux-specification.md | 📝 | Screen-by-screen layouts and interactions |
-| information-architecture.md | 📝 | Sitemap, URLs, navigation, internal linking |
-| content-voice-ux-copy.md | 📝 | Voice, tone, microcopy, error messages |
-| motion-design.md | 📝 | Detailed choreography per interaction |
-| accessibility.md | 📝 | WCAG 2.2 AA requirements and test procedure |
+| [ui-ux-specification.md](02-design/ui-ux-specification.md) | ✅ | Screen-by-screen layouts and interactions |
+| [information-architecture.md](02-design/information-architecture.md) | ✅ | Sitemap, URLs, navigation, internal linking |
+| [content-voice-ux-copy.md](02-design/content-voice-ux-copy.md) | ✅ | Voice, tone, microcopy, error messages |
+| [motion-design.md](02-design/motion-design.md) | ✅ | Detailed choreography per interaction |
+| [accessibility.md](02-design/accessibility.md) | ✅ | WCAG 2.2 AA requirements and test procedure |
 
 ### 03-seo-growth: search, AI search, content, revenue
 | File | Status | Purpose |

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 (Phase 1 baseline) |
+| **Last updated** | 2026-10-13 (Phase 2 shell measured) |
 | **Related** | [architecture.md §14](../04-architecture/architecture.md#14-performance-budgets-target) · [testing-strategy.md](testing-strategy.md) · [risks-and-decisions.md](../06-delivery/risks-and-decisions.md) (R-14) |
 
 ## 1. Budgets **[Target]**
@@ -36,6 +36,20 @@ Measured 2026-10-13 with Lighthouse CI (mobile emulation, 3 runs, local server w
 **Finding (R-14):** Next.js + React alone ship about 141 KB of gzipped JS, which is above the 100 KB homepage budget before any Sprigkit code exists. The budget cannot be met as written. The owner needs to decide by Phase 9 whether to raise it (baseline + headroom) or accept the overrun. Until then the assertion warns.
 
 Fonts: 2 `.woff2` files (Geist Sans + Mono variable), preloaded.
+
+## 2.1 Phase 2: app shell
+
+Measured 2026-10-13 with Lighthouse CI (same setup), homepage with the full shell (header with theme menu, search trigger, mobile menu; footer; toaster; Motion provider).
+
+| Performance | A11y | Best Practices | SEO | LCP | TBT | CLS | Script transfer | Fonts |
+|---|---|---|---|---|---|---|---|---|
+| 92–95 | 100 | 100 | 100 | 2.60–2.72 s | 177–226 ms | 0 | **240 KB** (+99 KB) | 1 |
+
+Where the shell's JS goes (gzip, from the built chunks): Radix (Tooltip, DropdownMenu, Dialog with popper, focus scope, dismissable layer) ≈ 38 KB; sonner + Motion (`m`, `LazyMotion`, `MotionConfig`) + Lucide icons ≈ 22 KB; layout and shell components ≈ 8 KB. Motion's `domMax` features load in a separate chunk after hydration; cmdk and the palette load on intent.
+
+LCP and TBT warnings are new versus Phase 1 (LCP 2.1 s → 2.6 s, TBT up to 226 ms). Not optimized yet:
+- Loading the theme menu and mobile menu sheet on intent would save ≈ 15 KB (measured by removing them) but needs a focus-preserving swap of the trigger. Deferred to Phase 9 with R-14.
+- Toaster could mount on first toast instead of at load.
 
 ## 3. Rules that keep us inside the budgets
 
