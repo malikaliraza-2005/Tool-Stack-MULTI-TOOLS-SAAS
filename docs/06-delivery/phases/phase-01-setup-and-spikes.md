@@ -66,7 +66,7 @@ testing-strategy.md · coding-standards.md · deployment.md · performance.md ·
 
 ## Exit criteria
 - [ ] Push to a branch produces a preview URL; push to `main` produces production (not yet public/announced).
-- [ ] CI green with all stages running.
+- [x] CI green with all stages running. First run on `main`: GitHub Actions run 38421132375, 2026-10-13, all stages passed.
 - [ ] CSP active on deployments; cross-origin fetch blocked in a test.
 - [x] Every spike has a recorded, working approach (or an accepted fallback). See [architecture.md §8.4](../../04-architecture/architecture.md#84-phase-1-spike-results).
 - [ ] Preview deployments return `noindex`.
