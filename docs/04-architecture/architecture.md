@@ -93,11 +93,12 @@ Used by canonicals, sitemap, robots, Open Graph, JSON-LD. Changing domain = chan
 | `/[tool]` | `app/[tool]/page.tsx` + `generateStaticParams()` from registry, `dynamicParams = false` | Static, one HTML file per tool |
 | `/pdf-tools`, `/image-tools`, `/developer-tools` | `app/(hubs)/<category>/page.tsx` (thin wrappers around one `CategoryHub` component) | Static |
 | `/guides`, `/guides/[slug]` | `app/guides/…` | Static (after MVP content starts) |
-| `/about`, `/privacy`, `/terms` | Static pages | Static |
+| `/about`, `/privacy`, `/terms`, `/licenses` | Static pages (Phase 8) | Static |
+| `/_gallery` | `app/%5Fgallery/page.tsx`: component gallery for design review. `noindex, nofollow`, not linked, excluded from the sitemap | Static |
 | `/sitemap.xml`, `/robots.txt` | `app/sitemap.ts`, `app/robots.ts` | Static |
 | 404 | `app/not-found.tsx` → `out/404.html` | Static |
 
-Static routes take precedence over `[tool]`. The registry validator rejects slugs that collide with reserved routes (`about`, `privacy`, `terms`, `guides`, hub slugs, etc.).
+Static routes take precedence over `[tool]`. The registry validator rejects slugs that collide with reserved routes (`about`, `privacy`, `terms`, `licenses`, `guides`, `_gallery`, hub slugs, etc.).
 
 ---
 
@@ -119,11 +120,17 @@ Static routes take precedence over `[tool]`. The registry validator rejects slug
    │  ├─ page.tsx                 # homepage
    │  ├─ [tool]/page.tsx          # tool page template
    │  ├─ (hubs)/pdf-tools/page.tsx …
-   │  ├─ about/ privacy/ terms/
+   │  ├─ about/ privacy/ terms/ licenses/
+   │  ├─ %5Fgallery/page.tsx      # /_gallery component gallery (noindex, unlinked; `%5F` = literal "_")
+   │  ├─ template.tsx             # page transition (<ViewTransition>)
+   │  ├─ icon.svg  apple-icon.png  favicon.ico
    │  ├─ sitemap.ts  robots.ts  not-found.tsx
    ├─ components/
-   │  ├─ ui/                      # shadcn/ui primitives, restyled
-   │  ├─ layout/                  # header, footer, breadcrumbs, theme toggle
+   │  ├─ ui/                      # Radix-based primitives, restyled with tokens
+   │  ├─ layout/                  # header, footer, breadcrumbs, theme toggle, command palette, Container
+   │  ├─ brand/                   # Logo, LogoMark
+   │  ├─ motion/                  # MotionProvider (LazyMotion + MotionConfig)
+   │  ├─ gallery/                 # component gallery (dev review only)
    │  ├─ tool/                    # ToolPage template, Workbench, DropZone, FileList,
    │  │                           # ResultPanel, PrivacyMeter, ComparisonSlider, PageThumbnailGrid
    │  └─ home/                    # hero, index, smart paste, drop suggestions
@@ -142,9 +149,12 @@ Static routes take precedence over `[tool]`. The registry validator rejects slug
    │  ├─ files/                   # file reading, type sniffing, download, zip
    │  ├─ detect/                  # smart-paste detectors
    │  ├─ storage.ts               # safe localStorage wrapper
+   │  ├─ theme.ts                 # theme preference + pre-paint script
+   │  ├─ motion.ts                # motion tokens for Motion for React
+   │  ├─ cn.ts                    # class name join
    │  ├─ seo.ts                   # metadata + JSON-LD builders
    │  └─ errors.ts                # ToolError taxonomy
-   ├─ config/site.ts
+   ├─ config/site.ts  config/nav.ts
    └─ styles/globals.css          # tokens + Tailwind
 ```
 
