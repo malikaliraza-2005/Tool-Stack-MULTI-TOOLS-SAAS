@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | 🟨 In progress: code, CI config, spikes and docs done; Cloudflare tasks T15, T17, T18 open |
+| **Status** | 🟨 In progress: code, CI config, spikes and docs done; only P1-T18 (rollback test, owner) open |
 | **Effort** | 3–5 days [Estimate] |
 | **Milestone** | M1: Pipeline live |
 
@@ -48,7 +48,7 @@ A clean, deployable project with CI, preview deployments, and security headers, 
 ### Hosting
 - [x] **P1-T15** Cloudflare Pages project connected to the repo; build command, output `out`, env `NEXT_PUBLIC_SITE_URL` per environment. Done 2026-10-13: Pages project `sprigkit` (`https://sprigkit.pages.dev`), production branch `main`.
 - [x] **P1-T16** `public/_headers`: CSP + security headers; `X-Robots-Tag: noindex` on preview hostnames (or via environment-aware build).
-- [ ] **P1-T17** Verify headers on a preview deployment (DevTools / `curl -I`); confirm static pages, 404 page, and clean URLs work. **Open (owner action):** after T15; checklist in [deployment.md §3](../deployment.md#3-verifying-a-deployment-p1-t17).
+- [x] **P1-T17** Verify headers on a preview deployment (DevTools / `curl -I`); confirm static pages, 404 page, and clean URLs work. Done 2026-10-13 on `sprigkit.pages.dev` and preview `p1-ci-green.sprigkit.pages.dev`: CSP and security headers present, `X-Robots-Tag: noindex`, unknown URL → 404 page, `/index.html` → 308 to `/`, `/_headers` not served, `/_next/static/*` immutable.
 - [ ] **P1-T18** Test rollback: promote a previous deployment in the dashboard. **Open (owner action):** after T15; steps in [deployment.md §4](../deployment.md#4-rollback-p1-t18).
 
 ### Spikes (throwaway code in a `spikes/` branch; record outcomes)
@@ -65,11 +65,11 @@ A clean, deployable project with CI, preview deployments, and security headers, 
 testing-strategy.md · coding-standards.md · deployment.md · performance.md · browser-device-support.md (initial matrix) · architecture.md (spike outcomes) · dependencies-licenses.md (pinned versions) · CLAUDE.md (real commands)
 
 ## Exit criteria
-- [ ] Push to a branch produces a preview URL; push to `main` produces production (not yet public/announced).
+- [x] Push to a branch produces a preview URL; push to `main` produces production (not yet public/announced). `p1-ci-green.sprigkit.pages.dev` / `sprigkit.pages.dev`.
 - [x] CI green with all stages running. First run on `main`: GitHub Actions run 38421132375, 2026-10-13, all stages passed.
-- [ ] CSP active on deployments; cross-origin fetch blocked in a test.
+- [x] CSP active on deployments; cross-origin fetch blocked in a test. CI test `e2e/smoke.spec.ts`; also checked on the preview in Chromium, Firefox and WebKit (blocked by `connect-src`, no external requests, no errors).
 - [x] Every spike has a recorded, working approach (or an accepted fallback). See [architecture.md §8.4](../../04-architecture/architecture.md#84-phase-1-spike-results).
-- [ ] Preview deployments return `noindex`.
+- [x] Preview deployments return `noindex`.
 
 ## Risks & fallbacks
 | Risk | Fallback |
