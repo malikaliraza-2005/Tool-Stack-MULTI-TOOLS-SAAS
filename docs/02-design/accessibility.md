@@ -61,6 +61,6 @@
 | 200% zoom (1280px window) | No horizontal scroll |
 | Keyboard tests | Pass |
 | Screen reader spot check | **Not done** (owner, P2-T18) |
-| Real-device review | **Not done** (owner, P2-T18) |
+| Real-device review | Done by the owner on the preview (P2-T18); no defects reported |
 
 Defects found and fixed during Phase 2: loading buttons lost their accessible name (`visibility: hidden` → `opacity: 0`); dialog close-button tooltip required two Esc presses; command palette returned focus to `<body>`; cmdk items were all rendered at 50% opacity (contrast failure) because `data-disabled="false"` matched Tailwind's `data-disabled:` variant.

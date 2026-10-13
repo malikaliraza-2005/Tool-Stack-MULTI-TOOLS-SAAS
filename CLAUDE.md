@@ -10,7 +10,9 @@ Full context: [docs/README.md](docs/README.md).
 
 ## Current phase
 
-**Phase 1: Setup & technical spikes** → [docs/06-delivery/phases/phase-01-setup-and-spikes.md](docs/06-delivery/phases/phase-01-setup-and-spikes.md)
+**Phase 3: Tool platform + pilot tools** → [docs/06-delivery/phases/phase-03-tool-platform.md](docs/06-delivery/phases/phase-03-tool-platform.md)
+
+Phase 2 (design system & shell) is done: components in `src/components/ui/`, shell in `src/components/layout/`, gallery at `/_gallery`. Still open from Phase 1: P1-T18 rollback test (owner).
 
 Carried over from Phase 0 (owner actions, see [risks-and-decisions.md](docs/06-delivery/risks-and-decisions.md)): register `sprigkit.com` (D-1); manual trademark search for "Sprigkit" (D-5); manual Google Trends check before the first production deploy (P0-T05).
 

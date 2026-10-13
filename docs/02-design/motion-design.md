@@ -64,4 +64,4 @@ The tokens and the seven acceptance rules in design-system §7 are binding. This
 | 4. No perpetual animation | Only loading indicators loop, and they unmount when work ends |
 | 5. Reduced motion | Global CSS + MotionConfig; E2E test for the theme transition |
 | 6. Focus placement | Radix focus trap and restore; palette restores focus manually (no trigger element); E2E tests |
-| 7. Smooth on mid-range devices | **Open:** P2-T19 performance trace on a real mid-range Android phone (owner) |
+| 7. Smooth on mid-range devices | Owner trace on a mid-range Android phone (P2-T19, 2026-10-13); no jank reported |
