@@ -67,10 +67,18 @@ function isFile(p) {
 
 /** @param {string} pathname */
 function resolveFile(pathname) {
-  const safe = normalize(decodeURIComponent(pathname)).replace(/^([/\\])+/, "");
+  let decoded;
+  try {
+    decoded = decodeURIComponent(pathname);
+  } catch {
+    return undefined; // malformed escape → 404
+  }
+  const safe = normalize(decoded).replace(/^([/\\])+/, "");
   const base = join(root, safe);
   if (base !== root && !base.startsWith(root + sep)) return undefined;
-  for (const candidate of [base, `${base}.html`, join(base, "index.html")]) {
+  const candidates =
+    base === root ? [join(root, "index.html")] : [base, `${base}.html`, join(base, "index.html")];
+  for (const candidate of candidates) {
     if (isFile(candidate)) return candidate;
   }
   return undefined;
@@ -109,7 +117,9 @@ const server = createServer((req, res) => {
       "",
     );
   }
-  // A Content-Type from _headers wins (e.g. extension-less OG images).
+  // A Content-Type from _headers wins (e.g. extension-less OG images), except on
+  // the 404 page, which is always HTML.
+  if (status !== 200) delete headers["content-type"];
   headers["content-type"] ??= TYPES[ext] ?? "application/octet-stream";
 
   const gzip =

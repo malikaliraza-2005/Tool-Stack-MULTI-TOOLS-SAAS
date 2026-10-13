@@ -35,8 +35,8 @@ This document says **how** Sprigkit is tested and which command runs each layer.
 - **Always against the production build.** `npm run build` first. Playwright starts `scripts/serve-out.mjs`, which serves `out/` the way Cloudflare Pages does: clean URLs, `404.html` with status 404, gzip, and the headers from `public/_headers` (CSP included). Tests therefore see the production CSP.
 - **Projects:** `chromium`, `firefox`, `webkit` (desktop) and `mobile` (Pixel 7 viewport, Chromium). See [browser-device-support.md](browser-device-support.md).
 - **Import from `e2e/fixtures.ts`, not `@playwright/test`.** The fixtures are automatic:
-  - `noNetwork`: records every request from the page, its workers and its service worker. The test fails if any request goes to another origin (`data:` and `blob:` are local). This is the automated proof of "0 bytes uploaded" ([mvp-scope.md §6](../01-product/mvp-scope.md#6-definition-of-done-per-tool)).
-  - `csp`: fails the test on any CSP violation or uncaught page error. A test that expects a violation calls `csp.allowViolations()` and asserts `await csp.violations()` itself.
+  - `noNetwork`: records every HTTP request from the page and its workers. The test fails if any request goes to another origin (`data:` and `blob:` are local). This is the automated proof of "0 bytes uploaded" ([mvp-scope.md §6](../01-product/mvp-scope.md#6-definition-of-done-per-tool)). **Limits:** Playwright reports service-worker requests in Chromium only, and WebSocket/WebRTC traffic is not recorded. The CSP (`connect-src`) blocks fetch/XHR/WebSocket to other origins in every browser, and Phase 7 SW tests must run in Chromium.
+  - `csp`: fails the test on any CSP violation reported on the **document** or any uncaught page error. A test that expects a violation calls `csp.allowViolations()` and asserts `await csp.violations()` itself. **Limit:** violations inside workers are not reported to the document; worker-based tool tests must assert the tool's result, so a blocked request inside a worker shows up as a failed flow.
 - **Accessibility:** call `expectNoA11yViolations(page)` (WCAG 2.0/2.1/2.2 A and AA rules) on every page and state that a test reaches. Run it in both themes once theming exists (Phase 2).
 - The fixtures were checked against a deliberate leak: a navigation to another origin fails the test with "requests left the origin".
 - **Offline / service worker** (Phase 7): simulate offline in Chromium with `context.route("**/*", r => r.abort("internetdisconnected"))`. `context.setOffline(true)` did not reproduce real offline behaviour with the service worker ([architecture.md §10](../04-architecture/architecture.md#10-pwa-and-offline)).
@@ -53,7 +53,7 @@ This document says **how** Sprigkit is tested and which command runs each layer.
 
 install (`npm ci`) → typecheck → lint + format check → unit tests → build → Playwright browsers → E2E → Lighthouse CI → license check → upload reports (Playwright HTML report, Lighthouse reports, `licenses.json`).
 
-Any failing stage fails the run, except Lighthouse assertions, which only warn until P9.
+Any failing stage fails the run, except Lighthouse assertions, which only warn until P9. `npm audit --omit=dev --audit-level=high` runs after install (production dependencies only; dev tooling such as Lighthouse CI has known advisories that never ship).
 
 ## 6. Adding tests for a new tool
 

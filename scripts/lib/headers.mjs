@@ -36,11 +36,17 @@ export function parseHeaders(text) {
  * @returns {RegExp}
  */
 function patternToRegExp(pattern) {
-  const escaped = pattern
-    .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
-    .replace(/\*/g, ".*")
-    .replace(/:[A-Za-z]\w*/g, "[^/.]+");
-  return new RegExp(`^${escaped}$`);
+  // A placeholder matches one host label (no dots) or one path segment.
+  const convert = (part, placeholder) =>
+    part
+      .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+      .replace(/\*/g, ".*")
+      .replace(/:[A-Za-z]\w*/g, placeholder);
+  const absolute = pattern.match(/^(https?:\/\/[^/]*)(\/.*)?$/);
+  const source = absolute
+    ? convert(absolute[1], "[^/.]+") + convert(absolute[2] ?? "", "[^/]+")
+    : convert(pattern, "[^/]+");
+  return new RegExp(`^${source}$`);
 }
 
 /**
