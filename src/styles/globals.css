@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens (design-system.md §2, §5, §7, §12).
+ * Empty token layer: values are added in Phase 2 (P2). Components must use
+ * these tokens only; no hard-coded colors, sizes, radii, shadows or timings.
+ */
+:root {
+}
+
+.dark {
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

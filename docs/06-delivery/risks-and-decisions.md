@@ -30,6 +30,7 @@ This file is the **decision log** and **risk register** for Sprigkit. It replace
 | D-10 | Hosting | **[Decision]** | Cloudflare (static) | 2026-10-13 |
 | D-11 | Final MVP slugs | **[Decision]** | 4 renamed: `jpg-to-pdf`, `pdf-to-jpg`, `base64-encode-decode`, `url-encode-decode`; 15 unchanged (see record) | 2026-10-13 |
 | D-12 | `requirements.md` | **[Decision]** | Not written; requirements live in product.md, mvp-scope.md, tool-specifications.md and architecture.md | 2026-10-13 |
+| D-13 | Repository visibility and license (P1-T01) | **[Decision]** (proposed, owner to confirm) | Public GitHub repo, **all rights reserved** (no open-source license) (see record) | 2026-10-13 |
 
 D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; their reasoning lives in the linked documents.
 
@@ -149,6 +150,21 @@ D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; th
   - Non-functional: [product.md](../01-product/product.md) (constraints, metrics) and [architecture.md](../04-architecture/architecture.md) (performance, security, PWA, CI).
 
   A consolidated copy would duplicate these and drift. [docs/README.md](../README.md) marks it "merged into existing docs".
+
+### D-13: Repository visibility and license
+
+- **Status:** [Decision] (proposed) 2026-10-13, P1-T01. The owner should confirm or supersede it.
+- **Context:**
+  - The GitHub repository (`malikaliraza-2005/Tool-Stack-MULTI-TOOLS-SAAS`) already exists and is **public**.
+  - GitHub Actions minutes are free and unlimited for public repositories; private repositories have a monthly allowance (Phase 1 risk table).
+  - A public source supports the "provably private" message (R-2): anyone can check that nothing is uploaded.
+  - Open-sourcing the code would let anyone clone the product; nothing in product.md requires it.
+- **Options:** (1) private repo; (2) public, all rights reserved; (3) public under an open-source license (all or parts).
+- **Decision:** **option 2.** Keep the repo public; no open-source license is granted. `package.json` uses `"license": "UNLICENSED"` and `"private": true`; the README states "All rights reserved".
+- **Consequences:**
+  - Free CI minutes; the source can be read and audited, but not reused.
+  - Open-sourcing parts later (e.g. the license gate or the no-network test helper) needs a superseding decision.
+  - The repository name still contains "Tool-Stack" (the old working name, D-5). Renaming it to `sprigkit` on GitHub is an owner action; GitHub redirects the old URL.
 
 ---
 
