@@ -29,15 +29,15 @@ Work from the current phase's task checklist. Tick tasks when done and reference
 
 ## Which doc to read for which task
 
-| Task | Read |
-|---|---|
-| Any tool work | [tool-specifications.md](docs/04-architecture/tool-specifications.md) (the tool's section + §2 shared behaviour) and [tool-registry.md](docs/04-architecture/tool-registry.md) |
-| Structure, routing, workers, CSP, PWA, CI | [architecture.md](docs/04-architecture/architecture.md) |
-| UI, styling, components, motion | [design-system.md](docs/02-design/design-system.md) |
-| Is X in scope? | [mvp-scope.md](docs/01-product/mvp-scope.md) |
-| Adding a package | [dependencies-licenses.md](docs/04-architecture/dependencies-licenses.md) |
-| Product intent, decisions | [product.md](docs/01-product/product.md) |
-| What to build next | Current phase file (above) and [implementation-roadmap.md](docs/06-delivery/implementation-roadmap.md) |
+| Task                                      | Read                                                                                                                                                                           |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Any tool work                             | [tool-specifications.md](docs/04-architecture/tool-specifications.md) (the tool's section + §2 shared behaviour) and [tool-registry.md](docs/04-architecture/tool-registry.md) |
+| Structure, routing, workers, CSP, PWA, CI | [architecture.md](docs/04-architecture/architecture.md)                                                                                                                        |
+| UI, styling, components, motion           | [design-system.md](docs/02-design/design-system.md)                                                                                                                            |
+| Is X in scope?                            | [mvp-scope.md](docs/01-product/mvp-scope.md)                                                                                                                                   |
+| Adding a package                          | [dependencies-licenses.md](docs/04-architecture/dependencies-licenses.md)                                                                                                      |
+| Product intent, decisions                 | [product.md](docs/01-product/product.md)                                                                                                                                       |
+| What to build next                        | Current phase file (above) and [implementation-roadmap.md](docs/06-delivery/implementation-roadmap.md)                                                                         |
 
 If documents disagree, the more specific one wins (see [docs/README.md](docs/README.md)). Point out the conflict to the user.
 
@@ -49,18 +49,22 @@ Not available in static export, do not use: middleware/proxy, Server Actions, ru
 
 ## Commands
 
-The project is not scaffolded yet. When it is, keep this list accurate:
+Node.js 24 (`.node-version`). Exact versions are pinned (`.npmrc` `save-exact=true`).
 
 ```
-npm run dev          # local dev server
+npm run dev          # local dev server (http://localhost:3000)
 npm run build        # static export to out/
+npm run serve        # serve out/ like Cloudflare Pages (clean URLs, 404, public/_headers) on :4173
 npm run typecheck
-npm run lint
+npm run lint         # ESLint, zero warnings
+npm run format       # Prettier (format:check in CI)
 npm run test         # Vitest unit tests
-npm run e2e          # Playwright (incl. no-network and axe checks)
-npm run lhci         # Lighthouse CI budgets
-npm run licenses     # license report / gate
+npm run e2e          # Playwright against out/ (needs build; incl. no-network, CSP and axe checks)
+npm run lhci         # Lighthouse CI budgets (needs build; warn-only until P9)
+npm run licenses     # license gate (scripts/check-licenses.mjs)
 ```
+
+E2E tests import `test`/`expect` from `e2e/fixtures.ts`: every test automatically fails on a cross-origin request, a CSP violation, or an uncaught page error. Use `expectNoA11yViolations(page)` for axe.
 
 ## Code layout
 

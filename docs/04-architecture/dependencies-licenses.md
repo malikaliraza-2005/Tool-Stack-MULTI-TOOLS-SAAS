@@ -2,11 +2,11 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 |
+| **Last updated** | 2026-10-13 (P1-T07: pinned versions) |
 | **Source** | Versions and license fields read from the npm registry (`registry.npmjs.org/<pkg>/latest`) on 2026-10-13 **[Verified]** |
 | **Related** | [architecture.md](architecture.md) · [tool-specifications.md](tool-specifications.md) |
 
-Versions below were the **latest published at the time of writing**. Pin exact versions when the project is scaffolded and update this table.
+Versions below were the **latest published at the time of writing**. Packages installed at scaffold (Phase 1, P1-T07) are **pinned to exact versions** in `package.json` (`save-exact=true` in `.npmrc`) and marked **📌** in the tables; the others are pinned when they are added.
 
 > The npm `license` field is what the package author declares. Before shipping, also read each package's LICENSE file and check bundled third-party code (e.g. WASM builds of C libraries), which can carry a different license.
 
@@ -34,9 +34,9 @@ Additional rules:
 
 | Package | Version | License | Status | Purpose | Load |
 |---|---|---|---|---|---|
-| `next` | 16.4.0 | MIT | ✅ | Framework, static export | Initial |
-| `react`, `react-dom` | 19.3.0 | MIT | ✅ | UI | Initial |
-| `tailwindcss` | 4.3.3 | MIT | ✅ | Styling (build time) | Build |
+| `next` | 16.4.0 📌 | MIT | ✅ | Framework, static export | Initial |
+| `react`, `react-dom` | 19.3.0 📌 | MIT | ✅ | UI | Initial |
+| `tailwindcss`, `@tailwindcss/turbopack` | 4.3.3 📌 | MIT | ✅ | Styling (build time; Turbopack CSS loader) | Build |
 | `radix-ui` | 1.8.1 | MIT | ✅ | Accessible primitives (via shadcn/ui) | Initial / per component |
 | `cmdk` | 1.1.1 | MIT | ✅ | Command palette | On open |
 | `sonner` | 2.0.8 | MIT | ✅ | Toasts | Initial (small) |
@@ -46,7 +46,7 @@ Additional rules:
 | `zod` | 4.6.7 | MIT | ✅ | Registry validation, stored-preference validation | Build / small runtime |
 | `@tanstack/react-virtual` | 3.14.18 | MIT | ✅ | Virtualized lists (page grid, tree view, diff) | With tool |
 | `serwist`, `@serwist/next` | 9.5.13 | MIT | ✅ | Service worker / PWA | Build + SW |
-| `@fontsource-variable/geist` or `geist` | 5.3.0 / — | OFL-1.1 | ✅ | Geist Sans & Mono fonts (self-hosted) | Initial |
+| `geist` | 1.7.2 📌 | OFL-1.1 (npm field: "SIL OPEN FONT LICENSE"; `LICENSE.TXT` read 2026-10-13) | ✅ | Geist Sans & Mono variable fonts via `next/font/local`, self-hosted (P1-T25). Chosen over `@fontsource-variable/geist` because it plugs into `next/font` (preload, fallback metrics) | Initial (2 preloaded `.woff2`) |
 
 ### 2.2 PDF
 
@@ -102,14 +102,33 @@ Note: `pdf-lib` has not had a release in a long time (1.17.1). It is stable and 
 
 | Package | Version | License | Status | Purpose |
 |---|---|---|---|---|
-| `typescript` | pin at scaffold | Apache-2.0 | ✅ | Type checking |
-| `vitest` | 5.0.4 | MIT | ✅ | Unit tests |
-| `@playwright/test` | 1.64.0 | Apache-2.0 | ✅ | E2E tests |
-| `@axe-core/playwright` | 4.13.0 | MPL-2.0 | ⚠️ Acceptable | Accessibility tests. Dev-only, unmodified, never shipped to users → MPL obligations not triggered |
-| `@lhci/cli` | 0.15.1 | Apache-2.0 | ✅ | Lighthouse CI |
-| `wrangler` | 4.150.0 | MIT OR Apache-2.0 | ✅ (optional) | Local Cloudflare preview / CLI deploys |
-| `license-checker-rseidelsohn` | 5.0.1 | BSD-3-Clause | ✅ | License report and CI gate |
-| ESLint, Prettier | pin at scaffold | MIT | ✅ | Lint and formatting |
+| `typescript` | 5.9.3 📌 | Apache-2.0 | ✅ | Type checking. `latest` on npm is 7.0.2 (native compiler); 5.9 kept because the `create-next-app` 16.4 template targets `^5` and the Next TS plugin is untested on 7. Revisit in Phase 9 |
+| `@types/node`, `@types/react`, `@types/react-dom` | 24.19.2 / 19.3.0 / 19.3.0 📌 | MIT | ✅ | Types (Node 24 LTS matches `.node-version`) |
+| `vitest` | 5.0.4 📌 | MIT | ✅ | Unit tests |
+| `@playwright/test` | 1.64.0 📌 | Apache-2.0 | ✅ | E2E tests |
+| `@axe-core/playwright` (+ `axe-core`) | 4.13.0 📌 | MPL-2.0 | ⚠️ Acceptable | Accessibility tests. Dev-only, unmodified, never shipped to users → MPL obligations not triggered |
+| `@lhci/cli` | 0.15.1 📌 | Apache-2.0 | ✅ | Lighthouse CI. `npm audit` reports advisories in its transitive dev-only tree (e.g. `tmp`, `uuid`, `basic-ftp`); production tree: 0 vulnerabilities (2026-10-13) |
+| `wrangler` | 4.150.0 | MIT OR Apache-2.0 | ✅ (optional) | Not installed. Local headers/clean URLs are emulated by `scripts/serve-out.mjs` instead |
+| `license-checker-rseidelsohn` | 5.0.1 📌 | BSD-3-Clause | ✅ | License report and CI gate (`npm run licenses`) |
+| `eslint` | 9.39.5 📌 | MIT | ✅ | Lint. ESLint 10 exists; 9 kept to match `eslint-config-next` 16.4 as scaffolded |
+| `eslint-config-next` | 16.4.0 📌 | MIT | ✅ | Next.js lint rules (core-web-vitals + TypeScript) |
+| `eslint-config-prettier` | 10.1.8 📌 | MIT | ✅ | Turns off rules that conflict with Prettier |
+| `prettier` | 3.9.10 📌 | MIT | ✅ | Formatting |
+
+### 3.1 Build-time and dev-only transitive licenses (license gate findings, 2026-10-13)
+
+`npm run licenses` checks the production tree against the §1 allow-list and the whole tree against the forbidden list. These non-allow-list licenses were found and accepted because the code is **never shipped to users** (not in `out/`):
+
+| Package | License | Why it is present | Gate rule |
+|---|---|---|---|
+| `@img/sharp-*` (platform binaries, incl. `sharp-libvips-*`) | Apache-2.0 AND LGPL-3.0-or-later (libvips) | Optional dependency of `next` for server image optimization. Never executed: `images.unoptimized` + static export | Production exception by name prefix |
+| `caniuse-lite` | CC-BY-4.0 | Browser-support data read by build tools (browserslist) | Production exception by name |
+| `lightningcss`, `axe-core` | MPL-2.0 | Tailwind's CSS compiler; axe engine | Dev-only, allowed (not forbidden) |
+| `glob`, `minimatch`, `lru-cache`, … | BlueOak-1.0.0 | Dev tooling | Dev-only, allowed |
+| `argparse` | Python-2.0 | Dev tooling | Dev-only, allowed |
+| `spdx-exceptions` / `spdx-ranges` | CC-BY-3.0 | License-checker data | Dev-only, allowed |
+
+The exception list lives in `scripts/check-licenses.mjs` and must stay in sync with this table. **Owner review requested** for the two production-tree exceptions (LGPL/CC-BY are "review required" in §1); they would only matter if the files were distributed, which they are not.
 
 ---
 
@@ -144,7 +163,7 @@ No other items are under review.
 2. Check license on npm **and** in the repository LICENSE/NOTICE, including bundled third-party code.
 3. Check maintenance (last release, open issues), bundle size, and whether it can load on intent.
 4. Add a row to this document (version, license, status, purpose, load).
-5. CI runs `license-checker-rseidelsohn` with an allow-list matching §1; a forbidden or unknown license fails the build.
+5. CI runs `npm run licenses` (`scripts/check-licenses.mjs`, built on `license-checker-rseidelsohn`) with an allow-list matching §1; a forbidden or unknown license fails the build. Name-scoped exceptions are listed in §3.1 and in the script.
 6. Major version upgrades: read the changelog, run full E2E and Lighthouse before merging.
 
 ---
