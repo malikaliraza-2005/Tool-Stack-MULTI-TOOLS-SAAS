@@ -46,7 +46,7 @@ A clean, deployable project with CI, preview deployments, and security headers, 
 - [x] **P1-T14** GitHub Actions workflow: install → typecheck → lint → test → build → e2e → lhci → licenses.
 
 ### Hosting
-- [ ] **P1-T15** Cloudflare Pages project connected to the repo; build command, output `out`, env `NEXT_PUBLIC_SITE_URL` per environment. **Open (owner action):** needs the repo pushed and the Cloudflare dashboard; steps in [deployment.md §2](../deployment.md#2-cloudflare-pages-setup-p1-t15-owner-action).
+- [x] **P1-T15** Cloudflare Pages project connected to the repo; build command, output `out`, env `NEXT_PUBLIC_SITE_URL` per environment. Done 2026-10-13: Pages project `sprigkit` (`https://sprigkit.pages.dev`), production branch `main`.
 - [x] **P1-T16** `public/_headers`: CSP + security headers; `X-Robots-Tag: noindex` on preview hostnames (or via environment-aware build).
 - [ ] **P1-T17** Verify headers on a preview deployment (DevTools / `curl -I`); confirm static pages, 404 page, and clean URLs work. **Open (owner action):** after T15; checklist in [deployment.md §3](../deployment.md#3-verifying-a-deployment-p1-t17).
 - [ ] **P1-T18** Test rollback: promote a previous deployment in the dashboard. **Open (owner action):** after T15; steps in [deployment.md §4](../deployment.md#4-rollback-p1-t18).
