@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <!-- Sprigkit app icon (brand-identity.md). Ink tile = --fg, paper = --bg, bud = dark-theme --accent. -->
+  <rect width="24" height="24" rx="5.5" fill="#1e1a15"/>
+  <g transform="translate(2.4 2.6) scale(0.8)" fill="none" stroke="#fbfaf7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 21V9"/>
+    <path d="M12 17c-3.6 0-5.8-1.9-6.5-5.2 3.6 0 5.8 1.9 6.5 5.2Z"/>
+    <path d="M12 13.5c3.6 0 5.8-1.9 6.5-5.2-3.6 0-5.8 1.9-6.5 5.2Z"/>
+    <circle cx="12" cy="5.5" r="2.25" fill="#f77e35" stroke="#f77e35"/>
+  </g>
+</svg>

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 (P1-T07: pinned versions) |
+| **Last updated** | 2026-10-13 (Phase 2: UI dependencies installed and pinned) |
 | **Source** | Versions and license fields read from the npm registry (`registry.npmjs.org/<pkg>/latest`) on 2026-10-13 **[Verified]** |
 | **Related** | [architecture.md](architecture.md) · [tool-specifications.md](tool-specifications.md) |
 
@@ -37,11 +37,11 @@ Additional rules:
 | `next` | 16.4.0 📌 | MIT | ✅ | Framework, static export | Initial |
 | `react`, `react-dom` | 19.3.0 📌 | MIT | ✅ | UI | Initial |
 | `tailwindcss`, `@tailwindcss/postcss` | 4.3.3 📌 | MIT | ✅ | Styling (build time, PostCSS plugin; works with webpack, D-14) | Build |
-| `radix-ui` | 1.8.1 | MIT | ✅ | Accessible primitives (via shadcn/ui) | Initial / per component |
-| `cmdk` | 1.1.1 | MIT | ✅ | Command palette | On open |
-| `sonner` | 2.0.8 | MIT | ✅ | Toasts | Initial (small) |
-| `motion` | 14.2.0 | MIT | ✅ | Layout/drag/presence animations via `LazyMotion` | Initial (reduced features), rest lazy |
-| `lucide-react` | 1.56.0 | ISC | ✅ | Icons (tree-shaken) | Initial |
+| `radix-ui` | 1.8.1 📌 | MIT | ✅ | Accessible primitives (Dialog, DropdownMenu, Popover, Select, Tabs, Tooltip, Checkbox, RadioGroup, Switch, Slider, Slot), restyled with tokens in `src/components/ui/` | Initial (shell: Tooltip, DropdownMenu, Dialog) / with the component |
+| `cmdk` | 1.1.1 📌 | MIT | ✅ | Command palette, Combobox list | On open (palette chunk fetched on trigger hover/focus or first open) |
+| `sonner` | 2.0.8 📌 | MIT | ✅ | Toasts (unstyled mode, restyled with tokens). Injects its base CSS via a `<style>` tag (allowed by `style-src 'unsafe-inline'`) | Initial (small) |
+| `motion` | 14.2.0 📌 | MIT | ✅ | Layout animations (`layoutId` indicators), later drag/reorder, via `LazyMotion` + `m`. Pulls in `framer-motion`, `motion-dom`, `motion-utils` (MIT) | Initial: `m` only; `domMax` features loaded async after hydration |
+| `lucide-react` | 1.56.0 📌 | ISC | ✅ | Icons (tree-shaken) | Initial |
 | `fuse.js` | 7.5.0 | Apache-2.0 | ✅ | Fuzzy tool search | On palette open |
 | `zod` | 4.6.7 | MIT | ✅ | Registry validation, stored-preference validation | Build / small runtime |
 | `@tanstack/react-virtual` | 3.14.18 | MIT | ✅ | Virtualized lists (page grid, tree view, diff) | With tool |
@@ -178,6 +178,15 @@ No other items are under review.
 6. Major version upgrades: read the changelog, run full E2E and Lighthouse before merging.
 
 ---
+
+### 3.2 Scripts that use dev dependencies
+
+| Script | Uses | Notes |
+|---|---|---|
+| `scripts/generate-icons.mjs` | `@playwright/test` (Chromium) | Renders `src/app/icon.svg` to the favicon/app-icon PNGs and ICO. Run manually; outputs are committed (brand-identity §4.3) |
+| `scripts/eslint/no-hardcoded-design.mjs` | `eslint` | Local lint rule enforcing design tokens |
+
+No utility class-merging library (`clsx`, `tailwind-merge`, `class-variance-authority`) is used: `src/lib/cn.ts` only joins classes, and components avoid overlapping variant classes instead (browser API first, §1 rule 2).
 
 ## 7. Attribution
 

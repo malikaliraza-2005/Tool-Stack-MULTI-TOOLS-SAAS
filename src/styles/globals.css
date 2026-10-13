@@ -2,26 +2,454 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
- * Design tokens (design-system.md §2, §5, §7, §12).
- * Empty token layer: values are added in Phase 2 (P2). Components must use
- * these tokens only; no hard-coded colors, sizes, radii, shadows or timings.
+ * Design tokens (design-system.md §2, §4, §5, §7, §12).
+ * Components use these tokens only: no hard-coded colors, sizes, radii,
+ * shadows, durations or easings (enforced by the `sprigkit/no-hardcoded-design`
+ * lint rule and src/styles/tokens.test.ts, which also checks every
+ * text/background pair for WCAG contrast).
+ *
+ * `.light` and `.dark` can also be set on any element to preview a theme
+ * locally (component gallery).
  */
-:root {
+:root,
+.light {
+  color-scheme: light;
+
+  --bg: oklch(0.985 0.004 85);
+  --surface: oklch(1 0 0);
+  --surface-2: oklch(0.965 0.006 85);
+  --surface-3: oklch(0.935 0.008 85);
+  --fg: oklch(0.22 0.012 70);
+  --fg-muted: oklch(0.48 0.012 70);
+  --fg-subtle: oklch(0.54 0.01 75);
+  --border: oklch(0.9 0.006 85);
+  --border-strong: oklch(0.63 0.008 80);
+  --accent: oklch(0.575 0.18 47);
+  --accent-hover: oklch(0.53 0.17 45);
+  --accent-fg: oklch(0.99 0.005 85);
+  --accent-text: oklch(0.53 0.17 38);
+  --accent-soft: oklch(0.95 0.035 55);
+  --success: oklch(0.51 0.13 150);
+  --success-soft: oklch(0.955 0.03 150);
+  --warning: oklch(0.53 0.12 70);
+  --warning-soft: oklch(0.955 0.04 80);
+  --danger: oklch(0.55 0.2 27);
+  --danger-hover: oklch(0.5 0.19 27);
+  --danger-fg: oklch(0.99 0.005 85);
+  --danger-soft: oklch(0.955 0.03 25);
+  --info: oklch(0.52 0.12 245);
+  --info-soft: oklch(0.955 0.025 245);
+  --focus-ring: var(--accent);
+  --overlay: oklch(0.2 0.01 70 / 0.4);
+
+  --shadow-1: 0 1px 2px oklch(0.2 0.01 70 / 0.06);
+  --shadow-2: 0 4px 16px -4px oklch(0.2 0.01 70 / 0.12);
+  --shadow-3: 0 16px 48px -12px oklch(0.2 0.01 70 / 0.2);
 }
 
 .dark {
+  color-scheme: dark;
+
+  --bg: oklch(0.165 0.005 70);
+  --surface: oklch(0.205 0.006 70);
+  --surface-2: oklch(0.245 0.006 70);
+  --surface-3: oklch(0.285 0.007 70);
+  --fg: oklch(0.955 0.005 85);
+  --fg-muted: oklch(0.72 0.01 80);
+  --fg-subtle: oklch(0.66 0.008 75);
+  --border: oklch(0.3 0.006 70);
+  --border-strong: oklch(0.53 0.008 70);
+  --accent: oklch(0.72 0.17 48);
+  --accent-hover: oklch(0.76 0.16 50);
+  --accent-fg: oklch(0.17 0.01 60);
+  --accent-text: oklch(0.78 0.14 52);
+  --accent-soft: oklch(0.28 0.05 45);
+  --success: oklch(0.72 0.14 150);
+  --success-soft: oklch(0.28 0.05 150);
+  --warning: oklch(0.8 0.14 80);
+  --warning-soft: oklch(0.28 0.05 80);
+  --danger: oklch(0.7 0.18 25);
+  --danger-hover: oklch(0.74 0.16 25);
+  --danger-fg: oklch(0.17 0.01 60);
+  --danger-soft: oklch(0.28 0.05 25);
+  --info: oklch(0.74 0.11 245);
+  --info-soft: oklch(0.28 0.05 245);
+  --focus-ring: var(--accent);
+  --overlay: oklch(0 0 0 / 0.6);
+
+  /* Dark mode separates resting surfaces with borders, not shadows (§5). */
+  --shadow-1: none;
+  --shadow-2: 0 4px 16px -4px oklch(0 0 0 / 0.5);
+  --shadow-3: 0 16px 48px -12px oklch(0 0 0 / 0.6);
+}
+
+/* Theme-independent tokens. */
+:root {
+  /* Motion (§7.1). Mirrored for Motion for React in src/lib/motion.ts. */
+  --dur-instant: 100ms;
+  --dur-quick: 180ms;
+  --dur-standard: 260ms;
+  --dur-page: 380ms;
+  /* Exits are faster than entrances (§7.4 rule 3). */
+  --dur-exit: 120ms;
+  /* Loop period of loading indicators (spinner, indeterminate bar). Not a transition. */
+  --dur-loop: 900ms;
+
+  /* Focus ring (§9). */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* Page gutter (§4.2) and section rhythm (§4.4), mobile first. */
+  --gutter: calc(var(--spacing) * 4);
+  --section-gap: calc(var(--spacing) * 14);
+  --header-height: calc(var(--spacing) * 16);
+  --sheet-max-height: 85dvh;
+}
+
+@media (width >= 48rem) {
+  :root {
+    --gutter: calc(var(--spacing) * 6);
+    --section-gap: calc(var(--spacing) * 20);
+  }
+}
+
+@media (width >= 64rem) {
+  :root {
+    --gutter: calc(var(--spacing) * 8);
+    --section-gap: calc(var(--spacing) * 24);
+  }
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-*: initial;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-text: var(--accent-text);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-fg: var(--danger-fg);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-focus-ring: var(--focus-ring);
+  --color-overlay: var(--overlay);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
+@theme {
+  /* Type scale (§3.1): size / line-height / tracking / weight. */
+  --text-*: initial;
+  --text-display: clamp(2.75rem, 6vw, 4rem);
+  --text-display--line-height: calc(68 / 64);
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 600;
+  --text-h1: clamp(2rem, 4vw, 2.5rem);
+  --text-h1--line-height: calc(46 / 40);
+  --text-h1--letter-spacing: -0.02em;
+  --text-h1--font-weight: 600;
+  --text-h2: 1.75rem;
+  --text-h2--line-height: calc(34 / 28);
+  --text-h2--letter-spacing: -0.015em;
+  --text-h2--font-weight: 600;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: calc(28 / 20);
+  --text-h3--font-weight: 600;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: calc(28 / 18);
+  --text-body: 1rem;
+  --text-body--line-height: calc(26 / 16);
+  --text-ui: 0.875rem;
+  --text-ui--line-height: calc(20 / 14);
+  --text-ui--font-weight: 500;
+  --text-small: 0.8125rem;
+  --text-small--line-height: calc(18 / 13);
+  --text-micro: 0.75rem;
+  --text-micro--line-height: calc(16 / 12);
+  --text-micro--letter-spacing: 0.02em;
+  --text-micro--font-weight: 500;
+  --text-code: 0.875rem;
+  --text-code--line-height: calc(22 / 14);
+
+  /* Radii (§5). */
+  --radius-*: initial;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows are theme-dependent: see the `shadow-1..3` utilities below. */
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+  --blur-*: initial;
+
+  /* Easing (§7.2). */
+  --ease-*: initial;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+
+  /* Containers (§4.2) plus overlay widths. */
+  --container-*: initial;
+  --container-content: 45rem;
+  --container-tool: 75rem;
+  --container-wide: 85rem;
+  --container-prose: 65ch;
+  --container-popover: 18rem;
+  --container-dialog: 32rem;
+  --container-palette: 40rem;
+
+  /* Enter/exit keyframes for overlays (Radix waits for `animationend`). */
+  --animate-*: initial;
+  --animate-fade-in: fade-in var(--dur-quick) var(--ease-out);
+  --animate-fade-out: fade-out var(--dur-exit) var(--ease-in);
+  --animate-pop-in: pop-in var(--dur-quick) var(--ease-out);
+  --animate-pop-out: pop-out var(--dur-exit) var(--ease-in);
+  --animate-dialog-in: dialog-in var(--dur-standard) var(--ease-out);
+  --animate-dialog-out: dialog-out var(--dur-exit) var(--ease-in);
+  --animate-sheet-in-bottom: sheet-in-bottom var(--dur-standard) var(--ease-out);
+  --animate-sheet-out-bottom: sheet-out-bottom var(--dur-exit) var(--ease-in);
+  --animate-sheet-in-right: sheet-in-right var(--dur-standard) var(--ease-out);
+  --animate-sheet-out-right: sheet-out-right var(--dur-exit) var(--ease-in);
+  --animate-spin: spin var(--dur-loop) linear infinite;
+  --animate-indeterminate: indeterminate calc(var(--dur-loop) * 2) var(--ease-in-out) infinite;
+  --animate-pulse: pulse calc(var(--dur-loop) * 2) var(--ease-in-out) infinite;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  /* Popover entrance from scale 0.96 (§7.3). */
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+  @keyframes pop-out {
+    to {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+  }
+  /* Entrance travel ≤ 12px, exit ≤ 6px (§7.3). */
+  @keyframes dialog-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+  }
+  @keyframes dialog-out {
+    to {
+      opacity: 0;
+      transform: translateY(4px) scale(0.99);
+    }
+  }
+  /* Sheets slide their full size: they enter from off-screen, not a short hop. */
+  @keyframes sheet-in-bottom {
+    from {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes sheet-out-bottom {
+    to {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes sheet-in-right {
+    from {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes sheet-out-right {
+    to {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes indeterminate {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(250%);
+    }
+  }
+  @keyframes pulse {
+    50% {
+      opacity: 0.5;
+    }
+  }
+}
+
+/* Elevation (§5). Plain utilities so the dark theme can swap the values. */
+@utility shadow-1 {
+  box-shadow: var(--shadow-1);
+}
+@utility shadow-2 {
+  box-shadow: var(--shadow-2);
+}
+@utility shadow-3 {
+  box-shadow: var(--shadow-3);
+}
+
+/* Hover and color changes at --dur-quick, press feedback at --dur-instant (§7.1). */
+@utility transition-control {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration:
+    var(--dur-quick), var(--dur-quick), var(--dur-quick), var(--dur-quick), var(--dur-quick),
+    var(--dur-instant);
+  transition-timing-function: var(--ease-out);
+}
+
+/* Page container: centered, max width set with `max-w-content|tool|wide` (§4.2). */
+@utility page-container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Vertical rhythm between page sections (§4.4). */
+@utility section-y {
+  padding-block: var(--section-gap);
+}
+@utility section-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+}
+
+/* Focus ring (§9): 2px accent with 2px offset, never removed. */
+@utility focus-ring {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--bg);
+    color: var(--fg);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  ::selection {
+    background-color: var(--accent-soft);
+    color: var(--fg);
+  }
+
+  /* Lucide icons at the 1.5px stroke of the icon style (§6). */
+  .lucide {
+    stroke-width: 1.5;
+  }
+
+  /* Theme transition (§11, P2-T07): the whole page cross-fades. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--dur-page);
+    animation-timing-function: var(--ease-out);
+  }
+
+  /*
+   * Page transition (P2-T10, src/app/template.tsx): the old page fades out
+   * quickly, the new one fades in with a short rise. The header stays put as
+   * the spatial anchor, and the overlay never swallows clicks (§7.4 rule 2).
+   */
+  ::view-transition {
+    pointer-events: none;
+  }
+  ::view-transition-old(.page-exit) {
+    animation: page-exit var(--dur-exit) var(--ease-in) both;
+  }
+  ::view-transition-new(.page-enter) {
+    animation: page-enter var(--dur-page) var(--ease-out) both;
+  }
+  .site-header {
+    view-transition-name: site-header;
+  }
+  [data-theme-transition] .site-header {
+    view-transition-name: none;
+  }
+  ::view-transition-group(site-header),
+  ::view-transition-new(site-header) {
+    animation: none;
+  }
+  ::view-transition-old(site-header) {
+    display: none;
+  }
+}
+
+@keyframes page-exit {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/*
+ * Reduced motion (§7.4 rule 5): movement and scale are removed. Transitions
+ * and keyframes collapse to an instant change, so overlays still fire
+ * `animationend` and close; View Transitions are skipped in JS as well.
+ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
