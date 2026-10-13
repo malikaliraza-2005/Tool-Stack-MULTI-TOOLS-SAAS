@@ -29,6 +29,9 @@ This document says **how** Sprigkit is tested and which command runs each layer.
 - Every `src/tools/<slug>/logic.ts` has `logic.test.ts` next to it: normal cases, edge cases and **every** error code. Fixtures go in `src/tools/<slug>/__fixtures__/`.
 - `logic.ts` is pure (no DOM, no React), so tests run in Node (`environment: "node"`). Use a DOM environment only where a test really needs it.
 - Registry tests (Phase 3): schema validity, unique slugs/titles/descriptions, related slugs exist, no reserved slugs.
+- Design tokens (`src/styles/tokens.test.ts`): WCAG contrast of every token pair in both themes, and parity between CSS tokens and their TypeScript mirrors (`src/lib/motion.ts`, `THEME_BG`).
+- Theme (`src/lib/theme.test.ts`): preference parsing and the inline pre-paint script, run in a `node:vm` sandbox.
+- Lint rule (`scripts/eslint/no-hardcoded-design.test.mjs`): ESLint `RuleTester` cases.
 
 ## 3. E2E tests (Playwright)
 
@@ -37,7 +40,9 @@ This document says **how** Sprigkit is tested and which command runs each layer.
 - **Import from `e2e/fixtures.ts`, not `@playwright/test`.** The fixtures are automatic:
   - `noNetwork`: records every HTTP request from the page and its workers. The test fails if any request goes to another origin (`data:` and `blob:` are local). This is the automated proof of "0 bytes uploaded" ([mvp-scope.md §6](../01-product/mvp-scope.md#6-definition-of-done-per-tool)). **Limits:** Playwright reports service-worker requests in Chromium only, and WebSocket/WebRTC traffic is not recorded. The CSP (`connect-src`) blocks fetch/XHR/WebSocket to other origins in every browser, and Phase 7 SW tests must run in Chromium.
   - `csp`: fails the test on any CSP violation reported on the **document** or any uncaught page error. A test that expects a violation calls `csp.allowViolations()` and asserts `await csp.violations()` itself. **Limit:** violations inside workers are not reported to the document; worker-based tool tests must assert the tool's result, so a blocked request inside a worker shows up as a failed flow.
-- **Accessibility:** call `expectNoA11yViolations(page)` (WCAG 2.0/2.1/2.2 A and AA rules) on every page and state that a test reaches. Run it in both themes once theming exists (Phase 2).
+- **Accessibility:** call `expectNoA11yViolations(page)` (WCAG 2.0/2.1/2.2 A and AA rules) on every page and state that a test reaches, in both themes (`page.emulateMedia({ colorScheme })`).
+- **Shell (`e2e/shell.spec.ts`, Phase 2):** landmarks and skip link, header/mobile navigation, theme pre-paint, persistence and View Transition (skipped under reduced motion), command palette (shortcut, action, Esc + focus restore), gallery `noindex`, dialog focus trap/restore, keyboard operation of SegmentedControl and Tabs, CopyButton announcement, axe on gallery/home/404 in both themes.
+- **Browser quirks in tests:** WebKit does not focus buttons or links on click/Tab by default (as in Safari), so keyboard tests focus elements explicitly; Playwright's Firefox ignores `prefers-color-scheme` emulation in `matchMedia()`, and only Chromium fires `matchMedia` change events when emulation changes. Radix arrow-key selection needs the key held (`keyboard.down`/`up`), because Playwright releases it before Radix moves focus.
 - The fixtures were checked against a deliberate leak: a navigation to another origin fails the test with "requests left the origin".
 - **Offline / service worker** (Phase 7): simulate offline in Chromium with `context.route("**/*", r => r.abort("internetdisconnected"))`. `context.setOffline(true)` did not reproduce real offline behaviour with the service worker ([architecture.md §10](../04-architecture/architecture.md#10-pwa-and-offline)).
 
