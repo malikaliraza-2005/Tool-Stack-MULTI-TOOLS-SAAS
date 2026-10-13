@@ -31,6 +31,7 @@ This file is the **decision log** and **risk register** for Sprigkit. It replace
 | D-11 | Final MVP slugs | **[Decision]** | 4 renamed: `jpg-to-pdf`, `pdf-to-jpg`, `base64-encode-decode`, `url-encode-decode`; 15 unchanged (see record) | 2026-10-13 |
 | D-12 | `requirements.md` | **[Decision]** | Not written; requirements live in product.md, mvp-scope.md, tool-specifications.md and architecture.md | 2026-10-13 |
 | D-13 | Repository visibility and license (P1-T01) | **[Decision]** (proposed, owner to confirm) | Public GitHub repo, **all rights reserved** (no open-source license) (see record) | 2026-10-13 |
+| D-14 | Bundler for dev and production builds | **[Decision]** | **Webpack** (`--webpack`), not Turbopack: Turbopack workers fail in WebKit (see record) | 2026-10-13 |
 
 D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; their reasoning lives in the linked documents.
 
@@ -166,6 +167,21 @@ D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; th
   - Open-sourcing parts later (e.g. the license gate or the no-network test helper) needs a superseding decision.
   - The repository name still contains "Tool-Stack" (the old working name, D-5). Renaming it to `sprigkit` on GitHub is an owner action; GitHub redirects the old URL.
 
+### D-14: Bundler (webpack instead of Turbopack)
+
+- **Status:** [Decision] 2026-10-13, from the Phase 1 spikes (P1-T19–T22). Applies the fallback planned in the Phase 1 risk table.
+- **Context:**
+  - Next.js 16 uses Turbopack by default.
+  - Turbopack starts dedicated Web Workers through a bootstrap script that reads its chunk list from the worker URL fragment (`#params=…`). WebKit drops the fragment from the worker's `location`, so every Turbopack worker failed to start in Playwright WebKit (12/12 runs; details in [architecture.md §8.4](../04-architecture/architecture.md#84-phase-1-spike-results)).
+  - Every file tool depends on module workers (A-5), and Safari is a target browser.
+  - With `next build --webpack`, the jSquash, pdf.js, pdf-lib and Serwist spikes pass in Chromium, Firefox, WebKit and mobile.
+- **Options:** (1) Turbopack and accept broken Safari workers; (2) Turbopack plus self-built worker bundles in `public/` (own esbuild step); (3) webpack for dev and production.
+- **Decision:** **option 3.** `npm run dev` = `next dev --webpack`; `npm run build` = `next build --webpack`. Tailwind runs through `@tailwindcss/postcss`, which both bundlers support.
+- **Consequences:**
+  - Slower builds and HMR than Turbopack (webpack build of the scaffold: ~5 s compile).
+  - Dev and production use the same bundler, so worker behaviour matches in every browser.
+  - **Revisit** when a Next.js release changes the Turbopack worker bootstrap, or if real Safari (Phase 9 device tests) turns out to keep the fragment. Switching back means removing `--webpack` and re-running the spike tests on the `spikes` branch.
+
 ---
 
 ## 3. Risk register
@@ -187,3 +203,5 @@ Likelihood and impact are qualitative judgements **[Estimate]**. Review at every
 | R-11 | Hosting terms change | Low–Medium | Medium | Static output is portable; avoid platform-specific features | Before monetization |
 | R-12 | Free subdomain limits SEO and monetization | — | — | **Closed** by D-1 (owned domain) | — |
 | R-13 | Name collision ("ToolStack") | — | — | **Closed** by D-5 (renamed to Sprigkit) | — |
+| R-14 | Framework JS alone exceeds the homepage JS budget: Next.js 16 + React 19 ship **141 KB gzipped** on a near-empty page (Lighthouse, 2026-10-13) vs the 100 KB budget ([architecture.md §14](../04-architecture/architecture.md#14-performance-budgets-target)) | High | Medium | Budget is warn-only until P9. Keep our initial JS minimal (server components, on-intent loading). **Owner decision needed by Phase 9:** raise the homepage budget to measured framework baseline + headroom, or accept the overrun | Phase 2 shell; Phase 9 |
+| R-15 | Turbopack workers fail in WebKit; we depend on webpack support in Next.js | Medium | Medium | D-14; spike tests kept on the `spikes` branch to re-check new Next.js versions | Every Next.js upgrade |

@@ -43,7 +43,9 @@ If documents disagree, the more specific one wins (see [docs/README.md](docs/REA
 
 ## Stack
 
-Next.js 16 (App Router, static export) · React 19 · TypeScript (strict) · Tailwind CSS 4 · shadcn/ui on Radix · Motion for React (`LazyMotion` + `m`) · lucide-react · CodeMirror 6 · Fuse.js · Zod · Serwist (PWA) · Vitest · Playwright + axe · Lighthouse CI · Cloudflare Pages.
+Next.js 16 (App Router, static export, **webpack** builds via `--webpack`, not Turbopack: D-14) · React 19 · TypeScript (strict) · Tailwind CSS 4 · shadcn/ui on Radix · Motion for React (`LazyMotion` + `m`) · lucide-react · CodeMirror 6 · Fuse.js · Zod · Serwist (PWA) · Vitest · Playwright + axe · Lighthouse CI · Cloudflare Pages.
+
+Workers: `new Worker(new URL("./x.worker.ts", import.meta.url), { type: "module" })`; proven patterns for WASM, pdf.js, pdf-lib and Serwist are in [architecture.md §8.4](docs/04-architecture/architecture.md#84-phase-1-spike-results) (spike code on the local `spikes` branch).
 
 Not available in static export, do not use: middleware/proxy, Server Actions, runtime route handlers, ISR, `cookies()`/`headers()`, `headers`/`redirects`/`rewrites` in `next.config`. Use `public/_headers` and `public/_redirects` instead.
 

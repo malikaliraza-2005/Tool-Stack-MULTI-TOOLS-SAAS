@@ -36,7 +36,7 @@ Additional rules:
 |---|---|---|---|---|---|
 | `next` | 16.4.0 📌 | MIT | ✅ | Framework, static export | Initial |
 | `react`, `react-dom` | 19.3.0 📌 | MIT | ✅ | UI | Initial |
-| `tailwindcss`, `@tailwindcss/turbopack` | 4.3.3 📌 | MIT | ✅ | Styling (build time; Turbopack CSS loader) | Build |
+| `tailwindcss`, `@tailwindcss/postcss` | 4.3.3 📌 | MIT | ✅ | Styling (build time, PostCSS plugin; works with webpack, D-14) | Build |
 | `radix-ui` | 1.8.1 | MIT | ✅ | Accessible primitives (via shadcn/ui) | Initial / per component |
 | `cmdk` | 1.1.1 | MIT | ✅ | Command palette | On open |
 | `sonner` | 2.0.8 | MIT | ✅ | Toasts | Initial (small) |
@@ -45,7 +45,7 @@ Additional rules:
 | `fuse.js` | 7.5.0 | Apache-2.0 | ✅ | Fuzzy tool search | On palette open |
 | `zod` | 4.6.7 | MIT | ✅ | Registry validation, stored-preference validation | Build / small runtime |
 | `@tanstack/react-virtual` | 3.14.18 | MIT | ✅ | Virtualized lists (page grid, tree view, diff) | With tool |
-| `serwist`, `@serwist/next` | 9.5.13 | MIT | ✅ | Service worker / PWA | Build + SW |
+| `serwist`, `@serwist/turbopack` | 9.5.13 | MIT | ✅ | Service worker / PWA. Spike (P1-T22) used `@serwist/turbopack` (route-handler integration; works with webpack builds), not `@serwist/next`. Needs `esbuild` (MIT) as a dev dependency to bundle the SW. Install in Phase 7 | Build + SW |
 | `geist` | 1.7.2 📌 | OFL-1.1 (npm field: "SIL OPEN FONT LICENSE"; `LICENSE.TXT` read 2026-10-13) | ✅ | Geist Sans & Mono variable fonts via `next/font/local`, self-hosted (P1-T25). Chosen over `@fontsource-variable/geist` because it plugs into `next/font` (preload, fallback metrics) | Initial (2 preloaded `.woff2`) |
 
 ### 2.2 PDF
@@ -53,7 +53,7 @@ Additional rules:
 | Package | Version | License | Status | Used by | Load |
 |---|---|---|---|---|---|
 | `pdf-lib` | 1.17.1 | MIT | ✅ | merge, split, organize, jpg-to-pdf, sign | On intent (worker) |
-| `pdfjs-dist` | 6.4.299 | Apache-2.0 | ✅ | Thumbnails, pdf-to-jpg, sign preview | On intent (worker) |
+| `pdfjs-dist` | 6.4.299 | Apache-2.0 | ✅ | Thumbnails, pdf-to-jpg, sign preview. No `eval` in 6.x (P1-T20). Self-host its `wasm/`, `cmaps/`, `standard_fonts/` (architecture §8.2) | On intent (worker) |
 | `signature_pad` | 5.1.4 | MIT | ✅ | sign-pdf drawn signatures | On intent |
 
 Note: `pdf-lib` has not had a release in a long time (1.17.1). It is stable and widely used, but track issues; a maintained fork may be adopted later if needed.
@@ -73,7 +73,18 @@ Note: `pdf-lib` has not had a release in a long time (1.17.1). It is stable and 
 | `libheif-js` | 1.23.5 | **LGPL-3.0** | ✅ under D-6 conditions only | HEIC/HEIF decoding (convert-image, jpg-to-pdf input) | On intent (worker); `libheif-wasm` build served as a separate, unmodified file, never bundled |
 | `pica` | 10.0.3 | MIT | ✅ (optional) | Alternative resampler if `@jsquash/resize` is unsuitable | Not planned |
 
-**Check at scaffold:** the jSquash packages wrap codecs originally from Squoosh and their upstream C/Rust libraries (mozjpeg, libwebp, libavif, oxipng). Confirm the upstream licenses (expected permissive: BSD/IJG/zlib-style) in each package's LICENSE/NOTICE and record them here.
+**Upstream codec licenses** (package tarballs read 2026-10-13 **[Verified]**; package code itself is Apache-2.0):
+
+| Package | Bundled codec notice (`LICENSE.codec.md`) |
+|---|---|
+| `@jsquash/jpeg` | libjpeg-turbo / mozjpeg: IJG License + BSD-3-Clause (+ zlib for SIMD parts) |
+| `@jsquash/webp` | libwebp: BSD-3-Clause (Google) |
+| `@jsquash/png` | BSD-3-Clause-style (Google) |
+| `@jsquash/oxipng` | oxipng: MIT |
+| `@jsquash/resize` | hqx: Apache-2.0; magic-kernel: MIT; resize: MIT |
+| `@jsquash/avif` | **No codec license file shipped.** Upstream libavif and libaom are BSD-2-Clause **[Unverified]**; confirm and add notices before Phase 6 |
+
+All permissive. The `/licenses` page must reproduce these notices (BSD/IJG attribution terms).
 
 ### 2.4 Developer tools
 

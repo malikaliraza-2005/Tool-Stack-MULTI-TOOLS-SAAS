@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 |
+| **Last updated** | 2026-10-13 (Phase 1 spike outcomes) |
 | **Related** | [tool-registry.md](tool-registry.md) · [tool-specifications.md](tool-specifications.md) · [dependencies-licenses.md](dependencies-licenses.md) · [design-system.md](../02-design/design-system.md) |
 
 ---
@@ -23,9 +23,9 @@
 
 | Concern | Choice | Notes |
 |---|---|---|
-| Framework | **Next.js 16** (App Router) with **static export** | `output: 'export'` |
+| Framework | **Next.js 16** (App Router) with **static export** | `output: 'export'`. Built with **webpack** (`--webpack`), not Turbopack (D-14, §8.4) |
 | UI | **React 19**, **TypeScript** (strict) | |
-| Styling | **Tailwind CSS 4** with design tokens | See [design-system.md](../02-design/design-system.md) §12 |
+| Styling | **Tailwind CSS 4** with design tokens | Via `@tailwindcss/postcss`. See [design-system.md](../02-design/design-system.md) §12 |
 | Components | **shadcn/ui** (copied into repo) on **Radix** primitives | Restyled to tokens |
 | Motion | CSS + **View Transitions API** + **Motion for React** (`LazyMotion`) | |
 | Icons | **lucide-react** | |
@@ -33,7 +33,7 @@
 | Editor | **CodeMirror 6** | Developer tools only, lazy-loaded |
 | Search | **Fuse.js** over a generated tool index | |
 | Validation | **Zod** | Registry validation at build; option schemas |
-| PWA | **Serwist** | Turbopack compatibility to be verified at scaffold (§8) |
+| PWA | **Serwist** (`@serwist/turbopack` route-handler integration; works with webpack builds) | Verified in Phase 1 (§10) |
 | Unit tests | **Vitest** | |
 | E2E, a11y | **Playwright** + **@axe-core/playwright** | |
 | Performance | **Lighthouse CI** | |
@@ -54,8 +54,11 @@ const nextConfig = {
   images: { unoptimized: true },   // no image optimization server in static export
   trailingSlash: false,            // /merge-pdf → out/merge-pdf.html
   reactStrictMode: true,
+  poweredByHeader: false,
 };
 ```
+
+`npm run build` runs `next build --webpack`; `npm run dev` runs `next dev --webpack` (D-14).
 
 **Not available in static export** (do not use): middleware/proxy, Server Actions, ISR, runtime route handlers, `cookies()`/`headers()`, and `headers`/`redirects`/`rewrites` in `next.config`. Replacements:
 
@@ -65,7 +68,7 @@ const nextConfig = {
 | Redirects | `public/_redirects` (Cloudflare Pages) |
 | Images | Pre-optimized at build or authored as SVG; `<img>` with explicit width/height |
 | Sitemap, robots | `app/sitemap.ts`, `app/robots.ts` with `export const dynamic = "force-static"` |
-| OG images | Generated at build (`opengraph-image.tsx` with static params); if unsupported in export at scaffold time, a build script renders them to `public/og/` |
+| OG images | Generated at build (`opengraph-image.tsx` with static params). **Works** (P1-T23). Files are emitted without an extension, so `_headers` sets `Content-Type: image/png` (§8.4). Fallback if Cloudflare ignores that header: a build script renders them to `public/og/*.png` |
 
 ---
 
@@ -181,13 +184,34 @@ Workers are created per job for regex (so a runaway pattern can be killed) and r
 - pdf.js worker, jSquash codecs, hash-wasm load on intent (file selected or input entered), never on page load.
 - WASM files are served from our own origin (no CDNs) and cached by the service worker.
 - Every deployed file < 25 MiB (Cloudflare Pages limit).
-- **Spike required at scaffold:** confirm jSquash WASM loading and pdf.js worker bundling with Next 16 (Turbopack). Fallback: `next build --webpack` or copying WASM to `public/` and loading by URL.
+- jSquash WASM loading and pdf.js worker bundling were proven in Phase 1 with webpack builds (§8.4).
+- pdf.js 6 loads optional WASM decoders (JPX/ICC), CMaps and standard fonts by URL. Copy `pdfjs-dist/wasm`, `cmaps` and `standard_fonts` to a versioned public path (e.g. `/vendor/pdfjs-6.4.299/`) and pass `wasmUrl`, `cMapUrl` and `standardFontDataUrl`; never use CDN defaults (Phase 5).
 
 ### 8.3 Memory hygiene
 - Release object URLs (`URL.revokeObjectURL`) after download.
 - Process batches sequentially with a small concurrency limit (default 2).
 - Check limits from the registry **before** reading large files.
 - Catch allocation failures and report `E_OUT_OF_MEMORY` with guidance (fewer pages, smaller files, desktop browser).
+
+
+### 8.4 Phase 1 spike results
+
+Spikes ran as throwaway pages on the local `spikes` branch (commit `P1-T19..T25`, not merged). Each spike has a Playwright test that runs it on the **production build**, served with the real `_headers` CSP, with the no-network and CSP-violation fixtures active, in Chromium, Firefox, WebKit and a mobile viewport. Verified 2026-10-13 with Next.js 16.4.0.
+
+| Task | Spike | Result | Approach / notes |
+|---|---|---|---|
+| P1-T19 | jSquash WASM (JPEG + WebP encode) in a module worker | **Works with workaround** (webpack build) | `new Worker(new URL("./x.worker.ts", import.meta.url), { type: "module" })`. The emscripten glue's `new URL("*.wasm", import.meta.url)` is emitted to `/_next/static/media/*.wasm` (self-hosted, hashed, 250–350 KB each). Allowed by `'wasm-unsafe-eval'`; no CSP violations |
+| — | **Turbopack + workers** | **Blocked in WebKit** | Turbopack starts dedicated workers through a bootstrap script that reads its chunk list from the URL fragment (`#params=…`). This is hard-coded in the runtime and cannot be configured. WebKit drops the fragment from the worker's `location`, so the worker throws "Missing worker bootstrap config". 12/12 runs failed in Playwright WebKit 27.2 (Windows); Chromium and Firefox work. Not yet confirmed on real Safari (Phase 9 device matrix). **D-14: build and develop with webpack** |
+| P1-T20 | pdf.js 6.4: render page 1 to a canvas | **Works** (webpack) | `GlobalWorkerOptions.workerPort = new Worker(new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url), { type: "module" })`; library loaded with `import("pdfjs-dist")` on intent. pdf.js 6 contains no `eval`/`new Function` (the `isEvalSupported` option no longer exists). Worker 1.26 MB and library chunk 1.18 MB (uncompressed) |
+| P1-T21 | pdf-lib merge in a worker | **Works** (webpack) | Two PDFs (1 + 2 pages) merged into 3 pages. Inputs and output are passed as transferables (`postMessage(msg, buffers)`); the input buffers are detached on the sender, so nothing is copied |
+| P1-T22 | Serwist PWA: precache + offline | **Works** (webpack; `@serwist/turbopack` 9.5.13 + `esbuild`) | A route handler `app/serwist/[path]/route.ts` (`createSerwistRoute`, force-static) emits `out/serwist/sw.js` at build time; `SerwistProvider swUrl="/serwist/sw.js"` registers it. Required settings: §10 |
+| P1-T23 | OG images in static export | **Works with workaround** | `opengraph-image.tsx` + `generateStaticParams` under a dynamic route emits a 1200×630 PNG per param at build; `og:image` uses `metadataBase` (SITE_URL). The file has no extension, so `_headers` sets `Content-Type: image/png` for `/*/opengraph-image`. **Verify on a Cloudflare preview (P1-T17)**; fallback: build script to `public/og/` |
+| P1-T24 | CSP + hydration; cross-origin `fetch()` | **Works** | A client counter hydrates and responds under the planned CSP in all browsers, with zero CSP violations and page errors. `fetch("https://example.com", { method: "POST" })` is blocked by `connect-src` (violation reported; no request leaves the browser). This check runs on `main` in `e2e/smoke.spec.ts` |
+| P1-T25 | Fonts | **Works** | `geist` package (`next/font/local`): two variable `.woff2` files emitted to `/_next/static/media/` and preloaded; no external font requests (asserted in `e2e/smoke.spec.ts`). `next/font/google` is not used because it downloads from Google at build time |
+
+Build-tool notes:
+- Tailwind 4 runs through `@tailwindcss/postcss` (`postcss.config.mjs`), which both bundlers support. The `@tailwindcss/turbopack` loader from the `create-next-app` template was removed with D-14.
+- Bundle baseline (webpack, near-empty homepage): **141 KB gzipped JS** from Next.js + React alone, above the 100 KB homepage budget (§14) before any Sprigkit code. See R-14.
 
 ---
 
@@ -204,7 +228,14 @@ Workers are created per job for regex (so a runaway pattern can be killed) and r
 - **Serwist** generates the service worker: precache app shell, fonts, and tool pages; runtime-cache lazily loaded libraries/WASM after first use.
 - Navigation fallback to cached pages offline.
 - Web app manifest with icons and `display: standalone`.
-- Turbopack compatibility to be verified at scaffold; fallback: webpack build for production.
+- **Verified in Phase 1 (P1-T22)** with `@serwist/turbopack`. Despite the name, its route-handler integration builds the SW with esbuild and works with webpack builds. Required settings found by the spike:
+  - `globIgnores: ["public/_headers", "public/_redirects"]`. Serwist's default glob precaches all of `public/`, but Cloudflare does not serve these config files, so SW install would fail.
+  - HTML pages are not in the default precache. List them in `additionalPrecacheEntries` with a revision (commit SHA), including the offline fallback page.
+  - Offline fallbacks only apply to requests handled by a runtime route. Add a `NetworkFirst` route for `request.mode === "navigate"` before `defaultCache`.
+  - The SW is served from `/serwist/sw.js`. `_headers` must add `Service-Worker-Allowed: /` (scope `/`) and `Cache-Control: no-cache` for it.
+  - `navigationPreload: false`: little benefit for static pages, and preload requests bypass Playwright's offline routing.
+  - The default precache was ~2.7 MB in the spike because it includes on-intent chunks such as pdf.js. Phase 7 must exclude on-intent libraries and WASM from precache and runtime-cache them after first use.
+- Test offline in Chromium with `context.route("**/*", r => r.abort("internetdisconnected"))`. `context.setOffline(true)` did not reproduce real offline behaviour with the SW.
 
 ---
 
@@ -220,6 +251,8 @@ Workers are created per job for regex (so a runaway pattern can be killed) and r
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Cross-Origin-Opener-Policy: same-origin
 ```
+
+The repo's `public/_headers` also sets `X-Robots-Tag: noindex` for `https://:project.pages.dev/*` and `https://:subdomain.:project.pages.dev/*` (every preview and `pages.dev` host, P1-T16) and immutable caching for `/_next/static/*`. The service-worker and OG-image rules from §10 and §8.4 are added with those features. `scripts/serve-out.mjs` applies the same file locally for E2E and Lighthouse; it drops `upgrade-insecure-requests` because it serves plain HTTP.
 
 Notes:
 - **`connect-src 'self' blob: data:`** is the technical backbone of the "0 bytes uploaded" promise: scripts cannot send data to any other origin.
@@ -303,3 +336,4 @@ All generated from the registry (see [tool-registry.md](tool-registry.md)):
 | A-5 | Workers for heavy processing | Responsive UI, cancellation, timeouts | Bundling complexity |
 | A-6 | `unsafe-inline` scripts in CSP | Required by static export | Weaker XSS protection; mitigated by no user-HTML rendering and strict `connect-src` |
 | A-7 | No global state library | Tools are independent | Slight prop/context plumbing |
+| A-8 | Webpack instead of Turbopack for dev and production (D-14) | Turbopack workers fail to start in WebKit (§8.4) | Slower builds and HMR; revisit when Turbopack's worker bootstrap no longer relies on the URL fragment |
