@@ -1,6 +1,6 @@
 // Serves the static export (`out/`) the way Cloudflare Pages does, for E2E and
 // Lighthouse CI: clean URLs (/about → about.html), 404.html with status 404,
-// headers from `out/_headers`, and gzip. Local only; not used in production.
+// headers from `out/_headers` (not served itself), and gzip. Local only; not used in production.
 //
 // Usage: node scripts/serve-out.mjs [--port 4173]
 
@@ -90,7 +90,9 @@ const server = createServer((req, res) => {
     }
   }
 
-  let file = resolveFile(url.pathname);
+  // Cloudflare Pages reads these config files but does not serve them.
+  const hidden = url.pathname === "/_headers" || url.pathname === "/_redirects";
+  let file = hidden ? undefined : resolveFile(url.pathname);
   let status = 200;
   if (!file) {
     file = join(root, "404.html");
@@ -107,7 +109,8 @@ const server = createServer((req, res) => {
       "",
     );
   }
-  headers["content-type"] = TYPES[ext] ?? "application/octet-stream";
+  // A Content-Type from _headers wins (e.g. extension-less OG images).
+  headers["content-type"] ??= TYPES[ext] ?? "application/octet-stream";
 
   const gzip =
     COMPRESSIBLE.has(ext) && /\bgzip\b/.test(String(req.headers["accept-encoding"] ?? ""));

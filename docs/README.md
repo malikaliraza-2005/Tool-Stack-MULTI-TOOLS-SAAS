@@ -79,14 +79,14 @@ Status: ✅ Written · 📝 Planned · ➖ Not needed
 | [tool-specifications.md](04-architecture/tool-specifications.md) | ✅ | Inputs, options, processing, errors and tests per tool |
 | [dependencies-licenses.md](04-architecture/dependencies-licenses.md) | ✅ | License policy and dependency register |
 | security-privacy.md | 📝 | Threat model, CSP details, data-handling rules |
-| coding-standards.md | 📝 | Conventions and step-by-step contribution guide |
+| [coding-standards.md](04-architecture/coding-standards.md) | ✅ | Conventions and step-by-step contribution guide |
 
 ### 05-quality: correctness, performance, release gates
 | File | Status | Purpose |
 |---|---|---|
-| testing-strategy.md | 📝 | Unit, E2E, visual, accessibility testing |
-| browser-device-support.md | 📝 | Support matrix and device limits |
-| performance.md | 📝 | Budgets and measurement |
+| [testing-strategy.md](05-quality/testing-strategy.md) | ✅ | Unit, E2E, visual, accessibility testing |
+| [browser-device-support.md](05-quality/browser-device-support.md) | ✅ | Support matrix (initial; device results in Phase 9) and device limits |
+| [performance.md](05-quality/performance.md) | ✅ | Budgets and measurement |
 | acceptance-criteria.md | 📝 | Release gates per tool and per page |
 
 ### 06-delivery: shipping and operating
@@ -94,7 +94,7 @@ Status: ✅ Written · 📝 Planned · ➖ Not needed
 |---|---|---|
 | [implementation-roadmap.md](06-delivery/implementation-roadmap.md) | ✅ | Master plan: phases, milestones, dependencies, doc schedule |
 | [phases/](06-delivery/phases/README.md) | ✅ | One file per phase (0–11): tasks, exit criteria, risks; current phase and status |
-| deployment.md | 📝 | Cloudflare setup, environments, rollback |
+| [deployment.md](06-delivery/deployment.md) | ✅ | Cloudflare setup, environments, rollback |
 | analytics-monitoring.md | 📝 | Analytics, Search Console, error monitoring |
 | launch-checklist.md | 📝 | Pre-launch and launch-day steps |
 | maintenance.md | 📝 | Updates, bug triage, monthly reviews, tool retirement |
