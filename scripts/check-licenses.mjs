@@ -47,7 +47,12 @@ const production = await check({ ...common, production: true });
 const all = await check(common);
 
 const nameOf = (id) => id.slice(0, id.lastIndexOf("@"));
-const licenseOf = (id, info) => OVERRIDES[nameOf(id)] ?? String(info.licenses ?? "UNKNOWN");
+// An array of licenses means the package declares several; treat it as a choice.
+const licenseOf = (id, info) =>
+  OVERRIDES[nameOf(id)] ??
+  (Array.isArray(info.licenses)
+    ? `(${info.licenses.join(" OR ")})`
+    : String(info.licenses ?? "UNKNOWN"));
 const isException = (id, license) =>
   EXCEPTIONS.some(({ name, license: re }) => {
     const pkg = nameOf(id);
@@ -55,12 +60,38 @@ const isException = (id, license) =>
     return matches && re.test(license);
   });
 
-// "(MIT OR Apache-2.0)" is fine if any alternative is allowed; "(MIT AND X)" needs all.
+// Evaluates an SPDX expression: OR needs one allowed side, AND needs all; AND binds
+// tighter than OR and parentheses group, e.g. "(MIT OR Apache-2.0) AND MPL-2.0".
 function isAllowed(license) {
-  const expr = license.replace(/[()]/g, "").trim();
-  if (/\sOR\s/.test(expr)) return expr.split(/\s+OR\s+/).some(isAllowed);
-  if (/\sAND\s/.test(expr)) return expr.split(/\s+AND\s+/).every(isAllowed);
-  return ALLOWED.has(expr);
+  const tokens = license.match(/\(|\)|[^\s()]+/g) ?? [];
+  let pos = 0;
+  const parseOr = () => {
+    let ok = parseAnd();
+    while (tokens[pos] === "OR") {
+      pos++;
+      ok = parseAnd() || ok;
+    }
+    return ok;
+  };
+  const parseAnd = () => {
+    let ok = parseTerm();
+    while (tokens[pos] === "AND") {
+      pos++;
+      ok = parseTerm() && ok;
+    }
+    return ok;
+  };
+  const parseTerm = () => {
+    const token = tokens[pos++];
+    if (token === "(") {
+      const ok = parseOr();
+      if (tokens[pos++] !== ")") return false;
+      return ok;
+    }
+    return token !== undefined && ALLOWED.has(token);
+  };
+  const ok = parseOr();
+  return ok && pos === tokens.length;
 }
 
 const failures = [];

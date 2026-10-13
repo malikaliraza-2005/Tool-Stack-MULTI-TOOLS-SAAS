@@ -267,7 +267,7 @@ Notes:
 - No `dangerouslySetInnerHTML` with user content.
 
 ### 11.3 Supply chain
-Lockfile committed; minimal dependencies; Dependabot/Renovate PRs reviewed manually; `npm audit` and license check in CI.
+Lockfile committed; minimal dependencies; Dependabot/Renovate PRs reviewed manually; `npm audit --omit=dev` and license check in CI.
 
 ---
 
@@ -292,7 +292,7 @@ All generated from the registry (see [tool-registry.md](tool-registry.md)):
 | E2E | Playwright | Main flow per tool on Chromium, Firefox, WebKit; mobile viewport |
 | **Privacy** | Playwright | Records all requests during a tool run; **fails if any request leaves the origin** (except declared analytics) |
 | Accessibility | @axe-core/playwright | Every page, both themes |
-| Performance | Lighthouse CI | Budgets below; fails the build when exceeded |
+| Performance | Lighthouse CI | Budgets below; warn-only until Phase 9, then fails the build when exceeded |
 | Visual/motion | Manual checklist on the running site | Motion rules in design-system §7.4 |
 
 ---
