@@ -47,3 +47,6 @@ next-env.d.ts
 /playwright/.cache/
 /.lighthouseci/
 /licenses.json
+
+# self-hosted vendor assets, copied from node_modules (scripts/copy-pdfjs-assets.mjs)
+/public/vendor/
