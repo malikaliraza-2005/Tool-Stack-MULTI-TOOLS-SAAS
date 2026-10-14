@@ -10,15 +10,11 @@ const output = (page: Page) => page.getByRole("textbox", { name: "Formatted JSON
 
 /** Replaces the editor content by typing into whichever editor is mounted. */
 async function fill(page: Page, text: string) {
-  // CodeMirror replaces the plain textarea on intent; hover to load it, then
-  // type into the final editor.
-  await input(page).hover();
+  // CodeMirror replaces the plain textarea on intent; focusing loads it (works
+  // with mouse and touch), then the text replaces the final editor's content.
+  await input(page).focus();
   await expect(page.locator(".cm-editor").first()).toBeVisible();
-  const editor = input(page);
-  await editor.click();
-  await page.keyboard.press("ControlOrMeta+A");
-  await page.keyboard.press("Delete");
-  await page.keyboard.insertText(text);
+  await input(page).fill(text);
 }
 
 async function bothThemesAccessible(page: Page) {
@@ -144,7 +140,7 @@ test.describe("json-formatter", () => {
 
     await page.goto("/json-formatter");
     // Load CodeMirror first, so the measurement includes the real editor.
-    await input(page).hover();
+    await input(page).focus();
     await expect(page.locator(".cm-editor")).toBeVisible();
     // Longest gap between animation frames while the file is processed.
     await page.evaluate(() => {

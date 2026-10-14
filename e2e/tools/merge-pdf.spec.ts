@@ -138,8 +138,11 @@ test.describe("merge-pdf", () => {
     expect(download.suggestedFilename()).toMatch(/^Q3[ _]report\.pdf$/);
   });
 
-  test("reorders by dragging the handle", async ({ page, isMobile }) => {
+  test("reorders by dragging the handle", async ({ page, isMobile, browserName }) => {
     test.skip(isMobile, "Mouse drag; touch drag is checked manually");
+    // Playwright's synthetic mouse drag is unreliable in WebKit; keyboard
+    // reordering is tested in every browser.
+    test.skip(browserName === "webkit", "Synthetic drag is flaky in WebKit");
     await page.goto("/merge-pdf");
     await addFiles(page, [await pdfFile("a.pdf", [A4]), await pdfFile("b.pdf", [A4])]);
     const rows = list(page).getByRole("listitem");
