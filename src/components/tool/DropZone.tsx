@@ -1,8 +1,16 @@
 "use client";
 
 import { FileUp, Plus } from "lucide-react";
-import { useEffect, useEffectEvent, useImperativeHandle, useRef, useState, type Ref } from "react";
-import { Button } from "@/components/ui/Button";
+import {
+  useEffect,
+  useEffectEvent,
+  useId,
+  useImperativeHandle,
+  useRef,
+  useState,
+  type Ref,
+} from "react";
+import { buttonClasses } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 
 export type DropZoneHandle = { focus(): void; open(): void };
@@ -37,6 +45,10 @@ function matchesAccept(type: string, accept: DropZoneProps["accept"]): boolean |
  * File input for file tools (design-system §8): drag and drop, a "Choose
  * files" button for keyboard and screen-reader users, and paste (Ctrl+V)
  * of files. Types are checked again by magic bytes after selection.
+ *
+ * The "Choose files" button is a <label> for the real file input, so the
+ * browser opens the picker natively: it works before JavaScript has loaded
+ * and in in-app browsers that block pickers opened from script (phones).
  */
 export function DropZone({
   accept,
@@ -52,12 +64,12 @@ export function DropZone({
   ref,
 }: DropZoneProps) {
   const input = useRef<HTMLInputElement>(null);
-  const button = useRef<HTMLButtonElement>(null);
+  const inputId = useId();
   const depth = useRef(0);
   const [drag, setDrag] = useState<DragState>("idle");
 
   useImperativeHandle(ref, () => ({
-    focus: () => button.current?.focus(),
+    focus: () => input.current?.focus(),
     open: () => input.current?.click(),
   }));
 
@@ -161,29 +173,33 @@ export function DropZone({
         <p className="max-w-prose text-small text-fg-muted">{description}</p>
         {hint && large && <p className="font-mono text-small text-fg-muted tabular-nums">{hint}</p>}
       </div>
-      <Button
-        ref={button}
-        variant={large ? "primary" : "secondary"}
-        size={large ? "lg" : "md"}
-        onClick={() => input.current?.click()}
-        disabled={disabled}
-      >
-        {buttonLabel}
-      </Button>
+      {/* The input comes first so the label can show its focus (peer). It is
+          the focusable control; screen readers announce it as "Choose files". */}
       <input
         ref={input}
+        id={inputId}
         type="file"
         accept={accepted}
         multiple={multiple}
-        tabIndex={-1}
-        aria-hidden
-        className="sr-only"
+        disabled={disabled}
+        className="peer sr-only"
         onChange={(event) => {
           deliver(Array.from(event.target.files ?? []));
           // Allow choosing the same file again.
           event.target.value = "";
         }}
       />
+      <label
+        htmlFor={inputId}
+        className={buttonClasses({
+          variant: large ? "primary" : "secondary",
+          size: large ? "lg" : "md",
+          className:
+            "peer-focus-visible:focus-ring peer-disabled:pointer-events-none peer-disabled:opacity-50",
+        })}
+      >
+        {buttonLabel}
+      </label>
     </div>
   );
 }
