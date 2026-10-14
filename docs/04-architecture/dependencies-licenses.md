@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 (Phase 2: UI dependencies installed and pinned) |
+| **Last updated** | 2026-10-14 (Phase 3: platform and pilot dependencies installed and pinned) |
 | **Source** | Versions and license fields read from the npm registry (`registry.npmjs.org/<pkg>/latest`) on 2026-10-13 **[Verified]** |
 | **Related** | [architecture.md](architecture.md) · [tool-specifications.md](tool-specifications.md) |
 
@@ -43,8 +43,8 @@ Additional rules:
 | `motion` | 14.2.0 📌 | MIT | ✅ | Layout animations (`layoutId` indicators), later drag/reorder, via `LazyMotion` + `m`. Pulls in `framer-motion`, `motion-dom`, `motion-utils` (MIT) | Initial: `m` only; `domMax` features loaded async after hydration |
 | `lucide-react` | 1.56.0 📌 | ISC | ✅ | Icons (tree-shaken) | Initial |
 | `fuse.js` | 7.5.0 | Apache-2.0 | ✅ | Fuzzy tool search | On palette open |
-| `zod` | 4.6.7 | MIT | ✅ | Registry validation, stored-preference validation | Build / small runtime |
-| `@tanstack/react-virtual` | 3.14.18 | MIT | ✅ | Virtualized lists (page grid, tree view, diff) | With tool |
+| `zod` | 4.6.7 📌 | MIT | ✅ | Registry validation (full `zod`, build time only); tool option schemas in the browser use `zod/mini` (tree-shakable) | Build / small runtime |
+| `@tanstack/react-virtual` | 3.14.18 📌 | MIT | ✅ | Virtualized lists (JSON tree view; later page grid, diff). 3.14.19 was skipped: published the day before install | With tool |
 | `serwist`, `@serwist/turbopack` | 9.5.13 | MIT | ✅ | Service worker / PWA. Spike (P1-T22) used `@serwist/turbopack` (route-handler integration; works with webpack builds), not `@serwist/next`. Needs `esbuild` (MIT) as a dev dependency to bundle the SW. Install in Phase 7 | Build + SW |
 | `geist` | 1.7.2 📌 | OFL-1.1 (npm field: "SIL OPEN FONT LICENSE"; `LICENSE.TXT` read 2026-10-13) | ✅ | Geist Sans & Mono variable fonts via `next/font/local`, self-hosted (P1-T25). Chosen over `@fontsource-variable/geist` because it plugs into `next/font` (preload, fallback metrics) | Initial (2 preloaded `.woff2`) |
 
@@ -52,9 +52,11 @@ Additional rules:
 
 | Package | Version | License | Status | Used by | Load |
 |---|---|---|---|---|---|
-| `pdf-lib` | 1.17.1 | MIT | ✅ | merge, split, organize, jpg-to-pdf, sign | On intent (worker) |
-| `pdfjs-dist` | 6.4.299 | Apache-2.0 | ✅ | Thumbnails, pdf-to-jpg, sign preview. No `eval` in 6.x (P1-T20). Self-host its `wasm/`, `cmaps/`, `standard_fonts/` (architecture §8.2) | On intent (worker) |
+| `pdf-lib` | 1.17.1 📌 | MIT | ✅ | merge, split, organize, jpg-to-pdf, sign. Depends on `pako` 1.0.11 (MIT AND Zlib), see §3.1 | On intent (worker) |
+| `pdfjs-dist` | 6.4.299 📌 | Apache-2.0 | ✅ | FileList thumbnails (Phase 3), pdf-to-jpg, sign preview. No `eval` in 6.x (P1-T20). Its `wasm/`, `cmaps/`, `standard_fonts/`, `iccs/` are self-hosted by `scripts/copy-pdfjs-assets.mjs` (licenses below) | On intent (library + worker) |
 | `signature_pad` | 5.1.4 | MIT | ✅ | sign-pdf drawn signatures | On intent |
+
+**pdf.js runtime assets** (`node_modules/pdfjs-dist`, LICENSE files read 2026-10-14 **[Verified]**), served from `/vendor/pdfjs-6.4.299/`: `jbig2.wasm` (PDFium, BSD-3-Clause; pdf.js wrapper Apache-2.0), `openjpeg.wasm` (OpenJPEG, BSD-2-Clause; wrapper BSD-2-Clause), `qcms_bg.wasm` (qcms, MIT), CMaps and standard fonts (pdf.js, Apache-2.0 / bundled font licenses), `iccs/` (CC0-1.0). Not copied: `quickjs-eval.*` (JavaScript inside PDFs, never enabled). All permissive; the `/licenses` page must list them.
 
 Note: `pdf-lib` has not had a release in a long time (1.17.1). It is stable and widely used, but track issues; a maintained fork may be adopted later if needed.
 
@@ -90,8 +92,8 @@ All permissive. The `/licenses` page must reproduce these notices (BSD/IJG attri
 
 | Package | Version | License | Status | Used by | Load |
 |---|---|---|---|---|---|
-| `codemirror` / `@codemirror/*` | 6.0.2 / view 6.43.14 | MIT | ✅ | Workbench editor | With tool |
-| `jsonc-parser` | 3.3.1 | MIT | ✅ | JSON error positions, JSONC | With tool |
+| `@codemirror/state`, `view`, `commands`, `language`, `lang-json`; `@lezer/highlight` | 6.7.6, 6.43.14, 6.11.1, 6.13.1, 6.0.2; 1.2.5 📌 | MIT | ✅ | Workbench editor (`CodeEditor`). Individual packages instead of the `codemirror` meta-package (only the extensions we use) | On intent (hover, focus or content) |
+| `jsonc-parser` | 3.3.1 📌 | MIT | ✅ | JSON parsing with error offsets, JSONC | On first input (main thread ≤ 1 MB, worker above) |
 | `jose` | 6.2.12 | MIT | ✅ | JWT signature verification | On verify |
 | `diff` | 9.0.0 | BSD-3-Clause | ✅ | diff-checker | With tool (worker) |
 | `hash-wasm` | 4.12.0 | MIT | ✅ | MD5, streaming file hashes | On intent (worker) |
@@ -102,7 +104,7 @@ All permissive. The `/licenses` page must reproduce these notices (BSD/IJG attri
 
 | Package | Version | License | Status | Purpose | Load |
 |---|---|---|---|---|---|
-| `fflate` | 0.8.3 | MIT | ✅ | ZIP for multi-file downloads | On intent |
+| `fflate` | 0.8.3 📌 | MIT | ✅ | ZIP for multi-file downloads (`src/lib/files/zip.ts`; first used in Phase 5) | On intent |
 
 ### 2.6 Native browser APIs used instead of dependencies
 `crypto.randomUUID`, `crypto.getRandomValues`, `crypto.subtle` (SHA, HMAC), `TextEncoder/Decoder`, `URL`, `Intl` (time zones, dates), `OffscreenCanvas`, `createImageBitmap`, `CompressionStream` (if needed), View Transitions API, File System Access API (progressive enhancement only).
@@ -138,6 +140,7 @@ All permissive. The `/licenses` page must reproduce these notices (BSD/IJG attri
 | `glob`, `minimatch`, `lru-cache`, … | BlueOak-1.0.0 | Dev tooling | Dev-only, allowed |
 | `argparse` | Python-2.0 | Dev tooling | Dev-only, allowed |
 | `spdx-exceptions` / `spdx-ranges` | CC-BY-3.0 | License-checker data | Dev-only, allowed |
+| `pako` 1.0.11 | MIT AND Zlib | Deflate inside `pdf-lib` (shipped in the merge-pdf worker) | Production exception by name (Phase 3). Zlib is permissive (attribution only) but not on the §1 allow-list. **Owner review requested:** add Zlib to the allow-list, or keep the exception |
 
 The exception list lives in `scripts/check-licenses.mjs` and must stay in sync with this table. **Owner review requested** for the two production-tree exceptions (LGPL/CC-BY are "review required" in §1); they would only matter if the files were distributed, which they are not.
 

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 (Phase 2 shell measured) |
+| **Last updated** | 2026-10-14 (Phase 3 tool pages measured) |
 | **Related** | [architecture.md §14](../04-architecture/architecture.md#14-performance-budgets-target) · [testing-strategy.md](testing-strategy.md) · [risks-and-decisions.md](../06-delivery/risks-and-decisions.md) (R-14) |
 
 ## 1. Budgets **[Target]**
@@ -19,7 +19,7 @@ The budgets are defined in [architecture.md §14](../04-architecture/architectur
 | CLS ≤ 0.1 | `cumulative-layout-shift` ≤ 0.1 | warn until P9 |
 | INP ≤ 200 ms (field) | lab proxy: `total-blocking-time` ≤ 200 ms | warn until P9 |
 | Homepage initial JS ≤ 100 KB gzipped | `resource-summary:script:size` ≤ 102 400 bytes (transfer size, gzip) | warn until P9 |
-| Tool page initial JS ≤ 120 KB gzipped | Added with the tool page template (Phase 3) | — |
+| Tool page initial JS ≤ 120 KB gzipped | `resource-summary:script:size` ≤ 122 880 bytes on tool URLs (`assertMatrix` in `lighthouserc.cjs`, Phase 3) | warn until P9 |
 | ≤ 2 font files | `resource-summary:font:count` ≤ 2 | warn until P9 |
 
 INP can only be measured in the field; TBT is the lab stand-in.
@@ -50,6 +50,25 @@ Where the shell's JS goes (gzip, from the built chunks): Radix (Tooltip, Dropdow
 LCP and TBT warnings are new versus Phase 1 (LCP 2.1 s → 2.6 s, TBT up to 226 ms). Not optimized yet:
 - Loading the theme menu and mobile menu sheet on intent would save ≈ 15 KB (measured by removing them) but needs a focus-preserving swap of the trigger. Deferred to Phase 9 with R-14.
 - Toaster could mount on first toast instead of at load.
+
+## 2.2 Phase 3: tool pages
+
+Measured 2026-10-14 with Lighthouse CI (same setup, 3 runs per page, on a busy development machine; the homepage scored 86–92 in the same run vs 92–95 in Phase 2, so absolute values are pessimistic).
+
+| Page | Performance | A11y | BP | SEO | LCP | TBT | CLS | Script transfer |
+|---|---|---|---|---|---|---|---|---|
+| `/` | 86–92 | 100 | 100 | 100 | 2.3–3.0 s | 216–375 ms | 0 | 247 KB |
+| `/merge-pdf` | 82–84 | 100 | 100 | 100 | 3.6–3.8 s | 240–335 ms | ≤ 0.003 | 267 KB (+20 KB) |
+| `/json-formatter` | 73–79 | 100 | 100 | 100 | 3.8–4.0 s | 348–576 ms | 0 | 291 KB (+44 KB) |
+
+Findings:
+- **The 120 KB tool-page budget cannot be met** while the framework and shell alone ship 247 KB (R-14). The tools' own initial JS is small: +20 KB for merge-pdf, +44 KB for json-formatter (UI chunk, Workbench, Radix Select/Switch, `zod/mini`, TanStack Virtual).
+- LCP is the tagline or H1 (text), and all of the LCP time is render delay behind JavaScript evaluation on Lighthouse's simulated slow CPU; images and fonts are not the cause.
+- Loading CodeMirror when the browser was idle added 154 KB to json-formatter's measured JS and TBT; it now loads on intent (hover, focus or content), which removed 110 KB from page load.
+- No layout shift from hydration: the tool UIs are pre-rendered at build time.
+- 20 MB JSON: parsing and formatting run in the worker (≈ 5.5 s end to end on a desktop); the longest main-thread block is ≈ 1.2 s while CodeMirror builds its documents. Before large text was kept out of `<textarea>`, the page froze for 30–45 s.
+
+Not yet done: tracing on a mid-range Android phone (P3-T24, Phase 9).
 
 ## 3. Rules that keep us inside the budgets
 

@@ -2,12 +2,14 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 (Phase 2) |
+| **Last updated** | 2026-10-14 (Phase 3: tool components) |
 | **Related** | [design-system.md §7](design-system.md#7-motion) (tokens and binding rules) · [accessibility.md](accessibility.md) |
 
 The tokens and the seven acceptance rules in design-system §7 are binding. This document records **how each interaction moves** and which technique implements it. Tool-specific choreography (drop zone, file list reorder, result reveal, comparison slider) is added in Phases 3–6 when those components are built.
 
 ## 1. Techniques
+
+`transition-control` also lists the individual `scale`, `translate` and `rotate` properties (Phase 3): Tailwind 4's `scale-*` and `rotate-*` utilities set those rather than `transform`, so press and drag-over scales used to snap instead of animating.
 
 | Technique | Used for | Why |
 |---|---|---|
@@ -41,6 +43,10 @@ The tokens and the seven acceptance rules in design-system §7 are binding. This
 | Skeleton | opacity pulse | `--dur-loop` × 2 | — | static |
 | Theme change | View Transition cross-fade of the whole page | `--dur-page`, `--ease-out` | — | skipped (no `startViewTransition` call) |
 | Page navigation | View Transition: old page fades out, new page fades in and rises | out `--dur-exit`; in `--dur-page` | rise 6px | animation removed by CSS (instant swap) |
+| DropZone drag-over (Phase 3) | border, background; `scale` | `--dur-quick` colors, `--dur-instant` scale | scale 1.01 | instant |
+| FileList reorder (Phase 3) | layout (transform), Motion `layout="position"` | spring (design-system §7.2) | rows slide to their new place; the dragged row follows the pointer with `--shadow-2` | no layout animation (`reducedMotion="user"`) |
+| ResultPanel reveal (Phase 3) | opacity + transform | `--dur-standard`, `--ease-out` | rise 8px | opacity only, `--dur-instant` |
+| JSON tree chevron (Phase 3) | `rotate` | `--dur-instant` | 90° | instant |
 
 ## 3. Page transitions
 

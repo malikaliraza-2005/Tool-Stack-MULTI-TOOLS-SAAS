@@ -64,7 +64,7 @@ Status: ✅ Written · 📝 Planned · ➖ Not needed
 ### 03-seo-growth: search, AI search, content, revenue
 | File | Status | Purpose |
 |---|---|---|
-| seo-strategy.md | 📝 | Technical and on-page SEO strategy |
+| [seo-strategy.md](03-seo-growth/seo-strategy.md) | ✅ | Technical and on-page SEO strategy (technical SEO as built) |
 | [keyword-research.md](03-seo-growth/keyword-research.md) | ✅ | Keyword findings, final slugs (from free sources only) |
 | page-seo-specs.md | 📝 | Per-page title, meta, H1, FAQs, schema, links |
 | geo-strategy.md | 📝 | AI-assisted search visibility |
@@ -78,7 +78,7 @@ Status: ✅ Written · 📝 Planned · ➖ Not needed
 | [tool-registry.md](04-architecture/tool-registry.md) | ✅ | Tool definition schema and how it drives the site |
 | [tool-specifications.md](04-architecture/tool-specifications.md) | ✅ | Inputs, options, processing, errors and tests per tool |
 | [dependencies-licenses.md](04-architecture/dependencies-licenses.md) | ✅ | License policy and dependency register |
-| security-privacy.md | 📝 | Threat model, CSP details, data-handling rules |
+| [security-privacy.md](04-architecture/security-privacy.md) | ✅ | Threat model, CSP details, data-handling rules |
 | [coding-standards.md](04-architecture/coding-standards.md) | ✅ | Conventions and step-by-step contribution guide |
 
 ### 05-quality: correctness, performance, release gates
@@ -87,7 +87,7 @@ Status: ✅ Written · 📝 Planned · ➖ Not needed
 | [testing-strategy.md](05-quality/testing-strategy.md) | ✅ | Unit, E2E, visual, accessibility testing |
 | [browser-device-support.md](05-quality/browser-device-support.md) | ✅ | Support matrix (initial; device results in Phase 9) and device limits |
 | [performance.md](05-quality/performance.md) | ✅ | Budgets and measurement |
-| acceptance-criteria.md | 📝 | Release gates per tool and per page |
+| [acceptance-criteria.md](05-quality/acceptance-criteria.md) | ✅ | Release gates per tool and per page; pilot status |
 
 ### 06-delivery: shipping and operating
 | File | Status | Purpose |

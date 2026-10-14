@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 (Phase 2) |
+| **Last updated** | 2026-10-14 (Phase 3: tool components) |
 | **Target** | WCAG 2.2 Level AA on every page and state **[Decision]** |
 | **Related** | [design-system.md §9](design-system.md#9-accessibility-rules-design-level) · [testing-strategy.md](../05-quality/testing-strategy.md) · [motion-design.md](motion-design.md) |
 
@@ -34,6 +34,19 @@
 - **Disabled controls** use 50% opacity (exempt from contrast) and are not focusable, so they have no tooltip.
 - **Dialog close button** has an accessible name but no tooltip (its tooltip would swallow the first Esc).
 - **Loading buttons** keep their text in the accessibility tree (`aria-busy`), only visually hidden behind the spinner.
+
+### Tool components (Phase 3)
+
+- **DropZone:** a real "Choose files" button; drag and drop and Ctrl+V paste are extras. Drag-over states pair color with a changed title ("Only PDF files can be added here").
+- **FileList:** reorder with Move up / Move down buttons named per file; moves and removals are announced (`role="status"`); focus stays on the moved file's controls, moves to the next file after a removal, and to "Choose files" when the list empties.
+- **Per-file errors** are shown under the file (icon + text) and announced (`role="alert"`).
+- **ResultPanel** moves focus to its heading, because the button that started the work is gone.
+- **ProcessingState:** progress bar with an accessible name; Cancel is focused when the work replaced the focused control.
+- **CodeEditor:** labelled text area; Tab is not captured, so keyboard users can always leave the editor; errors are linked with `aria-describedby`, highlighted on the line and written out.
+- **JSON tree:** `role="tree"` with one tab stop and `aria-activedescendant`; arrow keys, Home/End, Enter/Space (tool-specifications §5.1).
+- Syntax colors are checked for contrast on the active-line, selection and error-line backgrounds (`tokens.test.ts`).
+
+Phase 3 results: axe 0 violations on both pilots in the empty, working, error and result states, both themes, in Chromium, Firefox, WebKit and the mobile viewport. **Not done:** screen-reader spot check; 320 px and 200% zoom check on the tool pages.
 
 ## 2. Test procedure
 
