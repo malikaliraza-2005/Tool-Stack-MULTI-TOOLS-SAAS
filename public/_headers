@@ -14,3 +14,7 @@ https://:project.pages.dev/*
   X-Robots-Tag: noindex
 https://:subdomain.:project.pages.dev/*
   X-Robots-Tag: noindex
+
+# OG images from app/[tool]/opengraph-image.tsx are emitted without a file extension (P1-T23).
+/*/opengraph-image
+  Content-Type: image/png
