@@ -23,6 +23,8 @@ const eslintConfig = defineConfig([
     "playwright-report/**",
     "test-results/**",
     ".lighthouseci/**",
+    // Third-party files copied from node_modules (scripts/copy-pdfjs-assets.mjs).
+    "public/vendor/**",
   ]),
 ]);
 

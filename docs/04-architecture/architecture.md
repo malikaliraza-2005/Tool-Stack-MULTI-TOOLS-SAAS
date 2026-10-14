@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 (Phase 1 spike outcomes) |
+| **Last updated** | 2026-10-14 (Phase 3: tool platform as built) |
 | **Related** | [tool-registry.md](tool-registry.md) · [tool-specifications.md](tool-specifications.md) · [dependencies-licenses.md](dependencies-licenses.md) · [design-system.md](../02-design/design-system.md) |
 
 ---
@@ -143,11 +143,16 @@ Static routes take precedence over `[tool]`. The registry validator rejects slug
    │     ├─ ui.tsx                # client component ("use client"), lazy-loaded
    │     ├─ logic.ts              # pure processing functions
    │     ├─ logic.worker.ts       # worker entry (if heavy)
-   │     └─ logic.test.ts         # unit tests
+   │     ├─ logic.test.ts         # unit tests
+   │     └─ __fixtures__/         # generated test fixtures (shared with e2e/)
+   │  ├─ content.ts               # slug → supporting content component
+   │  ├─ schema.ts  validate.ts   # Zod schema and registry rules (build time)
    ├─ lib/
    │  ├─ worker/                  # runInWorker helper, error types
    │  ├─ files/                   # file reading, type sniffing, download, zip
    │  ├─ detect/                  # smart-paste detectors
+   │  ├─ pdf/                     # pdf.js thumbnails (on intent)
+   │  ├─ og.ts                    # token colors as sRGB for OG images
    │  ├─ storage.ts               # safe localStorage wrapper
    │  ├─ theme.ts                 # theme preference + pre-paint script
    │  ├─ motion.ts                # motion tokens for Motion for React
@@ -168,6 +173,7 @@ Static routes take precedence over `[tool]`. The registry validator rejects slug
 - **Client components:** the interactive tool (`ui.tsx`), command palette, theme toggle, drop zone, smart paste.
 - The tool page renders the workspace shell statically (labels, empty state, accepted formats) and **hydrates** the interactive part, so the page is meaningful before JavaScript runs and has no layout shift when it does.
 - The server-rendered page includes a small client `ToolLoader` that lazy-loads the tool's `ui.tsx` (via `next/dynamic` from a client component) and swaps it into the static shell without changing its size.
+- *As built (Phase 3):* `ToolLoader` keeps `next/dynamic`'s server rendering on, so each tool UI is its own chunk **and** is pre-rendered at build time: the static HTML contains the real empty workspace (drop zone with its "Choose files" button, editors as plain text areas) and hydration changes nothing visible (CLS 0–0.003 in Lighthouse). Libraries inside the UI load on intent: CodeMirror on hover/focus/content, the JSON parser on first input, pdf.js on the first added PDF, pdf-lib only in the worker.
 
 ---
 
@@ -195,12 +201,13 @@ Workers are created per job for regex (so a runaway pattern can be killed) and r
 - WASM files are served from our own origin (no CDNs) and cached by the service worker.
 - Every deployed file < 25 MiB (Cloudflare Pages limit).
 - jSquash WASM loading and pdf.js worker bundling were proven in Phase 1 with webpack builds (§8.4).
-- pdf.js 6 loads optional WASM decoders (JPX/ICC), CMaps and standard fonts by URL. Copy `pdfjs-dist/wasm`, `cmaps` and `standard_fonts` to a versioned public path (e.g. `/vendor/pdfjs-6.4.299/`) and pass `wasmUrl`, `cMapUrl` and `standardFontDataUrl`; never use CDN defaults (Phase 5).
+- pdf.js 6 loads optional WASM decoders (JPX/ICC), CMaps and standard fonts by URL. **Implemented in Phase 3:** `scripts/copy-pdfjs-assets.mjs` (run by `predev`/`prebuild`) copies `wasm/` (without the unused QuickJS engine), `cmaps/`, `standard_fonts/` and `iccs/` to `public/vendor/pdfjs-<version>/` (git-ignored); `src/lib/pdf/thumbnail.ts` passes `wasmUrl`, `cMapUrl`, `standardFontDataUrl` and `iccUrl`, and a unit test keeps its version equal to the installed package. Never use CDN defaults.
 
 ### 8.3 Memory hygiene
-- Release object URLs (`URL.revokeObjectURL`) after download.
+- Release object URLs (`URL.revokeObjectURL`) after download (`downloadBlob` revokes after 10 s, because Safari and Firefox can fail when it happens synchronously) and when thumbnails are removed.
+- Never put large text in an unvirtualized element: 20 MB of formatted JSON in a `<textarea>` blocked the main thread for 30–45 s (layout), while CodeMirror's virtualized view handles it in about 1.2 s (Phase 3).
 - Process batches sequentially with a small concurrency limit (default 2).
-- Check limits from the registry **before** reading large files.
+- Check limits from the registry **before** reading large files (`checkLimits` in `src/lib/files/limits.ts`; `limits.per` says per file or total).
 - Catch allocation failures and report `E_OUT_OF_MEMORY` with guidance (fewer pages, smaller files, desktop browser).
 
 
@@ -262,7 +269,7 @@ Build-tool notes:
   Cross-Origin-Opener-Policy: same-origin
 ```
 
-The repo's `public/_headers` also sets `X-Robots-Tag: noindex` for `https://:project.pages.dev/*` and `https://:subdomain.:project.pages.dev/*` (every preview and `pages.dev` host, P1-T16) and immutable caching for `/_next/static/*`. The service-worker and OG-image rules from §10 and §8.4 are added with those features. `scripts/serve-out.mjs` applies the same file locally for E2E and Lighthouse; it drops `upgrade-insecure-requests` because it serves plain HTTP.
+The `/*/opengraph-image` rule (`Content-Type: image/png`) is in `public/_headers` since Phase 3. The repo's `public/_headers` also sets `X-Robots-Tag: noindex` for `https://:project.pages.dev/*` and `https://:subdomain.:project.pages.dev/*` (every preview and `pages.dev` host, P1-T16) and immutable caching for `/_next/static/*`. The service-worker and OG-image rules from §10 and §8.4 are added with those features. `scripts/serve-out.mjs` applies the same file locally for E2E and Lighthouse; it drops `upgrade-insecure-requests` because it serves plain HTTP.
 
 Notes:
 - **`connect-src 'self' blob: data:`** is the technical backbone of the "0 bytes uploaded" promise: scripts cannot send data to any other origin.
@@ -285,9 +292,9 @@ Lockfile committed; minimal dependencies; Dependabot/Renovate PRs reviewed manua
 
 All generated from the registry (see [tool-registry.md](tool-registry.md)):
 
-- `generateMetadata()` per tool: title, description, canonical (`SITE_URL + /slug`), Open Graph, Twitter card.
+- `generateMetadata()` per tool: title, description, canonical (`SITE_URL + /slug`), Open Graph, Twitter card. *As built:* `src/lib/seo.ts` (`toolMetadata`, JSON-LD builders) and `app/[tool]/opengraph-image.tsx` (1200×630 PNG per tool, Geist fonts read from the `geist` package at build time, colors from `src/lib/og.ts`, kept equal to the tokens by `tokens.test.ts`). Details and status: [seo-strategy.md](../03-seo-growth/seo-strategy.md).
 - JSON-LD per tool page: `BreadcrumbList`, `WebApplication` (free, `applicationCategory`, `operatingSystem: "Any (web browser)"`), `FAQPage` only when FAQs are visible on the page.
-- `sitemap.ts`: all live tools, hubs, static pages, guides; `lastModified` from registry `updatedAt`.
+- `sitemap.ts`: all live tools, hubs, static pages, guides; `lastModified` from registry `updatedAt`. Only pages that exist are listed (Phase 3: home and the published tools; hubs and static pages are added with their phases).
 - `robots.ts`: allow all (D-7), sitemap URL.
 - Internal links: breadcrumbs, related tools, hub listings, homepage index.
 

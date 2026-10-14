@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 |
+| **Last updated** | 2026-10-14 (Phase 3: implemented in `src/tools/`) |
 | **Related** | [architecture.md](architecture.md) · [tool-specifications.md](tool-specifications.md) · [mvp-scope.md](../01-product/mvp-scope.md) |
 
 The tool registry is the **single source of truth** about every tool. Pages, metadata, sitemap, search, hubs, drop-zone suggestions, smart paste, and related links are all generated from it. If information about a tool exists in two places, one of them is wrong.
@@ -55,7 +55,7 @@ export interface ToolDefinition {
   };
 
   /** Internal linking */
-  related: string[];                // slugs; 3–5 recommended; must exist
+  related: string[];                // slugs; 3–5 recommended; must be registered or a planned MVP slug (§3 rule 4)
 
   /** Inputs, used by DropZone suggestions, file pickers, and smart paste */
   input: {
@@ -72,13 +72,14 @@ export interface ToolDefinition {
   limits: {
     desktop: { softBytes: number; hardBytes: number; maxFiles?: number };
     mobile:  { softBytes: number; hardBytes: number; maxFiles?: number };
+    per?: "file" | "total";         // bytes limit each file (default) or all files together (PDF tools)
   };
 
   /** Processing facts, shown in UI and checked by tests */
   processing: {
     local: true;                    // literal true: non-local tools are not allowed in the MVP
     worker: boolean;                // runs heavy work in a Web Worker
-    offline: boolean;               // works offline after first load
+    offline: boolean;               // works offline after first load; false until the service worker ships (G-5, Phase 7)
   };
 
   /** Hand-off targets for "Use in another tool" */
@@ -90,7 +91,7 @@ export interface ToolDefinition {
 }
 ```
 
-`schema.ts` mirrors this with Zod. `registry.ts` validates every entry **at build time** and fails the build on any error.
+`schema.ts` mirrors this with Zod. `registry.ts` validates every entry when the module loads (`assertValidRegistry` in `validate.ts`). Every tool page, the OG images and the sitemap import it at build time, so any error fails the build (verified 2026-10-14 by breaking an entry: `next build` stops with "Tool registry is invalid … related target "does-not-exist" not found").
 
 ---
 
@@ -98,14 +99,16 @@ export interface ToolDefinition {
 
 The build fails if any of these are violated:
 
-1. `slug` is unique, kebab-case, and not reserved (`about`, `privacy`, `terms`, `licenses`, `guides`, `pdf-tools`, `image-tools`, `developer-tools`, `api`, `_next`, `og`, `sitemap.xml`, `robots.txt`).
+1. `slug` is unique, kebab-case, and not reserved (`about`, `privacy`, `terms`, `licenses`, `guides`, `pdf-tools`, `image-tools`, `developer-tools`, `api`, `_next`, `_gallery`, `og`, `icons`, `vendor`, `serwist`, `sitemap.xml`, `robots.txt`; list in `validate.ts`).
 2. `seo.title`, `seo.description`, and `seo.h1` are **unique across all tools**.
 3. `seo.title` ≤ 65 characters; `seo.description` between 70 and 160 characters.
-4. Every slug in `related` and `handoff` exists and is not the tool itself.
+4. Every slug in `related` and `handoff` exists and is not the tool itself. "Exists" means registered, or one of the final MVP slugs not built yet (`PLANNED_SLUGS` in `registry.ts`, from D-11). Pages only link to related tools that are live, so pilots can declare their final related tools now.
 5. File tools (`kind: "files" | "both"`) have `accepts`; every id in `detect` points to an existing detector.
 6. `limits.mobile` values ≤ `limits.desktop` values.
 7. `processing.local === true`.
 8. At least 3 FAQs for `live` tools.
+
+Also checked: dates are ISO (`YYYY-MM-DD`) and `updatedAt` is not before `addedAt`; `softBytes ≤ hardBytes`. Each rule has a unit test in `src/tools/registry.test.ts`.
 
 ---
 
@@ -223,21 +226,28 @@ Copy in examples is illustrative; final titles, descriptions, and FAQs come from
 
 ## 7. Adding a new tool (checklist)
 
+Updated after the Phase 3 pilots (P3-T25).
+
 1. Confirm the tool is in [mvp-scope.md](../01-product/mvp-scope.md) (or update scope first).
 2. Write its section in [tool-specifications.md](tool-specifications.md).
-3. Add any new dependency to [dependencies-licenses.md](dependencies-licenses.md) (license must be allowed).
+3. Add any new dependency to [dependencies-licenses.md](dependencies-licenses.md) (license must be allowed) and run `npm run licenses`.
 4. Create `src/tools/<slug>/`:
-   - `meta.ts`: registry entry
-   - `logic.ts` + `logic.test.ts`: pure processing + unit tests (write tests from the spec's acceptance tests)
-   - `logic.worker.ts`: if heavy
-   - `ui.tsx`: client UI using shared components (Workbench / DropZone / ResultPanel)
-   - `content.tsx`: supporting content (how-to, formats & limits, explanation, troubleshooting)
-5. Import the meta in `src/tools/registry.ts`.
-6. Add an E2E test in `e2e/tools/<slug>.spec.ts` including the **no-network** assertion.
-7. Run `typecheck`, `test`, `build`, `e2e`, Lighthouse; fix everything.
-8. Check the Definition of Done in [mvp-scope.md](../01-product/mvp-scope.md) §6.
+   - `meta.ts`: registry entry (data only)
+   - `logic.ts` + `logic.test.ts`: pure processing + unit tests (write tests from the spec's acceptance tests). Fixtures that can be generated (e.g. PDFs with pdf-lib) go in `__fixtures__/*.ts`, so no binaries are committed and E2E tests can reuse them
+   - `logic.worker.ts`: if heavy, using `expose()` from `src/lib/worker/expose.ts`; the UI runs it with `createWorkerRunner` (transfer `ArrayBuffer`s)
+   - `ui.tsx`: client UI (default export) using the shared components in `src/components/tool/` (Workbench + CodeEditor, or DropZone + FileList + ProcessingState + ResultPanel)
+   - `content.tsx`: supporting content (default export) built from `src/components/tool/content.tsx`
+   - `constants.ts` (optional): small values the UI needs eagerly, so it never imports `logic.ts` at module level
+5. Register it in three places: the meta in `src/tools/registry.ts` (`TOOLS`), the UI in `src/components/tool/ToolLoader.tsx`, the content in `src/tools/content.ts`. A missing UI or content fails the build.
+6. **Keep heavy code out of `ui.tsx`'s static imports.** Import `logic.ts` with `import type` only, and load libraries with `import()` on intent. Check the page's JS with Lighthouse (`npm run lhci`).
+7. Add `e2e/tools/<slug>.spec.ts` (import `test` from `../fixtures`, so the **no-network** and CSP checks run): main flow, every error case, keyboard-only use, `expectNoA11yViolations` in both themes for the empty, working and result states. Add the page URL to `lighthouserc.cjs`.
+8. Run `typecheck`, `lint`, `test`, `build`, `e2e`, `lhci`, `licenses`; fix everything.
+9. Check the Definition of Done in [mvp-scope.md](../01-product/mvp-scope.md) §6.
 
----
+Lessons from the pilots:
+- Files chosen before the page hydrated fire no React event (seen in WebKit). `DropZone` picks them up on mount; tool-specific file inputs must do the same.
+- Never put large text in a plain `<textarea>` or other unvirtualized element: layout of 20 MB of text froze the page for 30+ s. `CodeEditor` handles this; use it for any large text.
+- Number and string values must be copied from the source, not round-tripped through `JSON.parse`, or big integers change.
 
 ## 8. MVP registry summary
 

@@ -16,6 +16,8 @@ export function Breadcrumbs({ items, className }: { items: Crumb[]; className?: 
               {item.href && !current ? (
                 <Link
                   href={item.href}
+                  // Hub pages arrive in Phase 7; no prefetch of pages that may not exist yet.
+                  prefetch={false}
                   className="rounded-sm underline-offset-4 transition-control hover:text-fg hover:underline"
                 >
                   {item.label}

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 (Phase 2) |
+| **Last updated** | 2026-10-14 (Phase 3: tool page, Workbench, file workspace built) |
 | **Related** | [design-system.md §10](design-system.md#10-layout-patterns) · [information-architecture.md](information-architecture.md) · [tool-specifications.md](../04-architecture/tool-specifications.md) · [motion-design.md](motion-design.md) |
 
 Screen-level layouts. Component behaviour and tokens are in [design-system.md](design-system.md); tool behaviour is in [tool-specifications.md](../04-architecture/tool-specifications.md). Sections marked **Planned** are specified now and built in the phase noted.
@@ -42,7 +42,7 @@ Per design-system §10.1:
 4. **Popular tools:** small curated row; live mini-previews only where meaningful.
 5. Short FAQ, footer.
 
-## 4. Tool page (Planned, Phase 3)
+## 4. Tool page (built, Phase 3)
 
 Per design-system §10.2:
 
@@ -58,13 +58,16 @@ Related tools
 
 - The workspace is above the fold on desktop and starts in the first screen on mobile.
 - The static shell renders labels, empty state and accepted formats at build time; the interactive UI hydrates into the same box without layout shift (architecture §7).
+- As built: content sections, a shared "How your data stays private" section (the PrivacyMeter links to it), FAQ, then related tools (only live ones).
 - States: **empty** (EmptyState with next step) → **working** (real ProgressBar; Cancel) → **result** (ResultPanel: summary like "1.2 MB → 340 KB, −72%", primary Download/Copy, Reset, "Use in another tool") → **error** (ErrorState: what happened + what to do; input kept).
 
-## 5. Workbench, developer tools (Planned, Phase 3–4)
+## 5. Workbench, developer tools (built, Phase 3)
 
 Per design-system §10.3: toolbar on top (SegmentedControl for mode, options, actions Copy / Download / Swap / Clear); input | output panes side by side on `lg`, stacked below. Output updates live (150ms debounce; heavy work in a worker). Errors are shown inline at the position (line/column) and in an ErrorState under the editor.
 
-## 6. File workspace, PDF tools (Planned, Phase 5)
+## 6. File workspace, PDF tools (built for merge-pdf, Phase 3)
+
+As built: the empty state is a large DropZone. With files, the list (2/3 width on `lg`) has a compact "Add more PDFs" drop zone under it; the right column holds the file name, a numbers strip (files, pages, size) and the primary action, which is replaced by progress + Cancel while working and by the ResultPanel when done. Rejected files stay in the list with their reason. Everything stacks on mobile.
 
 Per design-system §10.4: left PageThumbnailGrid or FileList (drag **and** move-up/down buttons); right (bottom on mobile) options and the primary action; the result replaces the action area with ResultPanel.
 

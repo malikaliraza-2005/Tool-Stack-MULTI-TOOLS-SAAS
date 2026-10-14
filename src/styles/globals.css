@@ -323,11 +323,14 @@
 }
 
 /* Hover and color changes at --dur-quick, press feedback at --dur-instant (§7.1). */
+/* Tailwind 4's `scale-`, `translate-` and `rotate-` utilities set individual
+   transform properties, so they are listed next to `transform`. */
 @utility transition-control {
-  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-property:
+    color, background-color, border-color, box-shadow, opacity, transform, scale, translate, rotate;
   transition-duration:
     var(--dur-quick), var(--dur-quick), var(--dur-quick), var(--dur-quick), var(--dur-quick),
-    var(--dur-instant);
+    var(--dur-instant), var(--dur-instant), var(--dur-instant), var(--dur-instant);
   transition-timing-function: var(--ease-out);
 }
 

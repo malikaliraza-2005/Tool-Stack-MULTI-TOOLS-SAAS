@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Last updated** | 2026-10-13 |
-| **Status** | v0.2 (Phase 2). Tokens implemented in `src/styles/globals.css`; color values adjusted for contrast (§2.3). Visual direction awaiting owner approval (M2) |
+| **Status** | v0.2 (Phase 2). Tokens implemented in `src/styles/globals.css`; color values adjusted for contrast (§2.3). Visual direction approved by the owner (M2, 2026-10-13) |
 | **Related** | [product.md](../01-product/product.md) · [architecture.md](../04-architecture/architecture.md) |
 
 This document defines Sprigkit's visual identity and the rules every screen follows. **Never hard-code a color, size, radius, shadow, duration, or easing in a component; always use a token.**

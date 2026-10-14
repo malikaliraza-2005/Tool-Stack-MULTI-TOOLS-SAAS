@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Last updated** | 2026-10-13 (Phase 2, P2-T01) |
-| **Status** | Draft. Awaiting owner approval with the visual direction (M2). Trademark search for the name is still open (D-5, R-6) |
+| **Status** | Approved with the visual direction (M2, 2026-10-13). Trademark search for the name is still open (D-5, R-6) |
 | **Related** | [design-system.md](design-system.md) · [content-voice-ux-copy.md](content-voice-ux-copy.md) · [risks-and-decisions.md](../06-delivery/risks-and-decisions.md) (D-5) |
 
 ## 1. Name
@@ -67,4 +67,4 @@ The mark, wordmark styling and icons are **own work**. The wordmark uses Geist S
 ## 6. Open items
 
 - [ ] Owner trademark search for "SPRIGKIT" (classes 9 and 42) before the first production deploy (D-5, R-6). If it conflicts, the mark can stay; only the wordmark changes.
-- [ ] Owner approval of the mark on the preview deployment (P2-T18).
+- [x] Owner approval of the mark on the preview deployment (P2-T18, 2026-10-13).

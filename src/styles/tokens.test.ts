@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { duration, ease } from "@/lib/motion";
+import { OG_COLORS } from "@/lib/og";
 import { THEME_BG } from "@/lib/theme";
 
 // Verifies the design tokens in globals.css (design-system §2, §7, §9):
@@ -33,8 +34,8 @@ const themes = {
   dark: colors(".dark"),
 };
 
-/** OKLCH → linear sRGB (gamut-clipped) → WCAG relative luminance. */
-function luminance([l, c, h]: Oklch): number {
+/** OKLCH → linear sRGB, gamut-clipped. */
+function linearRgb([l, c, h]: Oklch): [number, number, number] {
   const rad = (h * Math.PI) / 180;
   const a = c * Math.cos(rad);
   const b = c * Math.sin(rad);
@@ -42,9 +43,16 @@ function luminance([l, c, h]: Oklch): number {
   const m_ = (l - 0.1055613458 * a - 0.0638541728 * b) ** 3;
   const s_ = (l - 0.0894841775 * a - 1.291485548 * b) ** 3;
   const clip = (x: number) => Math.min(1, Math.max(0, x));
-  const r = clip(4.0767416621 * l_ - 3.3077115913 * m_ + 0.2309699292 * s_);
-  const g = clip(-1.2684380046 * l_ + 2.6097574011 * m_ - 0.3413193965 * s_);
-  const bl = clip(-0.0041960863 * l_ - 0.7034186147 * m_ + 1.707614701 * s_);
+  return [
+    clip(4.0767416621 * l_ - 3.3077115913 * m_ + 0.2309699292 * s_),
+    clip(-1.2684380046 * l_ + 2.6097574011 * m_ - 0.3413193965 * s_),
+    clip(-0.0041960863 * l_ - 0.7034186147 * m_ + 1.707614701 * s_),
+  ];
+}
+
+/** WCAG relative luminance. */
+function luminance(color: Oklch): number {
+  const [r, g, bl] = linearRgb(color);
   return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
 }
 
@@ -84,6 +92,14 @@ const PAIRS: [string, string, number, string][] = [
       [status, `${status}-soft`, TEXT, `${status} badge / toast`],
       ["fg", `${status}-soft`, TEXT, `text on ${status} background`],
     ],
+  ),
+  // Syntax colors in CodeEditor and the JSON tree (Phase 3) on their row
+  // backgrounds: active line, selection / active tree row, error line.
+  ...(["success", "warning", "info", "accent-text", "fg-muted"] as const).flatMap(
+    (syntax): [string, string, number, string][] =>
+      (["surface-2", "accent-soft", "danger-soft"] as const).map(
+        (bg): [string, string, number, string] => [syntax, bg, TEXT, `syntax color on ${bg}`],
+      ),
   ),
   ["accent", "bg", UI, "focus ring, active indicators, progress"],
   ["accent", "surface", UI, "focus ring on panels"],
@@ -130,6 +146,22 @@ describe("token mirrors", () => {
   it("theme-color meta values match --bg", () => {
     expect(block(":root,\n.light")).toContain(`--bg: ${THEME_BG.light};`);
     expect(block(".dark")).toContain(`--bg: ${THEME_BG.dark};`);
+  });
+
+  it("OG image colors match the light-theme tokens", () => {
+    const encode = (x: number) => (x <= 0.0031308 ? 12.92 * x : 1.055 * x ** (1 / 2.4) - 0.055);
+    for (const [name, hex] of Object.entries(OG_COLORS)) {
+      const token = themes.light[name];
+      expect(token, `--${name}`).toBeDefined();
+      const expected = `#${linearRgb(token!)
+        .map((x) =>
+          Math.round(encode(x) * 255)
+            .toString(16)
+            .padStart(2, "0"),
+        )
+        .join("")}`;
+      expect(hex, `--${name}`).toBe(expected);
+    }
   });
 
   it("keeps every duration within the 380ms motion limit", () => {

@@ -2,7 +2,7 @@
 
 Detailed checklist for each phase of the [implementation roadmap](../implementation-roadmap.md).
 
-**Current phase:** Phase 1: Setup & technical spikes
+**Current phase:** Phase 3: Tool platform + pilot tools
 
 Status: ⬜ Not started · 🟨 In progress · ✅ Done · ⏸ Blocked
 
@@ -10,8 +10,8 @@ Status: ⬜ Not started · 🟨 In progress · ✅ Done · ⏸ Blocked
 |---|---|---|---|---|
 | 0 | [Validation & decisions](phase-00-validation-decisions.md) | ✅ | M0 | 2–3 days |
 | 1 | [Setup & technical spikes](phase-01-setup-and-spikes.md) | 🟨 | M1 | 3–5 days |
-| 2 | [Design system & app shell](phase-02-design-system-and-shell.md) | 🟨 | M2 | 6–8 days |
-| 3 | [Tool platform + pilot tools](phase-03-tool-platform.md) | ⬜ | M3 | 7–9 days |
+| 2 | [Design system & app shell](phase-02-design-system-and-shell.md) | ✅ | M2 | 6–8 days |
+| 3 | [Tool platform + pilot tools](phase-03-tool-platform.md) | 🟨 | M3 | 7–9 days |
 | 4 | [Developer tools](phase-04-developer-tools.md) | ⬜ | | 6–8 days |
 | 5 | [PDF tools](phase-05-pdf-tools.md) | ⬜ | | 8–10 days |
 | 6 | [Image tools](phase-06-image-tools.md) | ⬜ | M4 | 6–8 days |

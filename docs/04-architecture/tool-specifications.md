@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 |
+| **Last updated** | 2026-10-14 (Phase 3: clarifications from the pilots) |
 | **Related** | [mvp-scope.md](../01-product/mvp-scope.md) · [tool-registry.md](tool-registry.md) · [architecture.md](architecture.md) · [dependencies-licenses.md](dependencies-licenses.md) |
 
 This document defines how every MVP tool behaves. **Acceptance tests listed here are the minimum unit/E2E tests to write.** Limits refer to the registry (`limits`), with starting values from [mvp-scope.md](../01-product/mvp-scope.md) §4.
@@ -27,6 +27,7 @@ This document defines how every MVP tool behaves. **Acceptance tests listed here
 - Limits checked **before** reading file contents: over soft limit → warning but allowed; over hard limit → rejected with `E_TOO_LARGE`.
 - Mixed valid/invalid files: valid ones are accepted; each rejected file shows its own reason.
 - The FileList shows name, size, type, thumbnail (images, PDF first page), and remove; reorder by drag and by keyboard (move up/down).
+- *Clarified in Phase 3:* the registry says whether limits apply per file or to all files together (`limits.per`; PDF tools: total). Rejected and damaged files **stay in the list** with their reason and are left out of processing; the primary action counts only valid files. Files are checked when added (magic bytes, then a quick load in the worker), so problems show next to the file before the user starts. Files pasted with Ctrl+V (⌘V) are accepted anywhere on a file tool's page. PDF thumbnails are rendered with pdf.js on intent; when a PDF can't be rendered, a generic icon is shown.
 
 ### 2.2 Output and download
 - Single output: download with a sensible name: `<original>-<action>.<ext>` (e.g. `report-merged.pdf`, `photo-compressed.webp`). Merged outputs default to `merged.pdf`, editable before download.
@@ -41,6 +42,7 @@ This document defines how every MVP tool behaves. **Acceptance tests listed here
 - Last-used **options** (not content) persist in `localStorage`.
 - Input content is never persisted and never placed in the URL.
 - Sample button inserts a realistic example for first-time users.
+- *Clarified in Phase 3:* the editor is a plain text area until CodeMirror loads on intent (hover, focus, or content to show); the text, selection and focus carry over.
 
 ### 2.4 Error taxonomy (`src/lib/errors.ts`)
 
@@ -78,6 +80,7 @@ Libraries: **pdf-lib** for creating/modifying, **pdfjs-dist** for rendering thum
 - **Processing:** for each file `PDFDocument.load(bytes)` → `copyPages(src, src.getPageIndices())` → add to new document → `save()`. Preserve page size and rotation. Document outline/bookmarks and form fields are **not** guaranteed to be preserved (state in content).
 - **Output:** one PDF; summary "N files → 1 PDF, X pages, Y MB".
 - **Errors:** `E_ENCRYPTED`, `E_CORRUPT`, `E_UNSUPPORTED_FORMAT`, `E_TOO_LARGE`, `E_OUT_OF_MEMORY`. Merge button disabled with hint if fewer than 2 valid files.
+- *Clarified in Phase 3:* the output name is sanitized (characters file systems reject become `-`) and `.pdf` is added when missing; an empty name falls back to `merged.pdf`. Any change to the list after merging discards the result. Encryption is detected the way pdf-lib sees it (an `/Encrypt` entry), which also covers owner-password-only files that PDF readers open without asking.
 - **Acceptance tests:**
   1. Merging 2 fixtures yields page count = sum, in chosen order.
   2. Reordering changes output order.
@@ -186,6 +189,14 @@ All use the Workbench (§2.3) unless stated.
 - **Validation:** parse with `jsonc-parser` to get exact error offsets → show "Line L, column C: {message}" and highlight the line. Strict mode reports comments/trailing commas as errors.
 - **Extras:** warn when numbers exceed `Number.MAX_SAFE_INTEGER` (precision loss in JavaScript); tree view virtualized with expand/collapse all and copy path (e.g. `$.users[3].email`).
 - **Worker:** inputs > 1 MB.
+- *Clarified in Phase 3:*
+  - Output is rebuilt from the syntax tree, but every number and string literal is copied from the input as written, so big integers and escapes never change. Output is always strict JSON: in JSONC mode, comments and trailing commas are removed.
+  - Sort keys orders object keys by UTF-16 code unit; duplicate keys keep their order.
+  - The reported error is the first one. A missing comma at the end of a line is reported after the value that needs it (not at the next line's value); trailing commas and leading zeros get their own messages. In strict mode the result is cross-checked with `JSON.parse`.
+  - Nesting deeper than 2000 levels is rejected with a message (prevents a stack overflow).
+  - Minified output over 1 MB is not shown in the editor (one very long line); it can be copied or downloaded.
+  - Tree view keyboard: one tab stop; ↑/↓, Home/End move; → expands or enters; ← collapses or goes to the parent; Enter/Space toggles. "Copy path" copies the selected row's path.
+  - The big-number warning names the count and the first path; the output keeps every digit.
 - **Acceptance tests:** formatting idempotent; minify then format equals format; error location correct for 5 malformed fixtures; big-number warning; 20 MB file formats without freezing the UI.
 
 ### 5.2 jwt-decoder

@@ -11,13 +11,14 @@ import { cn } from "@/lib/cn";
 import { THEME_OPTIONS } from "./ThemeToggle";
 import { setThemePreference } from "./useTheme";
 
-// Static placeholder items until the registry-driven search in Phase 7 (P2-T15).
-const PLACEHOLDER_TOOLS = [
-  { name: "Merge PDF", icon: FileText },
+// Static items until the registry-driven search in Phase 7 (P2-T15). Tools
+// with an `href` are live (Phase 3 pilots); the others are marked "Soon".
+const PLACEHOLDER_TOOLS: { name: string; icon: typeof FileText; href?: string }[] = [
+  { name: "Merge PDF", icon: FileText, href: "/merge-pdf" },
   { name: "Split PDF", icon: FileText },
   { name: "Compress Image", icon: ImageIcon },
   { name: "Convert Image", icon: ImageIcon },
-  { name: "JSON Formatter", icon: Wrench },
+  { name: "JSON Formatter", icon: Wrench, href: "/json-formatter" },
   { name: "JWT Decoder", icon: Wrench },
   { name: "Base64 Encode / Decode", icon: Wrench },
   { name: "Regex Tester", icon: Wrench },
@@ -63,11 +64,17 @@ export function CommandPalette({ open, onOpenChange, onCloseAutoFocus }: Command
               No matching tools yet. Try “PDF”, “image” or “JSON”.
             </Command.Empty>
             <Command.Group heading="Tools" className={groupClasses}>
-              {PLACEHOLDER_TOOLS.map(({ name, icon: Icon }) => (
-                <Command.Item key={name} value={name} disabled className={commandItemClasses}>
+              {PLACEHOLDER_TOOLS.map(({ name, icon: Icon, href }) => (
+                <Command.Item
+                  key={name}
+                  value={name}
+                  disabled={!href}
+                  onSelect={href ? () => run(() => router.push(href)) : undefined}
+                  className={commandItemClasses}
+                >
                   <Icon aria-hidden className="text-fg-muted" />
                   {name}
-                  <Badge className="ml-auto">Soon</Badge>
+                  {!href && <Badge className="ml-auto">Soon</Badge>}
                 </Command.Item>
               ))}
             </Command.Group>
