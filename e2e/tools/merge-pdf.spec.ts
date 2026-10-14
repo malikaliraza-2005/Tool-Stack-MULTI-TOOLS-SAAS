@@ -109,7 +109,8 @@ test.describe("merge-pdf", () => {
       page.waitForEvent("download"),
       page.getByRole("button", { name: "Download merged PDF" }).click(),
     ]);
-    expect(download.suggestedFilename()).toBe("Q3 report.pdf");
+    // WebKit on Linux reports spaces in download names as "_".
+    expect(download.suggestedFilename()).toMatch(/^Q3[ _]report\.pdf$/);
   });
 
   test("reorders by dragging the handle", async ({ page, isMobile }) => {
