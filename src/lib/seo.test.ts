@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { SITE_URL } from "@/config/site";
 import { getTool } from "@/tools/registry";
 import {
   absoluteUrl,
@@ -10,13 +11,13 @@ import {
   webApplicationJsonLd,
 } from "./seo";
 
-// vitest runs without NEXT_PUBLIC_SITE_URL, so SITE_URL is the dev default.
-const ORIGIN = "http://localhost:3000";
+// The origin follows NEXT_PUBLIC_SITE_URL (set in CI), like the real pages.
+const ORIGIN = absoluteUrl("/");
 const merge = getTool("merge-pdf")!;
 
 describe("absoluteUrl", () => {
   it("joins paths to SITE_URL", () => {
-    expect(absoluteUrl("/")).toBe(ORIGIN);
+    expect(ORIGIN).toBe(SITE_URL.replace(/\/+$/, ""));
     expect(absoluteUrl("/merge-pdf")).toBe(`${ORIGIN}/merge-pdf`);
     expect(absoluteUrl("merge-pdf")).toBe(`${ORIGIN}/merge-pdf`);
   });
