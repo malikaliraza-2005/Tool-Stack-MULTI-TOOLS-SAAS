@@ -75,6 +75,10 @@ export { expect };
 
 /** Runs axe (WCAG 2.2 A/AA rules) on the current page and fails on any violation. */
 export async function expectNoA11yViolations(page: Page) {
+  // Check the page users interact with: before the app starts, Radix renders
+  // roving-focus groups (tabs, segmented controls) with tabindex="-1".
+  // `data-app-started` is set by Providers (src/lib/startup-check.ts).
+  await page.waitForFunction(() => document.documentElement.hasAttribute("data-app-started"));
   // Let finite animations and transitions finish first: right after a theme
   // switch, colors are mid-transition and axe would measure mixed themes.
   // Endless ones (spinners) are skipped.
