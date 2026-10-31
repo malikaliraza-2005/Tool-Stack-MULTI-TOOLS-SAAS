@@ -68,7 +68,7 @@ Findings:
 - No layout shift from hydration: the tool UIs are pre-rendered at build time.
 - 20 MB JSON: parsing and formatting run in the worker (≈ 5.5 s end to end on a desktop); the longest main-thread block is ≈ 1.2 s while CodeMirror builds its documents. Before large text was kept out of `<textarea>`, the page froze for 30–45 s.
 
-Not yet done: tracing on a mid-range Android phone (P3-T24, Phase 9).
+Not yet done: tracing on a mid-range Android phone (P9-T11). The owner accepted these results to close Phase 3 (2026-10-31, R-14); the budget decision is P9-T08.
 
 ## 3. Rules that keep us inside the budgets
 

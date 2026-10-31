@@ -24,7 +24,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 ## Tasks
 
 ### Functional & device testing
-- [ ] **P9-T01** Full device matrix run: Chrome, Edge, Firefox, Safari (macOS), Safari (iOS, real device), Chrome (mid-range Android, real device). Every tool's main flow + one error flow.
+- [ ] **P9-T01** Full device matrix run: Chrome, Edge, Firefox, Safari (macOS), Safari (iOS, real device), Chrome (mid-range Android, real device). Every tool's main flow + one error flow. The Phase 3 pilots have never run on real Safari: give them the full Definition of Done there (deferred from P3-T24).
 - [ ] **P9-T02** Large-file and memory testing on mobile; confirm limits and error messages.
 - [ ] **P9-T03** Fix all P0/P1 bugs; log the rest.
 
@@ -46,7 +46,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 ### Security & privacy
 - [ ] **P9-T13** Security review: CSP verified on production headers; no `dangerouslySetInnerHTML` with user content; malicious file fixtures (malformed PDF, decompression bombs, huge dimensions) handled safely.
 - [ ] **P9-T14** Privacy verification: no-network E2E for all 19 tools; localStorage contains no user content; analytics sends no content.
-- [ ] **P9-T15** `npm audit` clean (or documented exceptions); license gate green; Licenses page current.
+- [ ] **P9-T15** `npm audit` clean (or documented exceptions); license gate green; Licenses page current. Owner decides on `pako` (Zlib): add Zlib to the allow-list or keep the named exception ([dependencies-licenses.md §3.1](../../04-architecture/dependencies-licenses.md)).
 
 ### SEO
 - [ ] **P9-T16** Crawl the preview (free crawler or custom script): no broken links, correct canonicals, no orphan pages, sitemap complete.
