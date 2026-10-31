@@ -59,6 +59,7 @@ describe("the real registry", () => {
       "json-formatter",
       "unix-timestamp-converter",
       "base64-encode-decode",
+      "url-encode-decode",
     ]);
     expect(getTool("merge-pdf")?.name).toBe("Merge PDF");
     expect(getTool("split-pdf")).toBeUndefined();

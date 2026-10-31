@@ -5,10 +5,17 @@ import { base64Detector } from "./base64";
 import { jsonDetector } from "./json";
 import type { Detector } from "./types";
 import { unixTimestampDetector } from "./unix-timestamp";
+import { urlDetector, urlEncodedDetector } from "./url";
 
 export type { Detector } from "./types";
 
-export const DETECTORS: readonly Detector[] = [jsonDetector, unixTimestampDetector, base64Detector];
+export const DETECTORS: readonly Detector[] = [
+  jsonDetector,
+  unixTimestampDetector,
+  base64Detector,
+  urlDetector,
+  urlEncodedDetector,
+];
 
 /** Tie-break order (tool-registry §5). Ids not listed rank last. */
 export const DETECTOR_PRECEDENCE = [

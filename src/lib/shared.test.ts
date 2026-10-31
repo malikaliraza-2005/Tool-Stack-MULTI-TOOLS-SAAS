@@ -6,6 +6,7 @@ import { detect, detectorIds, DETECTORS } from "./detect";
 import { base64Detector } from "./detect/base64";
 import { jsonDetector } from "./detect/json";
 import { unixTimestampDetector } from "./detect/unix-timestamp";
+import { urlDetector, urlEncodedDetector } from "./detect/url";
 import {
   deserializeToolError,
   isOutOfMemory,
@@ -225,8 +226,50 @@ describe("detectors (tool-registry §5)", () => {
     expect(Math.min(...batches)).toBeLessThan(1);
   });
 
+  it("url: http(s) URLs only", () => {
+    expect(urlDetector.detect(" https://example.com/a?b=1#c ")).toBe(0.9);
+    expect(urlDetector.detect("http://[::1]:3000/")).toBe(0.9);
+    expect(urlDetector.detect("ftp://example.com")).toBe(0);
+    expect(urlDetector.detect("example.com")).toBe(0);
+    expect(urlDetector.detect("see https://example.com for details")).toBe(0);
+    expect(urlDetector.detect("https://")).toBe(0);
+    expect(urlDetector.detect(`https://example.com/${"a".repeat(9000)}`)).toBe(0);
+  });
+
+  it("url-encoded: escapes that decode cleanly", () => {
+    expect(urlEncodedDetector.detect("caf%C3%A9%20au%20lait")).toBe(0.8);
+    expect(urlEncodedDetector.detect("name=Ada%20Lovelace&city=K%C3%B6ln")).toBe(0.8);
+    expect(urlEncodedDetector.detect("100%25 sure")).toBe(0.6);
+    expect(urlEncodedDetector.detect("no escapes here")).toBe(0);
+    expect(urlEncodedDetector.detect("50% off")).toBe(0);
+    expect(urlEncodedDetector.detect("bad%C3%28utf8")).toBe(0);
+    // A long value cut in the middle of "é" (%C3%A9) still matches.
+    const long = `${"%C3%A9".repeat(700)}`;
+    expect(long.length).toBeGreaterThan(4096);
+    expect(urlEncodedDetector.detect(long)).toBe(0.8);
+  });
+
+  it("url and url-encoded: stay within 1 ms on 10 KB", () => {
+    const encoded = encodeURIComponent("Grüße aus Köln, ".repeat(450));
+    const url = `https://example.com/?q=${encodeURIComponent("x ".repeat(3000))}`;
+    expect(encoded.length).toBeGreaterThan(10_000);
+    for (const [detector, text] of [
+      [urlEncodedDetector, encoded],
+      [urlDetector, url],
+    ] as const) {
+      detector.detect(text); // warm up
+      const runs = 50;
+      const batches = Array.from({ length: 5 }, () => {
+        const started = performance.now();
+        for (let i = 0; i < runs; i++) detector.detect(text);
+        return (performance.now() - started) / runs;
+      });
+      expect(Math.min(...batches)).toBeLessThan(1);
+    }
+  });
+
   it("detect sorts by confidence, then precedence", () => {
-    expect(detectorIds()).toEqual(["json", "unix-timestamp", "base64"]);
+    expect(detectorIds()).toEqual(["json", "unix-timestamp", "base64", "url", "url-encoded"]);
     expect(detect('{"a":1}')).toEqual([{ id: "json", confidence: 0.95 }]);
     const tie = detect("x", [
       { id: "base64", detect: () => 0.5 },
@@ -234,7 +277,7 @@ describe("detectors (tool-registry §5)", () => {
       { id: "none", detect: () => 0 },
     ]);
     expect(tie.map((m) => m.id)).toEqual(["jwt", "base64"]);
-    expect(DETECTORS).toHaveLength(3);
+    expect(DETECTORS).toHaveLength(5);
   });
 });
 

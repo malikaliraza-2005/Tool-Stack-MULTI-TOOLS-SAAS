@@ -16,6 +16,7 @@ for (const path of [
   "/json-formatter",
   "/unix-timestamp-converter",
   "/base64-encode-decode",
+  "/url-encode-decode",
   "/does-not-exist",
 ]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {

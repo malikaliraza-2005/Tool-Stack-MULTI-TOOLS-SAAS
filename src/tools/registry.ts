@@ -7,6 +7,7 @@ import { meta as base64EncodeDecode } from "./base64-encode-decode/meta";
 import { meta as jsonFormatter } from "./json-formatter/meta";
 import { meta as mergePdf } from "./merge-pdf/meta";
 import { meta as unixTimestampConverter } from "./unix-timestamp-converter/meta";
+import { meta as urlEncodeDecode } from "./url-encode-decode/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
@@ -15,6 +16,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   jsonFormatter,
   unixTimestampConverter,
   base64EncodeDecode,
+  urlEncodeDecode,
 ];
 
 /**
@@ -32,7 +34,6 @@ export const PLANNED_SLUGS: readonly string[] = [
   "resize-image",
   "remove-exif-data",
   "jwt-decoder",
-  "url-encode-decode",
   "diff-checker",
   "regex-tester",
   "uuid-generator",

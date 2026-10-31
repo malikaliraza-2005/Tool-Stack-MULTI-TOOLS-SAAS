@@ -220,6 +220,7 @@ All use the Workbench (§2.3) unless stated.
 - **Decode:** `decodeURIComponent` with `+` → space option; malformed `%` sequence → error with position.
 - **Parse:** `new URL()` → protocol, username (password masked), host, port, path, query parameters table (decoded key/value, duplicates shown), fragment. Copy any part.
 - **Acceptance tests:** reserved characters per mode; round trip; malformed sequence error; parser handles IPv6 hosts, ports, repeated params, and Unicode (IDN shown in both Unicode and punycode).
+- *Clarified in Phase 4:* "Space as +" applies to Component only (encodeURI leaves "+" unescaped, so it would be ambiguous). Decoding reports two errors with position: "%" not followed by two hex digits, and escapes that aren't valid UTF-8 (e.g. Latin-1 `%E9`); "+ as space" converts literal "+" only, never `%2B`. Parse shows the default port with a "default" badge when none is given, the decoded path when it differs, and the password masked (Copy copies it). Punycode is decoded by a small built-in function (no dependency). Input limit: 1 MB soft, 10 MB hard (no worker).
 
 ### 5.5 diff-checker
 - **Input:** original and changed text (paste or load files).
