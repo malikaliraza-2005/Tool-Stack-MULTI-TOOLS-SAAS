@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import * as z from "zod/mini";
 import { detect, detectorIds, DETECTORS } from "./detect";
 import { jsonDetector } from "./detect/json";
+import { unixTimestampDetector } from "./detect/unix-timestamp";
 import {
   deserializeToolError,
   isOutOfMemory,
@@ -167,8 +168,23 @@ describe("detectors (tool-registry §5)", () => {
     expect(Math.min(...batches)).toBeLessThan(1);
   });
 
+  it("unix-timestamp: 10, 13 or 16 digits in 2000–2099", () => {
+    expect(unixTimestampDetector.detect("1700000000")).toBe(0.8);
+    expect(unixTimestampDetector.detect(" 1700000000000\n")).toBe(0.8);
+    expect(unixTimestampDetector.detect("1700000000000000")).toBe(0.8);
+    // Wrong length, sign, decimals, or outside the plausible range.
+    expect(unixTimestampDetector.detect("170000000")).toBe(0);
+    expect(unixTimestampDetector.detect("17000000000")).toBe(0);
+    expect(unixTimestampDetector.detect("-1700000000")).toBe(0);
+    expect(unixTimestampDetector.detect("1700000000.5")).toBe(0);
+    expect(unixTimestampDetector.detect("9999999999")).toBe(0);
+    expect(unixTimestampDetector.detect("0000000000000")).toBe(0);
+    expect(unixTimestampDetector.detect("4815162342")).toBe(0);
+    expect(unixTimestampDetector.detect("x".repeat(10_000))).toBe(0);
+  });
+
   it("detect sorts by confidence, then precedence", () => {
-    expect(detectorIds()).toEqual(["json"]);
+    expect(detectorIds()).toEqual(["json", "unix-timestamp"]);
     expect(detect('{"a":1}')).toEqual([{ id: "json", confidence: 0.95 }]);
     const tie = detect("x", [
       { id: "base64", detect: () => 0.5 },
@@ -176,7 +192,7 @@ describe("detectors (tool-registry §5)", () => {
       { id: "none", detect: () => 0 },
     ]);
     expect(tie.map((m) => m.id)).toEqual(["jwt", "base64"]);
-    expect(DETECTORS).toHaveLength(1);
+    expect(DETECTORS).toHaveLength(2);
   });
 });
 

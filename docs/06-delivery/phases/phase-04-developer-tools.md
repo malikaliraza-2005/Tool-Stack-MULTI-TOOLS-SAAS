@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | 🟨 In progress |
 | **Effort** | 6–8 days [Estimate] |
 
 ## Goal
@@ -22,7 +22,7 @@ Build the remaining 8 developer tools on the proven Workbench, each fully meetin
 
 Build in this order (simplest first, building momentum and reusable pieces):
 
-- [ ] **P4-T01** `unix-timestamp-converter` (spec §5.7) + `unix-timestamp` detector.
+- [x] **P4-T01** `unix-timestamp-converter` (spec §5.7) + `unix-timestamp` detector.
 - [ ] **P4-T02** `base64-encode-decode` (spec §5.3) + `base64` detector; file mode with magic-byte type detection.
 - [ ] **P4-T03** `url-encode-decode` (spec §5.4) + `url` and `url-encoded` detectors; parser mode.
 - [ ] **P4-T04** `uuid-generator` (spec §5.8) + `uuid` detector; v7 implementation per RFC 9562 with tests.

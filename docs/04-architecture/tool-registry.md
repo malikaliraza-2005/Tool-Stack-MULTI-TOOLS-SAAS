@@ -239,7 +239,7 @@ Updated after the Phase 3 pilots (P3-T25).
    - `content.tsx`: supporting content (default export) built from `src/components/tool/content.tsx`
    - `constants.ts` (optional): small values the UI needs eagerly, so it never imports `logic.ts` at module level
 5. Register it in three places: the meta in `src/tools/registry.ts` (`TOOLS`), the UI in `src/components/tool/ToolLoader.tsx`, the content in `src/tools/content.ts`. A missing UI or content fails the build.
-6. **Keep heavy code out of `ui.tsx`'s static imports.** Import `logic.ts` with `import type` only, and load libraries with `import()` on intent. Check the page's JS with Lighthouse (`npm run lhci`).
+6. **Keep heavy code out of `ui.tsx`'s static imports.** Import `logic.ts` with `import type` only, and load libraries with `import()` on intent. Exception: a small `logic.ts` with no dependencies that the UI needs on first render (e.g. `unix-timestamp-converter`) may be imported directly; say so in a comment. Check the page's JS with Lighthouse (`npm run lhci`).
 7. Add `e2e/tools/<slug>.spec.ts` (import `test` from `../fixtures`, so the **no-network** and CSP checks run): main flow, every error case, keyboard-only use, `expectNoA11yViolations` in both themes for the empty, working and result states. Add the page URL to `lighthouserc.cjs`.
 8. Run `typecheck`, `lint`, `test`, `build`, `e2e`, `lhci`, `licenses`; fix everything.
 9. Check the Definition of Done in [mvp-scope.md](../01-product/mvp-scope.md) §6.

@@ -5,10 +5,11 @@
 import { detectorIds } from "@/lib/detect";
 import { meta as jsonFormatter } from "./json-formatter/meta";
 import { meta as mergePdf } from "./merge-pdf/meta";
+import { meta as unixTimestampConverter } from "./unix-timestamp-converter/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
-export const TOOLS: readonly ToolDefinition[] = [mergePdf, jsonFormatter];
+export const TOOLS: readonly ToolDefinition[] = [mergePdf, jsonFormatter, unixTimestampConverter];
 
 /**
  * Final MVP slugs (D-11, mvp-scope §2) not built yet. `related` and `handoff`
@@ -29,7 +30,6 @@ export const PLANNED_SLUGS: readonly string[] = [
   "url-encode-decode",
   "diff-checker",
   "regex-tester",
-  "unix-timestamp-converter",
   "uuid-generator",
   "hash-generator",
 ];

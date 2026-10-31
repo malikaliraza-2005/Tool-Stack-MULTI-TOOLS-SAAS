@@ -12,6 +12,7 @@ import type { ComponentType } from "react";
 const TOOL_UIS: Record<string, ComponentType> = {
   "json-formatter": dynamic(() => import("@/tools/json-formatter/ui")),
   "merge-pdf": dynamic(() => import("@/tools/merge-pdf/ui")),
+  "unix-timestamp-converter": dynamic(() => import("@/tools/unix-timestamp-converter/ui")),
 };
 
 export function ToolLoader({ slug }: { slug: string }) {
