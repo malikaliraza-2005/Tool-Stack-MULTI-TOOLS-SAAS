@@ -249,6 +249,13 @@ Lessons from the pilots:
 - Never put large text in a plain `<textarea>` or other unvirtualized element: layout of 20 MB of text froze the page for 30+ s. `CodeEditor` handles this; use it for any large text.
 - Number and string values must be copied from the source, not round-tripped through `JSON.parse`, or big integers change.
 
+Lessons from Phase 4:
+- Text typed into a plain `<input>` before hydration is lost too: read the DOM value on mount (see `unix-timestamp-converter`, `uuid-generator`).
+- `CodeEditor` sets its label and placeholder once. If they change with a mode, remount it with `key={mode}`.
+- `cn` doesn't merge classes: to hide a component responsively, wrap it (`<div className="hidden lg:block">`) instead of passing `hidden` next to its own `inline-flex`.
+- Labelled values with copy buttons: use `ResultList` (`src/components/tool/ResultList.tsx`).
+- E2E: wait for `data-app-started` before the first click or key press, and clear a CodeMirror editor (its Clear button) before `fill()`; replacing a multi-line document with `fill()` can leave it empty in Firefox.
+
 ## 8. MVP registry summary
 
 Slugs are final (D-11 in [risks-and-decisions.md](../06-delivery/risks-and-decisions.md)).

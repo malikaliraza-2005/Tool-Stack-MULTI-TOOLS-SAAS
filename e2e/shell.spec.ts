@@ -126,8 +126,12 @@ test.describe("theme", () => {
     await expect(page.locator("html")).not.toHaveClass(/dark/);
   });
 
-  test("the toggle switches and persists the theme", async ({ page }) => {
+  test("the toggle switches and persists the theme", async ({ page, browserName }) => {
     await page.emulateMedia({ colorScheme: "light" });
+    // Playwright's WebKit build crashes in the theme View Transition on longer
+    // pages (found in Phase 4; real Safari to be checked in P9-T01). This test
+    // is about switching and persisting, so WebKit runs it without the transition.
+    if (browserName === "webkit") await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     await chooseTheme(page, "Dark");
     await expect(page.locator("html")).toHaveClass(/dark/);
