@@ -17,6 +17,8 @@ type CodeEditorProps = {
   label: string;
   readOnly?: boolean;
   language?: "json" | "text";
+  /** Soft-wraps long lines (e.g. Base64) instead of scrolling sideways. */
+  wrap?: boolean;
   placeholder?: string;
   /** Highlights the line containing this character offset (errors). */
   errorOffset?: number | null;
@@ -53,6 +55,7 @@ export function CodeEditor({
   label,
   readOnly = false,
   language = "json",
+  wrap = false,
   placeholder,
   errorOffset = null,
   describedBy,
@@ -75,10 +78,21 @@ export function CodeEditor({
   // Load CodeMirror on intent (architecture §8.2): hover or focus, or as soon
   // as there is content to show (sample, opened file, output).
   const requested = useRef(false);
+  // Focus and selection of the textarea, read just before it is removed: by
+  // the time the swap effect runs, the textarea is gone and focus is on <body>.
+  const handover = useRef<{ focused: boolean; anchor: number; head: number } | null>(null);
   const request = () => {
     if (requested.current) return;
     requested.current = true;
-    void loadCodeMirror().then(setModule);
+    void loadCodeMirror().then((mod) => {
+      const area = textarea.current;
+      handover.current = area && {
+        focused: document.activeElement === area,
+        anchor: area.selectionStart,
+        head: area.selectionEnd,
+      };
+      setModule(mod);
+    });
   };
   const hasContent = value !== "";
   useEffect(() => {
@@ -88,15 +102,15 @@ export function CodeEditor({
   // Swap the textarea for CodeMirror, carrying over text, selection and focus.
   useEffect(() => {
     if (!module || !host.current) return;
-    const area = textarea.current;
-    const hadFocus = area !== null && document.activeElement === area;
-    const selection = area ? { anchor: area.selectionStart, head: area.selectionEnd } : undefined;
+    const previous = handover.current;
+    handover.current = null;
     const controller = module.createEditor({
       parent: host.current,
       doc: emitted.current,
       label,
       readOnly,
       language,
+      wrap,
       placeholder,
       describedBy,
       onChange: (next) => {
@@ -105,7 +119,7 @@ export function CodeEditor({
       },
     });
     editor.current = controller;
-    if (hadFocus) controller.focus(selection);
+    if (previous?.focused) controller.focus({ anchor: previous.anchor, head: previous.head });
     return () => {
       controller.destroy();
       editor.current = null;
@@ -162,7 +176,7 @@ export function CodeEditor({
           spellCheck={false}
           autoCapitalize="off"
           autoCorrect="off"
-          wrap="off"
+          wrap={wrap ? "soft" : "off"}
           className="block size-full resize-none bg-surface px-4 py-3 font-mono text-code text-fg placeholder:text-fg-subtle"
         />
       )}
