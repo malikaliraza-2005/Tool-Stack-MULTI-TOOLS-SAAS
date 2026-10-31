@@ -9,6 +9,7 @@ import { meta as mergePdf } from "./merge-pdf/meta";
 import { meta as unixTimestampConverter } from "./unix-timestamp-converter/meta";
 import { meta as urlEncodeDecode } from "./url-encode-decode/meta";
 import { meta as uuidGenerator } from "./uuid-generator/meta";
+import { meta as hashGenerator } from "./hash-generator/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
@@ -19,6 +20,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   base64EncodeDecode,
   urlEncodeDecode,
   uuidGenerator,
+  hashGenerator,
 ];
 
 /**
@@ -38,7 +40,6 @@ export const PLANNED_SLUGS: readonly string[] = [
   "jwt-decoder",
   "diff-checker",
   "regex-tester",
-  "hash-generator",
 ];
 
 export const REGISTRY_CONTEXT: RegistryContext = {

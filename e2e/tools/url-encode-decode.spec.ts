@@ -123,7 +123,7 @@ test.describe("url-encode-decode", () => {
     await setMode(page, "Parse");
     await fill(page, "URL to parse", "http://[2001:db8::1]/");
     await expect(part(page, "Host")).toHaveText("[2001:db8::1]");
-    await expect(part(page, "Port")).toHaveText("80default");
+    await expect(part(page, "Port")).toHaveText("80");
 
     await fill(page, "URL to parse", "https://münchen.de/");
     await expect(part(page, "Host")).toHaveText("xn--mnchen-3ya.de");

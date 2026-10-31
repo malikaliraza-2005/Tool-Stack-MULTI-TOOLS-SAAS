@@ -96,7 +96,7 @@ All permissive. The `/licenses` page must reproduce these notices (BSD/IJG attri
 | `jsonc-parser` | 3.3.1 📌 | MIT | ✅ | JSON parsing with error offsets, JSONC | On first input (main thread ≤ 1 MB, worker above) |
 | `jose` | 6.2.12 | MIT | ✅ | JWT signature verification | On verify |
 | `diff` | 9.0.0 | BSD-3-Clause | ✅ | diff-checker | With tool (worker) |
-| `hash-wasm` | 4.12.0 | MIT | ✅ | MD5, streaming file hashes | On intent (worker) |
+| `hash-wasm` | 4.12.0 📌 | MIT | ✅ | hash-generator: MD5, SHA-1/256/384/512 and HMAC for text and files (files streamed in 4 MB chunks in a worker). WASM is inlined in the JS, compiled under `'wasm-unsafe-eval'` | On first input (text: main thread; files: worker) |
 | ~~`ulid`~~ | n/a | MIT | Not used | ULID generation is ~20 lines in `uuid-generator/logic.ts` (Phase 4), so no dependency | n/a |
 | `dompurify` | 3.4.17 | MPL-2.0 OR Apache-2.0 | ✅ (use under Apache-2.0) | Sanitizing any user-provided markup (Tier 2 previews) | Tier 2 |
 

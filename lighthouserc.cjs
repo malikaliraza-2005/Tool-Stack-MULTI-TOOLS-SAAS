@@ -28,6 +28,7 @@ module.exports = {
         "http://127.0.0.1:4174/base64-encode-decode",
         "http://127.0.0.1:4174/url-encode-decode",
         "http://127.0.0.1:4174/uuid-generator",
+        "http://127.0.0.1:4174/hash-generator",
       ],
       numberOfRuns: 3,
     },

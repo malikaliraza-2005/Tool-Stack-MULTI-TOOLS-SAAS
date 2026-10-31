@@ -29,11 +29,14 @@ export function ResultList({ rows, className }: { rows: ResultRow[]; className?:
     >
       {rows.map((row) => (
         <div key={row.label} className="flex flex-col px-3 py-2">
-          <dt className="text-small text-fg-muted">{row.label}</dt>
+          {/* The badge sits with the label, so long values keep the full width. */}
+          <dt className="flex flex-wrap items-center gap-2 text-small text-fg-muted">
+            <span>{row.label}</span>
+            {row.note && <Badge>{row.note}</Badge>}
+          </dt>
           <dd className="flex min-h-8 items-center justify-between gap-3">
-            <span className="flex min-w-0 items-center gap-2 font-mono text-code break-all text-fg tabular-nums">
+            <span className="min-w-0 font-mono text-code break-all text-fg tabular-nums">
               {row.shown ?? row.value}
-              {row.note && <Badge>{row.note}</Badge>}
             </span>
             {row.copy !== false && (
               <CopyButton

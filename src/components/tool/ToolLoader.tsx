@@ -16,6 +16,7 @@ const TOOL_UIS: Record<string, ComponentType> = {
   "unix-timestamp-converter": dynamic(() => import("@/tools/unix-timestamp-converter/ui")),
   "url-encode-decode": dynamic(() => import("@/tools/url-encode-decode/ui")),
   "uuid-generator": dynamic(() => import("@/tools/uuid-generator/ui")),
+  "hash-generator": dynamic(() => import("@/tools/hash-generator/ui")),
 };
 
 export function ToolLoader({ slug }: { slug: string }) {

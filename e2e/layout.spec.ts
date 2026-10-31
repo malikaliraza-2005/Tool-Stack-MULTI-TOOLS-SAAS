@@ -18,6 +18,7 @@ for (const path of [
   "/base64-encode-decode",
   "/url-encode-decode",
   "/uuid-generator",
+  "/hash-generator",
   "/does-not-exist",
 ]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {
