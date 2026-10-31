@@ -94,8 +94,33 @@ test.describe("regex-tester", () => {
       };
       requestAnimationFrame(tick);
     });
-    await pattern(page).fill("(a+)+$");
+    // Engines optimize different patterns: JavaScriptCore on Linux finishes
+    // (a+)+$ on this text at once, while V8 backtracks for minutes. Each of
+    // these is catastrophic in V8 through a different structure (nested
+    // quantifiers, overlapping alternation, counted .*, a backreference);
+    // the timeout must stop at least one in every browser.
+    const candidates = [
+      String.raw`(a+)+$`,
+      String.raw`(a|aa)+$`,
+      String.raw`(.*a){24}$`,
+      String.raw`^(a+)+\1!x`,
+    ];
     const alert = page.getByRole("alert").filter({ hasText: "The pattern was stopped" });
+    let stopped: string | null = null;
+    for (const candidate of candidates) {
+      await pattern(page).fill(candidate);
+      // Debounce + 1 s timeout + margin for slow runners.
+      if (
+        await alert.waitFor({ timeout: 4000 }).then(
+          () => true,
+          () => false,
+        )
+      ) {
+        stopped = candidate;
+        break;
+      }
+    }
+    expect(stopped, "no candidate pattern was stopped by the timeout").not.toBeNull();
     await expect(alert).toContainText(
       "This pattern took too long (possible catastrophic backtracking). Try making quantifiers more specific.",
     );
@@ -104,11 +129,11 @@ test.describe("regex-tester", () => {
       w.__stop = true;
       return w.__maxGap ?? 0;
     });
-    console.log(`(a+)+$: longest main-thread frame gap ${Math.round(maxGap)} ms`);
-    // On the page, (a+)+$ on 40 characters would block for minutes; in the
-    // worker it is stopped at 1 s. What remains is rendering the update:
-    // 17 ms in Chromium, ~100 ms in WebKit locally, up to ~650 ms on CI
-    // runners. Any gap under the 1 s timeout proves the page wasn't blocked.
+    console.log(`${stopped} stopped; longest main-thread frame gap ${Math.round(maxGap)} ms`);
+    // On the page, these patterns would block for minutes; in the worker they
+    // are stopped at 1 s. What remains is rendering the update: 17 ms in
+    // Chromium, ~100 ms in WebKit locally, up to ~650 ms on CI runners. Any
+    // gap under the 1 s timeout proves the page wasn't blocked.
     expect(maxGap).toBeLessThan(1000);
 
     // The next pattern runs in a fresh worker.
