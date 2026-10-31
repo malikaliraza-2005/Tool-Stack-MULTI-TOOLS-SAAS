@@ -27,6 +27,7 @@ module.exports = {
         "http://127.0.0.1:4174/unix-timestamp-converter",
         "http://127.0.0.1:4174/base64-encode-decode",
         "http://127.0.0.1:4174/url-encode-decode",
+        "http://127.0.0.1:4174/uuid-generator",
       ],
       numberOfRuns: 3,
     },

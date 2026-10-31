@@ -7,6 +7,7 @@ import JsonFormatterContent from "./json-formatter/content";
 import MergePdfContent from "./merge-pdf/content";
 import UnixTimestampConverterContent from "./unix-timestamp-converter/content";
 import UrlEncodeDecodeContent from "./url-encode-decode/content";
+import UuidGeneratorContent from "./uuid-generator/content";
 
 export const TOOL_CONTENT: Record<string, ComponentType> = {
   "base64-encode-decode": Base64Content,
@@ -14,4 +15,5 @@ export const TOOL_CONTENT: Record<string, ComponentType> = {
   "merge-pdf": MergePdfContent,
   "unix-timestamp-converter": UnixTimestampConverterContent,
   "url-encode-decode": UrlEncodeDecodeContent,
+  "uuid-generator": UuidGeneratorContent,
 };

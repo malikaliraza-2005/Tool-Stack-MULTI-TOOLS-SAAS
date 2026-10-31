@@ -248,6 +248,7 @@ All use the Workbench (§2.3) unless stated.
 - **Generate:** UUID v4 (`crypto.randomUUID`, default), UUID v7 (time-ordered, implemented per RFC 9562 using `crypto.getRandomValues`), ULID (`ulid`). Quantity 1–1000 (default 1); options uppercase, without hyphens. Copy one / copy all / download `.txt`.
 - **Inspect:** paste a UUID → version, variant, and embedded timestamp for v1/v6/v7; invalid format explained.
 - **Acceptance tests:** format regex per version; version/variant bits correct; v7 values generated in sequence sort in time order; 1000 values unique; inspect decodes v7 timestamp correctly.
+- *Clarified in Phase 4:* v4 uses `crypto.getRandomValues` (works outside secure contexts, unlike `crypto.randomUUID`). v7 uses RFC 9562 §6.2 method 1: `rand_a` is a 12-bit counter seeded in its lower half, so a batch sorts in order; on overflow the timestamp moves 1 ms ahead, and it never goes back if the clock does. ULIDs are implemented in the tool (no `ulid` dependency) and are monotonic within a millisecond; Uppercase/Hyphens don't apply to them. Values are generated after the page loads (never in the static HTML), on load and whenever type or quantity changes. Inspect accepts braces, `urn:uuid:` and missing hyphens; it decodes v1, v6 and v7 times (checked against RFC 9562 appendix A vectors), and recognises nil, max, non-RFC variants and ULIDs pasted by mistake.
 
 ### 5.9 hash-generator
 - **Input:** text (UTF-8) or file.

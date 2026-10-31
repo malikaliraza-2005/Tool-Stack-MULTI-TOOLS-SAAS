@@ -8,6 +8,7 @@ import { meta as jsonFormatter } from "./json-formatter/meta";
 import { meta as mergePdf } from "./merge-pdf/meta";
 import { meta as unixTimestampConverter } from "./unix-timestamp-converter/meta";
 import { meta as urlEncodeDecode } from "./url-encode-decode/meta";
+import { meta as uuidGenerator } from "./uuid-generator/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
@@ -17,6 +18,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   unixTimestampConverter,
   base64EncodeDecode,
   urlEncodeDecode,
+  uuidGenerator,
 ];
 
 /**
@@ -36,7 +38,6 @@ export const PLANNED_SLUGS: readonly string[] = [
   "jwt-decoder",
   "diff-checker",
   "regex-tester",
-  "uuid-generator",
   "hash-generator",
 ];
 

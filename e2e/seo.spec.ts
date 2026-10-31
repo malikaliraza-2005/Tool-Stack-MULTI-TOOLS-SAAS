@@ -14,6 +14,7 @@ const TOOLS = [
   },
   { slug: "base64-encode-decode", name: "Base64 Encode & Decode", hub: "Developer tools" },
   { slug: "url-encode-decode", name: "URL Encode & Decode", hub: "Developer tools" },
+  { slug: "uuid-generator", name: "UUID Generator", hub: "Developer tools" },
 ];
 
 for (const tool of TOOLS) {
@@ -90,6 +91,7 @@ test("sitemap lists the home page and published tools", async ({ request }) => {
     "/unix-timestamp-converter",
     "/base64-encode-decode",
     "/url-encode-decode",
+    "/uuid-generator",
   ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");

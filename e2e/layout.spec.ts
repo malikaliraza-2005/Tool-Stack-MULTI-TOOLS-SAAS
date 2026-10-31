@@ -17,6 +17,7 @@ for (const path of [
   "/unix-timestamp-converter",
   "/base64-encode-decode",
   "/url-encode-decode",
+  "/uuid-generator",
   "/does-not-exist",
 ]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {

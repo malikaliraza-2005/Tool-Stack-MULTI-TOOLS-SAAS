@@ -7,6 +7,7 @@ import { base64Detector } from "./detect/base64";
 import { jsonDetector } from "./detect/json";
 import { unixTimestampDetector } from "./detect/unix-timestamp";
 import { urlDetector, urlEncodedDetector } from "./detect/url";
+import { uuidDetector } from "./detect/uuid";
 import {
   deserializeToolError,
   isOutOfMemory,
@@ -268,8 +269,27 @@ describe("detectors (tool-registry §5)", () => {
     }
   });
 
+  it("uuid: RFC 9562 format", () => {
+    expect(uuidDetector.detect("919108f7-52d1-4320-9bac-f847db4148a8")).toBe(0.95);
+    expect(uuidDetector.detect(" {017F22E2-79B0-7CC3-98C4-DC0C0C07398F}\n")).toBe(0.95);
+    expect(uuidDetector.detect("urn:uuid:c232ab00-9414-11ec-b3c8-9f6bdeced846")).toBe(0.95);
+    expect(uuidDetector.detect("00000000-0000-0000-0000-000000000000")).toBe(0.8);
+    // Version 0 or 9, wrong variant, no hyphens, or extra text.
+    expect(uuidDetector.detect("919108f7-52d1-0320-9bac-f847db4148a8")).toBe(0);
+    expect(uuidDetector.detect("919108f7-52d1-4320-cbac-f847db4148a8")).toBe(0);
+    expect(uuidDetector.detect("919108f752d143209bacf847db4148a8")).toBe(0);
+    expect(uuidDetector.detect("id: 919108f7-52d1-4320-9bac-f847db4148a8")).toBe(0);
+  });
+
   it("detect sorts by confidence, then precedence", () => {
-    expect(detectorIds()).toEqual(["json", "unix-timestamp", "base64", "url", "url-encoded"]);
+    expect(detectorIds()).toEqual([
+      "json",
+      "unix-timestamp",
+      "base64",
+      "url",
+      "url-encoded",
+      "uuid",
+    ]);
     expect(detect('{"a":1}')).toEqual([{ id: "json", confidence: 0.95 }]);
     const tie = detect("x", [
       { id: "base64", detect: () => 0.5 },
@@ -277,7 +297,7 @@ describe("detectors (tool-registry §5)", () => {
       { id: "none", detect: () => 0 },
     ]);
     expect(tie.map((m) => m.id)).toEqual(["jwt", "base64"]);
-    expect(DETECTORS).toHaveLength(5);
+    expect(DETECTORS).toHaveLength(6);
   });
 });
 
