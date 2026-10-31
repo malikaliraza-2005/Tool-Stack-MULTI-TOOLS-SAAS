@@ -16,6 +16,7 @@ const TOOLS = [
   { slug: "url-encode-decode", name: "URL Encode & Decode", hub: "Developer tools" },
   { slug: "uuid-generator", name: "UUID Generator", hub: "Developer tools" },
   { slug: "hash-generator", name: "Hash Generator", hub: "Developer tools" },
+  { slug: "jwt-decoder", name: "JWT Decoder", hub: "Developer tools" },
 ];
 
 for (const tool of TOOLS) {
@@ -94,6 +95,7 @@ test("sitemap lists the home page and published tools", async ({ request }) => {
     "/url-encode-decode",
     "/uuid-generator",
     "/hash-generator",
+    "/jwt-decoder",
   ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");

@@ -205,6 +205,7 @@ All use the Workbench (§2.3) unless stated.
 - **Verify (optional panel):** algorithm from header; secret (HS256/384/512) or public key as PEM/JWK (RS*, PS*, ES*, EdDSA) → verify with `jose`. Result: "Signature verified" / "Invalid signature" / "Key type doesn't match algorithm".
 - **Safety:** `alg: none` flagged as insecure; tokens never stored; no share link; a note explains that decoding is not verification.
 - **Acceptance tests:** decode fixtures for HS256, RS256, ES256; verification true/false cases; malformed token (2 segments, bad base64url, non-JSON header) → located error; `Bearer ` prefix trimmed; expiry status computed with a mocked clock.
+- *Clarified in Phase 4:* decoding needs no library (base64url + JSON); line breaks inside the token are removed and error positions point into the original input. Five-part tokens are recognised as JWE and explained. Verification uses jose `compactVerify` (signature only, `algorithms` pinned to the header's alg), loaded on Verify. HS secrets are text (UTF-8). Keys: SPKI PEM, X.509 certificate, JWK or JWKS (by `kid`); private keys and PKCS#1 RSA keys are refused with an explanation. Status is computed when the token is entered, from the device clock. The relative-time formatter moved to `src/lib/time.ts` (shared with the timestamp converter).
 
 ### 5.3 base64-encode-decode
 - **Modes:** Encode / Decode (SegmentedControl; Swap moves output to input).

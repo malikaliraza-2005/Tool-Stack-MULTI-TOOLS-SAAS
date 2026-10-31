@@ -29,6 +29,7 @@ module.exports = {
         "http://127.0.0.1:4174/url-encode-decode",
         "http://127.0.0.1:4174/uuid-generator",
         "http://127.0.0.1:4174/hash-generator",
+        "http://127.0.0.1:4174/jwt-decoder",
       ],
       numberOfRuns: 3,
     },

@@ -94,7 +94,7 @@ All permissive. The `/licenses` page must reproduce these notices (BSD/IJG attri
 |---|---|---|---|---|---|
 | `@codemirror/state`, `view`, `commands`, `language`, `lang-json`; `@lezer/highlight` | 6.7.6, 6.43.14, 6.11.1, 6.13.1, 6.0.2; 1.2.5 📌 | MIT | ✅ | Workbench editor (`CodeEditor`). Individual packages instead of the `codemirror` meta-package (only the extensions we use) | On intent (hover, focus or content) |
 | `jsonc-parser` | 3.3.1 📌 | MIT | ✅ | JSON parsing with error offsets, JSONC | On first input (main thread ≤ 1 MB, worker above) |
-| `jose` | 6.2.12 | MIT | ✅ | JWT signature verification | On verify |
+| `jose` | 6.2.12 📌 | MIT | ✅ | jwt-decoder: signature verification (`compactVerify`; key import from PEM, X.509, JWK, JWKS). Decoding doesn't use it | On Verify (dynamic import) |
 | `diff` | 9.0.0 | BSD-3-Clause | ✅ | diff-checker | With tool (worker) |
 | `hash-wasm` | 4.12.0 📌 | MIT | ✅ | hash-generator: MD5, SHA-1/256/384/512 and HMAC for text and files (files streamed in 4 MB chunks in a worker). WASM is inlined in the JS, compiled under `'wasm-unsafe-eval'` | On first input (text: main thread; files: worker) |
 | ~~`ulid`~~ | n/a | MIT | Not used | ULID generation is ~20 lines in `uuid-generator/logic.ts` (Phase 4), so no dependency | n/a |

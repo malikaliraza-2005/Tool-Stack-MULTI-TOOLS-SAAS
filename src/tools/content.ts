@@ -9,6 +9,7 @@ import UnixTimestampConverterContent from "./unix-timestamp-converter/content";
 import UrlEncodeDecodeContent from "./url-encode-decode/content";
 import UuidGeneratorContent from "./uuid-generator/content";
 import HashGeneratorContent from "./hash-generator/content";
+import JwtDecoderContent from "./jwt-decoder/content";
 
 export const TOOL_CONTENT: Record<string, ComponentType> = {
   "base64-encode-decode": Base64Content,
@@ -18,4 +19,5 @@ export const TOOL_CONTENT: Record<string, ComponentType> = {
   "url-encode-decode": UrlEncodeDecodeContent,
   "uuid-generator": UuidGeneratorContent,
   "hash-generator": HashGeneratorContent,
+  "jwt-decoder": JwtDecoderContent,
 };

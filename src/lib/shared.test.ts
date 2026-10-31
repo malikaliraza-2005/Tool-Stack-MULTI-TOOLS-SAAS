@@ -5,6 +5,7 @@ import * as z from "zod/mini";
 import { detect, detectorIds, DETECTORS } from "./detect";
 import { base64Detector } from "./detect/base64";
 import { jsonDetector } from "./detect/json";
+import { jwtDetector } from "./detect/jwt";
 import { unixTimestampDetector } from "./detect/unix-timestamp";
 import { urlDetector, urlEncodedDetector } from "./detect/url";
 import { uuidDetector } from "./detect/uuid";
@@ -281,8 +282,24 @@ describe("detectors (tool-registry §5)", () => {
     expect(uuidDetector.detect("id: 919108f7-52d1-4320-9bac-f847db4148a8")).toBe(0);
   });
 
+  it("jwt: three base64url parts with a JSON header that has alg", () => {
+    const jwt =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+    expect(jwtDetector.detect(jwt)).toBe(0.98);
+    expect(jwtDetector.detect(` Bearer ${jwt}\n`)).toBe(0.98);
+    // Unsecured tokens have an empty signature.
+    expect(jwtDetector.detect("eyJhbGciOiJub25lIn0.e30.")).toBe(0.98);
+    // No alg, not JSON, wrong number of parts, or not base64url.
+    expect(jwtDetector.detect("eyJ0eXAiOiJKV1QifQ.e30.c2ln")).toBe(0);
+    expect(jwtDetector.detect("aGVsbG8.e30.c2ln")).toBe(0);
+    expect(jwtDetector.detect("example.com.org")).toBe(0);
+    expect(jwtDetector.detect("eyJhbGciOiJIUzI1NiJ9.e30")).toBe(0);
+    expect(jwtDetector.detect("eyJhbGciOiJIUzI1NiJ9.e3+0.sig")).toBe(0);
+  });
+
   it("detect sorts by confidence, then precedence", () => {
     expect(detectorIds()).toEqual([
+      "jwt",
       "json",
       "unix-timestamp",
       "base64",
@@ -297,7 +314,7 @@ describe("detectors (tool-registry §5)", () => {
       { id: "none", detect: () => 0 },
     ]);
     expect(tie.map((m) => m.id)).toEqual(["jwt", "base64"]);
-    expect(DETECTORS).toHaveLength(6);
+    expect(DETECTORS).toHaveLength(7);
   });
 });
 

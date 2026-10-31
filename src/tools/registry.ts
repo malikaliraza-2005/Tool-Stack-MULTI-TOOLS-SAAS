@@ -10,6 +10,7 @@ import { meta as unixTimestampConverter } from "./unix-timestamp-converter/meta"
 import { meta as urlEncodeDecode } from "./url-encode-decode/meta";
 import { meta as uuidGenerator } from "./uuid-generator/meta";
 import { meta as hashGenerator } from "./hash-generator/meta";
+import { meta as jwtDecoder } from "./jwt-decoder/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
@@ -21,6 +22,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   urlEncodeDecode,
   uuidGenerator,
   hashGenerator,
+  jwtDecoder,
 ];
 
 /**
@@ -37,7 +39,6 @@ export const PLANNED_SLUGS: readonly string[] = [
   "convert-image",
   "resize-image",
   "remove-exif-data",
-  "jwt-decoder",
   "diff-checker",
   "regex-tester",
 ];

@@ -3,6 +3,7 @@
 
 import { base64Detector } from "./base64";
 import { jsonDetector } from "./json";
+import { jwtDetector } from "./jwt";
 import type { Detector } from "./types";
 import { unixTimestampDetector } from "./unix-timestamp";
 import { urlDetector, urlEncodedDetector } from "./url";
@@ -11,6 +12,7 @@ import { uuidDetector } from "./uuid";
 export type { Detector } from "./types";
 
 export const DETECTORS: readonly Detector[] = [
+  jwtDetector,
   jsonDetector,
   unixTimestampDetector,
   base64Detector,

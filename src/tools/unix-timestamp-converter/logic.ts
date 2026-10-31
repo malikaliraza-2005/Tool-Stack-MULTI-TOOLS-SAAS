@@ -2,6 +2,7 @@
 // no DOM, no React. Time zones use the browser's Intl data.
 
 import { toolErrors, type ToolError } from "@/lib/errors";
+import { formatRelative } from "@/lib/time";
 
 export type TimestampUnit = "s" | "ms" | "us";
 
@@ -331,26 +332,7 @@ export function formatRfc2822(ms: number, zone: string): string | null {
   return `${day}, ${pad(w.day)} ${MONTH_NAMES[w.month - 1]} ${w.year} ${time} ${formatOffset(zoneOffsetMs(ms, zone), "")}`;
 }
 
-const RELATIVE_STEPS: [Intl.RelativeTimeFormatUnit, number][] = [
-  ["year", 365.2425 * DAY],
-  ["month", (365.2425 / 12) * DAY],
-  ["week", 7 * DAY],
-  ["day", DAY],
-  ["hour", HOUR],
-  ["minute", MINUTE],
-  ["second", 1000],
-];
-
-const relativeFormat = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-
-/** "3 hours ago", "in 2 years", "now". Uses the largest whole unit. */
-export function formatRelative(ms: number, now: number): string {
-  const diff = ms - now;
-  for (const [unit, size] of RELATIVE_STEPS) {
-    if (Math.abs(diff) >= size) return relativeFormat.format(Math.trunc(diff / size), unit);
-  }
-  return relativeFormat.format(0, "second");
-}
+export { formatRelative } from "@/lib/time";
 
 export type DateViews = {
   isoUtc: string;
