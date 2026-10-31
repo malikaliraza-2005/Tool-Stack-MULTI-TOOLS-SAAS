@@ -80,7 +80,10 @@ test.describe("regex-tester", () => {
     await bothThemesAccessible(page);
   });
 
-  test("catastrophic backtracking times out while the page stays responsive", async ({ page }) => {
+  test("catastrophic backtracking times out while the page stays responsive", async ({
+    page,
+    browserName,
+  }) => {
     await open(page);
     await fillText(page, `${"a".repeat(40)}!`);
     await page.evaluate(() => {
@@ -94,11 +97,11 @@ test.describe("regex-tester", () => {
       };
       requestAnimationFrame(tick);
     });
-    // Engines optimize different patterns: JavaScriptCore on Linux finishes
-    // (a+)+$ on this text at once, while V8 backtracks for minutes. Each of
-    // these is catastrophic in V8 through a different structure (nested
-    // quantifiers, overlapping alternation, counted .*, a backreference);
-    // the timeout must stop at least one in every browser.
+    // Each pattern is catastrophic in V8 through a different structure (nested
+    // quantifiers, overlapping alternation, counted .*, a backreference).
+    // JavaScriptCore on Linux (CI WebKit) sometimes finishes all of them at
+    // once with no match, so the 1 s timeout never comes into play there; in
+    // WebKit either outcome is fine as long as the page stays responsive.
     const candidates = [
       String.raw`(a+)+$`,
       String.raw`(a|aa)+$`,
@@ -120,16 +123,23 @@ test.describe("regex-tester", () => {
         break;
       }
     }
-    expect(stopped, "no candidate pattern was stopped by the timeout").not.toBeNull();
-    await expect(alert).toContainText(
-      "This pattern took too long (possible catastrophic backtracking). Try making quantifiers more specific.",
-    );
+    if (stopped || browserName !== "webkit") {
+      expect(stopped, "no candidate pattern was stopped by the timeout").not.toBeNull();
+      await expect(alert).toContainText(
+        "This pattern took too long (possible catastrophic backtracking). Try making quantifiers more specific.",
+      );
+    } else {
+      // The engine finished the last pattern itself: a normal result is shown.
+      await expect(status(page)).toHaveText("No match");
+    }
     const maxGap = await page.evaluate(() => {
       const w = window as Window & { __maxGap?: number; __stop?: boolean };
       w.__stop = true;
       return w.__maxGap ?? 0;
     });
-    console.log(`${stopped} stopped; longest main-thread frame gap ${Math.round(maxGap)} ms`);
+    console.log(
+      `${stopped ?? "none"} stopped (${browserName}); longest main-thread frame gap ${Math.round(maxGap)} ms`,
+    );
     // On the page, these patterns would block for minutes; in the worker they
     // are stopped at 1 s. What remains is rendering the update: 17 ms in
     // Chromium, ~100 ms in WebKit locally, up to ~650 ms on CI runners. Any
