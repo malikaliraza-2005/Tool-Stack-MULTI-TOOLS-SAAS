@@ -13,6 +13,7 @@ import {
   type Ref,
 } from "react";
 import * as z from "zod/mini";
+import { ResultList, type ResultRow } from "@/components/tool/ResultList";
 import { useToolOptions } from "@/components/tool/useToolOptions";
 import { Button } from "@/components/ui/Button";
 import { Combobox, type ComboboxOption } from "@/components/ui/Combobox";
@@ -323,7 +324,7 @@ function TimestampResult({
   const views = dateViews(ms, { zone, localZone, now });
   const micros =
     used === "us" ? `${views.isoUtc.slice(0, -1)}${String(extraMicros).padStart(3, "0")}Z` : null;
-  const rows: Row[] = [
+  const rows: ResultRow[] = [
     { label: "UTC (ISO 8601)", value: micros ?? views.isoUtc },
     { label: `Local: ${zoneLabel(localZone)}`, value: views.local },
     ...(zone !== localZone && zone !== "UTC"
@@ -340,7 +341,7 @@ function TimestampResult({
       <p role="status" className="sr-only">
         {`${views.isoUtc} (${UNIT_NAMES[used]})`}
       </p>
-      <ResultRows rows={rows} />
+      <ResultList rows={rows} />
     </>
   );
 }
@@ -367,7 +368,7 @@ function DateResult({ text, zone }: { text: string; zone: string }) {
   const shown = formatIso(ms, zone);
   // "…T03:30:00.000+02:00" → time "03:30:00", offset "+02:00".
   const [, time, offset] = /T(\d{2}:\d{2}:\d{2})\.\d{3}(.*)$/.exec(shown) ?? [];
-  const rows: Row[] = [
+  const rows: ResultRow[] = [
     { label: "Unix timestamp (seconds)", value: String(Math.floor(ms / 1000)) },
     { label: "Milliseconds", value: String(ms) },
     { label: "UTC (ISO 8601)", value: formatIso(ms) },
@@ -388,36 +389,7 @@ function DateResult({ text, zone }: { text: string; zone: string }) {
           </span>
         </p>
       )}
-      <ResultRows rows={rows} />
+      <ResultList rows={rows} />
     </>
-  );
-}
-
-type Row = { label: string; value: string; copy?: boolean };
-
-function ResultRows({ rows }: { rows: Row[] }) {
-  return (
-    <dl className="flex flex-col divide-y divide-border rounded-md border border-border">
-      {rows.map((row) => (
-        <div key={row.label} className="flex flex-col px-3 py-2">
-          <dt className="text-small text-fg-muted">{row.label}</dt>
-          {/* The copy button lives in the <dd>: a <dl> row may hold only dt and dd. */}
-          <dd className="flex min-h-8 items-center justify-between gap-3">
-            <span className="min-w-0 font-mono text-code break-all text-fg tabular-nums">
-              {row.value}
-            </span>
-            {row.copy !== false && (
-              <CopyButton
-                value={row.value}
-                label={`Copy ${row.label}`}
-                iconOnly
-                variant="ghost"
-                size="sm"
-              />
-            )}
-          </dd>
-        </div>
-      ))}
-    </dl>
   );
 }

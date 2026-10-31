@@ -4,6 +4,7 @@ import { ArrowLeftRight, CircleAlert, CircleCheck, Download, Eraser, Sparkles } 
 import { useEffect, useId, useRef, useState } from "react";
 import * as z from "zod/mini";
 import { CodeEditor, type CodeEditorHandle } from "@/components/tool/CodeEditor";
+import { ResultList, type ResultRow } from "@/components/tool/ResultList";
 import { useToolOptions } from "@/components/tool/useToolOptions";
 import { ToolbarGroup, Workbench, WorkbenchPane } from "@/components/tool/Workbench";
 import { Badge } from "@/components/ui/Badge";
@@ -347,10 +348,8 @@ export default function UrlEncodeDecodeUI() {
   );
 }
 
-type Row = { label: string; value: string; shown?: string; note?: string };
-
 function UrlParts({ url }: { url: ParsedUrl }) {
-  const rows: Row[] = [
+  const rows: ResultRow[] = [
     { label: "Scheme", value: url.protocol },
     ...(url.username ? [{ label: "Username", value: url.username }] : []),
     // Shown masked; Copy still copies the real password.
@@ -370,27 +369,7 @@ function UrlParts({ url }: { url: ParsedUrl }) {
   ];
   return (
     <div className="flex h-full flex-col gap-4 overflow-y-auto p-3 md:p-4">
-      <dl className="flex flex-col divide-y divide-border rounded-md border border-border">
-        {rows.map((row) => (
-          <div key={row.label} className="flex flex-col px-3 py-2">
-            <dt className="text-small text-fg-muted">{row.label}</dt>
-            {/* The copy button lives in the <dd>: a <dl> row may hold only dt and dd. */}
-            <dd className="flex min-h-8 items-center justify-between gap-3">
-              <span className="flex min-w-0 items-center gap-2 font-mono text-code break-all text-fg">
-                {row.shown ?? row.value}
-                {row.note && <Badge>{row.note}</Badge>}
-              </span>
-              <CopyButton
-                value={row.value}
-                label={`Copy ${row.label.toLowerCase()}`}
-                iconOnly
-                variant="ghost"
-                size="sm"
-              />
-            </dd>
-          </div>
-        ))}
-      </dl>
+      <ResultList rows={rows} />
       {url.params.length > 0 && (
         <table className="w-full table-fixed border-separate border-spacing-0 rounded-md border border-border text-left">
           <caption className="pb-2 text-left text-ui text-fg">
