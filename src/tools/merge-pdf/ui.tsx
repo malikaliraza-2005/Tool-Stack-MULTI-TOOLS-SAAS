@@ -307,7 +307,7 @@ export default function MergePdfUI() {
   const excluded = entries.filter((entry) => entry.status === "error").length;
 
   return (
-    <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 p-4 md:p-6 lg:grid-cols-3">
       <div className="flex min-w-0 flex-col gap-4 lg:col-span-2">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-ui text-fg">

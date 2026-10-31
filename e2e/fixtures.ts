@@ -21,6 +21,12 @@ type Fixtures = {
    * unless the test calls `csp.allowViolations()` and asserts them itself.
    */
   csp: { violations: () => Promise<CspViolation[]>; allowViolations: () => void };
+  /**
+   * Fails the test if the page it ends on is wider than the viewport (content
+   * cut off or sideways scrolling on phones). Runs in every project, so each
+   * state a test reaches is checked at desktop and phone widths.
+   */
+  noOverflow: void;
 };
 
 export const test = base.extend<Fixtures>({
@@ -69,7 +75,39 @@ export const test = base.extend<Fixtures>({
     },
     { auto: true },
   ],
+
+  noOverflow: [
+    async ({ page }, use) => {
+      await use();
+      if (page.isClosed() || !page.url().startsWith("http")) return;
+      expect(await horizontalOverflow(page), "elements wider than the viewport").toEqual([]);
+    },
+    { auto: true },
+  ],
 });
+
+/**
+ * Lists the outermost elements that stick out past the right edge of the
+ * viewport, as "tag.class" strings. Empty when the page fits.
+ */
+export async function horizontalOverflow(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const root = document.documentElement;
+    if (root.scrollWidth <= root.clientWidth) return [];
+    const edge = root.clientWidth + 1;
+    return Array.from(document.querySelectorAll("body *"))
+      .filter((el) => {
+        const parent = el.parentElement;
+        return (
+          el.getBoundingClientRect().right > edge &&
+          (!parent || parent === document.body || parent.getBoundingClientRect().right <= edge)
+        );
+      })
+      .map(
+        (el) => `${el.tagName.toLowerCase()}.${String(el.className).trim().split(/\s+/).join(".")}`,
+      );
+  });
+}
 
 export { expect };
 

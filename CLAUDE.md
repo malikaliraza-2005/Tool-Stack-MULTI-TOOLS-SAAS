@@ -68,7 +68,7 @@ npm run lhci         # Lighthouse CI budgets (needs build; warn-only until P9)
 npm run licenses     # license gate (scripts/check-licenses.mjs)
 ```
 
-E2E tests import `test`/`expect` from `e2e/fixtures.ts`: every test automatically fails on a cross-origin request, a CSP violation on the document, or an uncaught page error (limits: [testing-strategy.md §3](docs/05-quality/testing-strategy.md#3-e2e-tests-playwright)). Use `expectNoA11yViolations(page)` for axe.
+E2E tests import `test`/`expect` from `e2e/fixtures.ts`: every test automatically fails on a cross-origin request, a CSP violation on the document, an uncaught page error, or a page wider than the viewport (limits: [testing-strategy.md §3](docs/05-quality/testing-strategy.md#3-e2e-tests-playwright)). Use `expectNoA11yViolations(page)` for axe.
 
 ## Code layout
 
