@@ -30,7 +30,7 @@ Build in this order (simplest first, building momentum and reusable pieces):
 - [x] **P4-T06** `jwt-decoder` (spec §5.2) + `jwt` detector; verification with `jose`; mocked-clock tests.
 - [x] **P4-T07** `diff-checker` (spec §5.5); worker; virtualized output; unified diff export.
 - [x] **P4-T08** `regex-tester` (spec §5.6); dedicated worker with 1000ms timeout; replace mode; explanation (P1 priority within the tool: may follow after launch if time-boxed out).
-- [ ] **P4-T09** Detector precedence tests (tool-registry §5) across all detectors.
+- [x] **P4-T09** Detector precedence tests (tool-registry §5) across all detectors.
 - [ ] **P4-T10** Cross-browser and mobile pass for all 8 tools; fix issues.
 - [ ] **P4-T11** Add any new dependency to the license register (expected: `jose`, `diff`, `hash-wasm`, `ulid`).
 

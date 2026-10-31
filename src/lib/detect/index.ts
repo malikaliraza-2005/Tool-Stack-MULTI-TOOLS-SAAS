@@ -1,5 +1,6 @@
-// Detector registry. Other detectors are added with their tools (Phase 4);
-// smart paste on the homepage uses them in Phase 7.
+// Detector registry (tool-registry §5): one detector per smart-paste type.
+// Smart paste on the homepage uses them in Phase 7. Precedence and speed
+// across all detectors are tested in detect.test.ts.
 
 import { base64Detector } from "./base64";
 import { jsonDetector } from "./json";
