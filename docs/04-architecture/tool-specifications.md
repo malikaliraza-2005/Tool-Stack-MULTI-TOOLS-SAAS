@@ -229,6 +229,7 @@ All use the Workbench (§2.3) unless stated.
 - **Processing:** `diff` library in a worker; results virtualized for large inputs.
 - **Output:** highlighted additions/removals (soft status colors + `+`/`−` markers, not color alone); counts of added/removed lines; next/previous change navigation (keyboard `n`/`p` or buttons); copy as unified diff.
 - **Acceptance tests:** known fixture pairs produce expected hunks; ignore-whitespace/case options; unified diff output parses with `patch`-compatible format; 50k-line inputs stay responsive.
+- *Clarified in Phase 4:* lines are diffed as arrays (`diffArrays`) on normalized keys, so Ignore whitespace (runs of whitespace collapsed, ends trimmed) and Ignore case apply to line matching; each side still shows its own text. A last line without a newline differs from the same line with one, as in `diff -u`. Changed line pairs are then diffed by word (`diffWordsWithSpace`) or character (default granularity: Word). The unified diff is generated from the same rows (3 lines of context, ` No newline at end of file`) and is checked with jsdiff's `parsePatch`/`applyPatch`; with ignore options on, context lines come from the original. The diff always runs in the worker, debounced 300 ms, with a 10 s timeout ("too different to compare quickly"). Side by side is offered from `lg`; narrower screens always show the inline view. Results are virtualized (TanStack Virtual); the 50k-line E2E test measured a 317 ms longest frame gap.
 
 ### 5.6 regex-tester
 - **Input:** pattern, flags (`g i m s u y d v`, toggles), test text.

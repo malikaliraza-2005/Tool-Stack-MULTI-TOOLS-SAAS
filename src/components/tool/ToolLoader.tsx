@@ -18,6 +18,7 @@ const TOOL_UIS: Record<string, ComponentType> = {
   "uuid-generator": dynamic(() => import("@/tools/uuid-generator/ui")),
   "hash-generator": dynamic(() => import("@/tools/hash-generator/ui")),
   "jwt-decoder": dynamic(() => import("@/tools/jwt-decoder/ui")),
+  "diff-checker": dynamic(() => import("@/tools/diff-checker/ui")),
 };
 
 export function ToolLoader({ slug }: { slug: string }) {

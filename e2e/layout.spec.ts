@@ -20,6 +20,7 @@ for (const path of [
   "/uuid-generator",
   "/hash-generator",
   "/jwt-decoder",
+  "/diff-checker",
   "/does-not-exist",
 ]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {
