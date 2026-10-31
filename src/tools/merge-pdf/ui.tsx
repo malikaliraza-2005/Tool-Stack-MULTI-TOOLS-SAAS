@@ -37,6 +37,10 @@ type Entry = {
 };
 
 type Result = { blob: Blob; pageCount: number; fileCount: number };
+
+// Plain counter ids: crypto.randomUUID is missing in some in-app browsers.
+let lastEntryId = 0;
+const nextEntryId = () => `file-${++lastEntryId}`;
 type Phase = "idle" | "merging" | "done";
 
 const createRunner = () =>
@@ -52,6 +56,7 @@ export default function MergePdfUI() {
   const [progress, setProgress] = useState<{ value: number; label?: string }>({ value: 0 });
   const [outputName, setOutputName] = useState(DEFAULT_OUTPUT_NAME);
   const [alert, setAlert] = useState("");
+  const [addError, setAddError] = useState<ToolError | null>(null);
 
   // Separate workers: cancelling a merge must not kill file checks.
   const inspector = useRef<WorkerRunner<MergeJob, MergeJobResult> | null>(null);
@@ -139,6 +144,18 @@ export default function MergePdfUI() {
   }
 
   function addFiles(files: File[]) {
+    setAddError(null);
+    try {
+      addFilesUnsafe(files);
+    } catch (error) {
+      // Never fail silently: show what went wrong next to the drop zone.
+      const toolError = toToolError(error, "adding the files");
+      setAddError(toolError);
+      setAlert(toolError.message);
+    }
+  }
+
+  function addFilesUnsafe(files: File[]) {
     const accepted = entries.filter((entry) => entry.status !== "error");
     const checks = checkLimits(files, meta.limits, getDeviceClass(), {
       count: accepted.length,
@@ -147,7 +164,7 @@ export default function MergePdfUI() {
     const added: Entry[] = files.map((file, index) => {
       const check = checks[index] ?? { status: "ok" };
       return {
-        id: crypto.randomUUID(),
+        id: nextEntryId(),
         file,
         status: check.status === "reject" ? "error" : "checking",
         error: check.status === "reject" ? check.error.message : undefined,
@@ -240,9 +257,25 @@ export default function MergePdfUI() {
     }
   }
 
+  const addErrorState = addError && (
+    <ErrorState
+      title="The files couldn’t be added"
+      description={addError.message}
+      action={
+        addError.details ? (
+          <details className="text-small text-fg-muted">
+            <summary className="cursor-pointer">Details</summary>
+            <p className="mt-1 font-mono break-all">{addError.details}</p>
+          </details>
+        ) : undefined
+      }
+    />
+  );
+
   if (entries.length === 0) {
     return (
-      <div className="p-4 md:p-6">
+      <div className="flex flex-col gap-4 p-4 md:p-6">
+        {addErrorState}
         <DropZone
           ref={dropZone}
           accept={meta.input.accepts!}
@@ -274,7 +307,7 @@ export default function MergePdfUI() {
   const excluded = entries.filter((entry) => entry.status === "error").length;
 
   return (
-    <div className="grid gap-6 p-4 md:p-6 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 p-4 md:p-6 lg:grid-cols-3">
       <div className="flex min-w-0 flex-col gap-4 lg:col-span-2">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-ui text-fg">
@@ -305,6 +338,7 @@ export default function MergePdfUI() {
           description="Drop files here, or choose more from your device."
           buttonLabel="Add files"
         />
+        {addErrorState}
       </div>
 
       <aside

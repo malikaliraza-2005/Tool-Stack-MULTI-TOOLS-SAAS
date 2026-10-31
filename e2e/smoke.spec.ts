@@ -46,3 +46,16 @@ test("CSP blocks fetch() to another origin", async ({ page, csp, noNetwork }) =>
     .toContain("connect-src");
   expect(noNetwork.requests.some((url) => url.startsWith("https://example.com"))).toBe(false);
 });
+
+test("the startup notice stays hidden when the app runs", async ({ page }) => {
+  await page.goto("/merge-pdf");
+  await expect(page.locator("html")).toHaveAttribute("data-app-started", "");
+  await expect(page.locator("#startup-notice")).toBeHidden();
+});
+
+test("the startup notice appears when the app's scripts can't run", async ({ page }) => {
+  // What an outdated phone browser experiences: the scripts fail.
+  await page.route("**/_next/static/chunks/**", (route) => route.abort());
+  await page.goto("/merge-pdf");
+  await expect(page.getByText("Sprigkit’s tools couldn’t start in this browser")).toBeVisible();
+});

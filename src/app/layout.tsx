@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Providers } from "@/components/layout/Providers";
 import { SITE_NAME, SITE_URL } from "@/config/site";
+import { STARTUP_NOTICE_ID, startupCheckScript } from "@/lib/startup-check";
 import { THEME_BG, themeInitScript } from "@/lib/theme";
 import "@/styles/globals.css";
 
@@ -33,6 +34,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         {/* Static string from src/lib/theme.ts, never user content (P2-T07). */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* Static string from src/lib/startup-check.ts, never user content. */}
+        <script dangerouslySetInnerHTML={{ __html: startupCheckScript }} />
       </head>
       <body className="flex flex-col font-sans antialiased">
         <a
@@ -41,6 +44,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        <div
+          id={STARTUP_NOTICE_ID}
+          role="alert"
+          hidden
+          className="border-b border-warning bg-warning-soft px-4 py-3 text-center text-small text-fg"
+        >
+          Sprigkit’s tools couldn’t start in this browser, so buttons won’t respond. Update your
+          browser, or open this page in a current version of Chrome, Safari, Firefox or Edge.
+        </div>
         <Providers>
           <Header />
           <main id="main" tabIndex={-1} className="flex grow flex-col outline-none">

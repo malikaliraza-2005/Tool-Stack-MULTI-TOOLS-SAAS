@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 (initial matrix, Phase 1) |
+| **Last updated** | 2026-10-14 (build targets and startup notice, Phase 3) |
 | **Related** | [testing-strategy.md](testing-strategy.md) · [architecture.md](../04-architecture/architecture.md) · [phase-09](../06-delivery/phases/phase-09-quality-hardening.md) |
 
 Initial matrix. Phase 9 extends it with real-device results and per-tool memory limits.
@@ -18,6 +18,8 @@ The current and previous major versions of:
 | WebKit | Safari (macOS, iOS, iPadOS); every iOS browser | `webkit` (desktop) | iPhone (Safari), Mac (Safari) |
 
 Not supported: Internet Explorer, browsers without ES modules in workers, and browsers without WebAssembly. Pages without JavaScript still show their content but tools need JavaScript.
+
+**Build targets [Verified 2026-10-14]:** Next.js 16 compiles for Chrome/Edge 111+, Firefox 111+ and Safari 16.4+ (iOS 16.4+), its default modern browserslist. In older browsers the page renders but no script runs. Since Phase 3 an inline, ES5-only check (`src/lib/startup-check.ts`) then shows a notice: "Sprigkit's tools couldn't start in this browser…". It appears when a site script fails to load or parse, or when the app hasn't started 20 s after load. File pickers are native `<label>`s, so they open even then, but chosen files are only handled once the app runs.
 
 ## 2. Platform features we rely on
 

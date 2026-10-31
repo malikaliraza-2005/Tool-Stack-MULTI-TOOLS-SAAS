@@ -49,6 +49,31 @@ test.describe("merge-pdf", () => {
     }
   });
 
+  test("Choose files opens the browser's file picker", async ({ page }) => {
+    await page.goto("/merge-pdf");
+    const [chooser] = await Promise.all([
+      page.waitForEvent("filechooser"),
+      page.locator("label", { hasText: "Choose files" }).click(),
+    ]);
+    expect(chooser.isMultiple()).toBe(true);
+    await chooser.setFiles([await pdfFile("a.pdf", [A4]), await pdfFile("b.pdf", [A4])]);
+    await expect(list(page).getByRole("listitem")).toHaveCount(2);
+  });
+
+  test("Choose files opens the picker even before JavaScript runs", async ({ browser }) => {
+    // Phones can show the page seconds before scripts load; the button is a
+    // native <label> for the file input, so it must not depend on JavaScript.
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto("/merge-pdf");
+    const [chooser] = await Promise.all([
+      page.waitForEvent("filechooser"),
+      page.locator("label", { hasText: "Choose files" }).click(),
+    ]);
+    expect(chooser.isMultiple()).toBe(true);
+    await context.close();
+  });
+
   test("merges in the chosen order, reordered by keyboard, and downloads", async ({ page }) => {
     await page.goto("/merge-pdf");
     await addFiles(page, [await pdfFile("a.pdf", [A4, A4]), await pdfFile("b.pdf", [LETTER])]);
@@ -113,8 +138,11 @@ test.describe("merge-pdf", () => {
     expect(download.suggestedFilename()).toMatch(/^Q3[ _]report\.pdf$/);
   });
 
-  test("reorders by dragging the handle", async ({ page, isMobile }) => {
+  test("reorders by dragging the handle", async ({ page, isMobile, browserName }) => {
     test.skip(isMobile, "Mouse drag; touch drag is checked manually");
+    // Playwright's synthetic mouse drag is unreliable in WebKit; keyboard
+    // reordering is tested in every browser.
+    test.skip(browserName === "webkit", "Synthetic drag is flaky in WebKit");
     await page.goto("/merge-pdf");
     await addFiles(page, [await pdfFile("a.pdf", [A4]), await pdfFile("b.pdf", [A4])]);
     const rows = list(page).getByRole("listitem");

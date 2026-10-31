@@ -20,6 +20,8 @@ export default defineConfig({
     { name: "firefox", use: { ...devices["Desktop Firefox"] } },
     { name: "webkit", use: { ...devices["Desktop Safari"] } },
     { name: "mobile", use: { ...devices["Pixel 7"] } },
+    // iPhone viewport, touch and user agent on WebKit (closest to iOS Safari).
+    { name: "iphone", use: { ...devices["iPhone 14"] } },
   ],
   webServer: {
     command: `node scripts/serve-out.mjs --port ${PORT}`,

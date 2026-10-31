@@ -2,7 +2,7 @@
 
 import { CircleCheck } from "lucide-react";
 import { m, useReducedMotion } from "motion/react";
-import { useEffect, useId, useRef, type ReactNode } from "react";
+import { Fragment, useEffect, useId, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { duration, ease } from "@/lib/motion";
 
@@ -66,11 +66,12 @@ export function ResultPanel({
             {title}
           </h2>
           <p className="font-mono text-small text-fg-muted tabular-nums">
+            {/* Separators sit outside the nowrap spans so the line can wrap between parts. */}
             {summary.map((part, index) => (
-              <span key={index} className="whitespace-nowrap">
+              <Fragment key={index}>
                 {index > 0 && " · "}
-                {part}
-              </span>
+                <span className="whitespace-nowrap">{part}</span>
+              </Fragment>
             ))}
           </p>
         </div>

@@ -15,7 +15,7 @@ import { CodeEditor, type CodeEditorHandle } from "@/components/tool/CodeEditor"
 import { ProcessingState } from "@/components/tool/ProcessingState";
 import { useToolOptions } from "@/components/tool/useToolOptions";
 import { ToolbarGroup, Workbench, WorkbenchPane } from "@/components/tool/Workbench";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonClasses } from "@/components/ui/Button";
 import { CopyButton } from "@/components/ui/CopyButton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorState } from "@/components/ui/ErrorState";
@@ -82,6 +82,7 @@ export default function JsonFormatterUI() {
   const controller = useRef<AbortController | null>(null);
   const sequence = useRef(0);
   const errorId = useId();
+  const fileInputId = useId();
 
   useEffect(() => () => runner.current?.dispose(), []);
 
@@ -303,29 +304,39 @@ export default function JsonFormatterUI() {
               <Sparkles aria-hidden />
               Sample
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => fileInput.current?.click()}>
-              <FolderOpen aria-hidden />
-              Open file
-            </Button>
+            {/* A label for the real input opens the picker natively, also before
+                hydration and in in-app browsers (see DropZone). */}
+            <span className="inline-flex">
+              <input
+                ref={fileInput}
+                id={fileInputId}
+                type="file"
+                accept=".json,application/json,text/plain"
+                className="peer sr-only"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) void openFile(file);
+                  event.target.value = "";
+                }}
+              />
+              <label
+                htmlFor={fileInputId}
+                className={buttonClasses({
+                  variant: "ghost",
+                  size: "sm",
+                  className: "peer-focus-visible:focus-ring",
+                })}
+              >
+                <FolderOpen aria-hidden />
+                Open file
+              </label>
+            </span>
             <IconButton
               label="Clear input"
               icon={<Eraser aria-hidden />}
               size="sm"
               onClick={clear}
               disabled={input === ""}
-            />
-            <input
-              ref={fileInput}
-              type="file"
-              accept=".json,application/json,text/plain"
-              tabIndex={-1}
-              aria-hidden
-              className="sr-only"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) void openFile(file);
-                event.target.value = "";
-              }}
             />
           </>
         }
