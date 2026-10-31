@@ -105,7 +105,11 @@ test.describe("regex-tester", () => {
       return w.__maxGap ?? 0;
     });
     console.log(`(a+)+$: longest main-thread frame gap ${Math.round(maxGap)} ms`);
-    expect(maxGap).toBeLessThan(500);
+    // On the page, (a+)+$ on 40 characters would block for minutes; in the
+    // worker it is stopped at 1 s. What remains is rendering the update:
+    // 17 ms in Chromium, ~100 ms in WebKit locally, up to ~650 ms on CI
+    // runners. Any gap under the 1 s timeout proves the page wasn't blocked.
+    expect(maxGap).toBeLessThan(1000);
 
     // The next pattern runs in a fresh worker.
     await pattern(page).fill("a+");
