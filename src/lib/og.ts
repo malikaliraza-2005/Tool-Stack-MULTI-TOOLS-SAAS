@@ -8,7 +8,7 @@ export const OG_COLORS = {
   fg: "#1e1a15",
   "fg-muted": "#625d56",
   border: "#e0deda",
-  accent: "#c94b00",
+  accent: "#c44600",
   success: "#187a3b",
 } as const;
 
