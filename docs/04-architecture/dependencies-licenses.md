@@ -34,7 +34,7 @@ Additional rules:
 
 | Package | Version | License | Status | Purpose | Load |
 |---|---|---|---|---|---|
-| `next` | 16.4.0 📌 | MIT | ✅ | Framework, static export | Initial |
+| `next` | 16.4.3 📌 | MIT | ✅ | Framework, static export | Initial |
 | `react`, `react-dom` | 19.3.0 📌 | MIT | ✅ | UI | Initial |
 | `tailwindcss`, `@tailwindcss/postcss` | 4.3.3 📌 | MIT | ✅ | Styling (build time, PostCSS plugin; works with webpack, D-14) | Build |
 | `radix-ui` | 1.8.1 📌 | MIT | ✅ | Accessible primitives (Dialog, DropdownMenu, Popover, Select, Tabs, Tooltip, Checkbox, RadioGroup, Switch, Slider, Slot), restyled with tokens in `src/components/ui/` | Initial (shell: Tooltip, DropdownMenu, Dialog) / with the component |
@@ -124,7 +124,7 @@ All permissive. The `/licenses` page must reproduce these notices (BSD/IJG attri
 | `wrangler` | 4.150.0 | MIT OR Apache-2.0 | ✅ (optional) | Not installed. Local headers/clean URLs are emulated by `scripts/serve-out.mjs` instead |
 | `license-checker-rseidelsohn` | 5.0.1 📌 | BSD-3-Clause | ✅ | License report and CI gate (`npm run licenses`) |
 | `eslint` | 9.39.5 📌 | MIT | ✅ | Lint. ESLint 10 exists; 9 kept to match `eslint-config-next` 16.4 as scaffolded |
-| `eslint-config-next` | 16.4.0 📌 | MIT | ✅ | Next.js lint rules (core-web-vitals + TypeScript) |
+| `eslint-config-next` | 16.4.3 📌 | MIT | ✅ | Next.js lint rules (core-web-vitals + TypeScript) |
 | `eslint-config-prettier` | 10.1.8 📌 | MIT | ✅ | Turns off rules that conflict with Prettier |
 | `prettier` | 3.9.10 📌 | MIT | ✅ | Formatting |
 
