@@ -3,6 +3,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import * as z from "zod/mini";
 import { detect, detectorIds, DETECTORS } from "./detect";
+import { base64Detector } from "./detect/base64";
 import { jsonDetector } from "./detect/json";
 import { unixTimestampDetector } from "./detect/unix-timestamp";
 import {
@@ -183,8 +184,49 @@ describe("detectors (tool-registry §5)", () => {
     expect(unixTimestampDetector.detect("x".repeat(10_000))).toBe(0);
   });
 
+  it("base64: text or known files, never random words or hex", () => {
+    const b64 = (text: string) => Buffer.from(text).toString("base64");
+    expect(base64Detector.detect(b64("Hello, world! This is Base64."))).toBe(0.7);
+    expect(base64Detector.detect(b64("Grüße 👋 こんにちは and more text"))).toBe(0.7);
+    // URL-safe without padding, and wrapped lines.
+    const urlSafe = b64("subjects?>>>").replace(/\+/g, "-").replace(/\//g, "_");
+    expect(urlSafe).toBe("c3ViamVjdHM_Pj4-");
+    expect(base64Detector.detect(urlSafe)).toBe(0.7);
+    expect(base64Detector.detect(b64("x".repeat(120)).replace(/(.{76})/g, "$1\n"))).toBe(0.7);
+    const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13, 1, 2]);
+    expect(base64Detector.detect(png.toString("base64"))).toBe(0.9);
+    expect(base64Detector.detect(`data:image/png;base64,${png.toString("base64")}`)).toBe(0.9);
+
+    expect(base64Detector.detect(b64("short"))).toBe(0); // under 16 characters
+    expect(base64Detector.detect("HelloWorldFooBar")).toBe(0);
+    expect(
+      base64Detector.detect("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"),
+    ).toBe(0);
+    expect(base64Detector.detect("1700000000000000")).toBe(0);
+    expect(base64Detector.detect(`${b64("Hello, world! Hello!")}=`)).toBe(0); // bad padding
+    expect(base64Detector.detect("eyJhbGciOiJIUzI1NiJ9.e30.abc")).toBe(0);
+    expect(
+      base64Detector.detect(
+        Buffer.from(Uint8Array.from({ length: 30 }, (_, i) => i * 9)).toString("base64"),
+      ),
+    ).toBe(0);
+  });
+
+  it("base64: stays within 1 ms on 10 KB", () => {
+    const text = Buffer.from("Lorem ipsum dolor sit amet. ".repeat(400)).toString("base64");
+    expect(text.length).toBeGreaterThan(10_000);
+    base64Detector.detect(text); // warm up
+    const runs = 50;
+    const batches = Array.from({ length: 5 }, () => {
+      const started = performance.now();
+      for (let i = 0; i < runs; i++) base64Detector.detect(text);
+      return (performance.now() - started) / runs;
+    });
+    expect(Math.min(...batches)).toBeLessThan(1);
+  });
+
   it("detect sorts by confidence, then precedence", () => {
-    expect(detectorIds()).toEqual(["json", "unix-timestamp"]);
+    expect(detectorIds()).toEqual(["json", "unix-timestamp", "base64"]);
     expect(detect('{"a":1}')).toEqual([{ id: "json", confidence: 0.95 }]);
     const tie = detect("x", [
       { id: "base64", detect: () => 0.5 },
@@ -192,7 +234,7 @@ describe("detectors (tool-registry §5)", () => {
       { id: "none", detect: () => 0 },
     ]);
     expect(tie.map((m) => m.id)).toEqual(["jwt", "base64"]);
-    expect(DETECTORS).toHaveLength(2);
+    expect(DETECTORS).toHaveLength(3);
   });
 });
 

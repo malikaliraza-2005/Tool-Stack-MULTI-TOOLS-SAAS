@@ -15,6 +15,7 @@ for (const path of [
   "/merge-pdf",
   "/json-formatter",
   "/unix-timestamp-converter",
+  "/base64-encode-decode",
   "/does-not-exist",
 ]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {

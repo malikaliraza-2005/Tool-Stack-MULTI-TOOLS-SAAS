@@ -12,6 +12,7 @@ const TOOLS = [
     name: "Unix Timestamp Converter",
     hub: "Developer tools",
   },
+  { slug: "base64-encode-decode", name: "Base64 Encode & Decode", hub: "Developer tools" },
 ];
 
 for (const tool of TOOLS) {
@@ -81,7 +82,13 @@ test("sitemap lists the home page and published tools", async ({ request }) => {
   expect(res.status()).toBe(200);
   const xml = await res.text();
   const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]!).pathname);
-  expect(urls).toEqual(["/", "/merge-pdf", "/json-formatter", "/unix-timestamp-converter"]);
+  expect(urls).toEqual([
+    "/",
+    "/merge-pdf",
+    "/json-formatter",
+    "/unix-timestamp-converter",
+    "/base64-encode-decode",
+  ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");
 });

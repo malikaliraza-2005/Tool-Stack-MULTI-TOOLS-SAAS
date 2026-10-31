@@ -10,6 +10,7 @@ import type { ComponentType } from "react";
  * hydrates. Heavy libraries load later, on intent, inside each UI.
  */
 const TOOL_UIS: Record<string, ComponentType> = {
+  "base64-encode-decode": dynamic(() => import("@/tools/base64-encode-decode/ui")),
   "json-formatter": dynamic(() => import("@/tools/json-formatter/ui")),
   "merge-pdf": dynamic(() => import("@/tools/merge-pdf/ui")),
   "unix-timestamp-converter": dynamic(() => import("@/tools/unix-timestamp-converter/ui")),

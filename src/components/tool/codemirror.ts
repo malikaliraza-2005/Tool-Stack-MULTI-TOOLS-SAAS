@@ -114,6 +114,7 @@ export type EditorOptions = {
   label: string;
   readOnly: boolean;
   language: "json" | "text";
+  wrap?: boolean;
   placeholder?: string;
   describedBy?: string;
   onChange?: (value: string) => void;
@@ -145,6 +146,7 @@ export function createEditor(options: EditorOptions): EditorController {
         // Tab is not bound, so keyboard users can always Tab out of the editor.
         keymap.of([...defaultKeymap, ...historyKeymap, ...foldKeymap]),
         language === "json" ? json() : [],
+        options.wrap ? EditorView.lineWrapping : [],
         syntaxHighlighting(highlight),
         theme,
         errorLine,

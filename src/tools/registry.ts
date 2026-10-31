@@ -3,13 +3,19 @@
 // at build time, so an invalid entry fails the build.
 
 import { detectorIds } from "@/lib/detect";
+import { meta as base64EncodeDecode } from "./base64-encode-decode/meta";
 import { meta as jsonFormatter } from "./json-formatter/meta";
 import { meta as mergePdf } from "./merge-pdf/meta";
 import { meta as unixTimestampConverter } from "./unix-timestamp-converter/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
-export const TOOLS: readonly ToolDefinition[] = [mergePdf, jsonFormatter, unixTimestampConverter];
+export const TOOLS: readonly ToolDefinition[] = [
+  mergePdf,
+  jsonFormatter,
+  unixTimestampConverter,
+  base64EncodeDecode,
+];
 
 /**
  * Final MVP slugs (D-11, mvp-scope §2) not built yet. `related` and `handoff`
@@ -26,7 +32,6 @@ export const PLANNED_SLUGS: readonly string[] = [
   "resize-image",
   "remove-exif-data",
   "jwt-decoder",
-  "base64-encode-decode",
   "url-encode-decode",
   "diff-checker",
   "regex-tester",

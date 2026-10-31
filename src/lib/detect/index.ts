@@ -1,13 +1,14 @@
 // Detector registry. Other detectors are added with their tools (Phase 4);
 // smart paste on the homepage uses them in Phase 7.
 
+import { base64Detector } from "./base64";
 import { jsonDetector } from "./json";
 import type { Detector } from "./types";
 import { unixTimestampDetector } from "./unix-timestamp";
 
 export type { Detector } from "./types";
 
-export const DETECTORS: readonly Detector[] = [jsonDetector, unixTimestampDetector];
+export const DETECTORS: readonly Detector[] = [jsonDetector, unixTimestampDetector, base64Detector];
 
 /** Tie-break order (tool-registry §5). Ids not listed rank last. */
 export const DETECTOR_PRECEDENCE = [

@@ -42,7 +42,7 @@ This document defines how every MVP tool behaves. **Acceptance tests listed here
 - Last-used **options** (not content) persist in `localStorage`.
 - Input content is never persisted and never placed in the URL.
 - Sample button inserts a realistic example for first-time users.
-- *Clarified in Phase 3:* the editor is a plain text area until CodeMirror loads on intent (hover, focus, or content to show); the text, selection and focus carry over.
+- *Clarified in Phase 3:* the editor is a plain text area until CodeMirror loads on intent (hover, focus, or content to show); the text, selection and focus carry over. *Phase 4:* focus did not carry over (fixed; covered by an E2E test). `CodeEditor` sets its label and placeholder once, so a tool whose labels change by mode remounts it with `key`. Long single-line content (Base64) uses the `wrap` prop.
 
 ### 2.4 Error taxonomy (`src/lib/errors.ts`)
 
@@ -212,6 +212,7 @@ All use the Workbench (§2.3) unless stated.
 - **File mode:** file → Base64 or data URL (`data:<mime>;base64,…`); Base64/data URL → downloadable file, type detected from magic bytes or data-URL MIME.
 - **Errors:** invalid characters or length → `E_INVALID_INPUT` with position; decoded bytes that aren't valid UTF-8 → offer "Download as file" instead of showing garbled text.
 - **Acceptance tests:** UTF-8 round trip incl. emoji and non-Latin scripts; URL-safe variant; padding handling; binary file round trip byte-identical; data-URL parsing.
+- *Clarified in Phase 4:* URL-safe output also drops `=` padding (as in JWTs). Decoding accepts both alphabets, missing padding, and spaces and line breaks anywhere; wrong padding (e.g. `Zg=`) and `=` before the end are errors. Data URLs without `;base64` are percent-decoded. Decoded bytes are shown as text only when they are valid UTF-8, contain no NUL byte and aren't a detected file type (PDF, JPEG, PNG, WebP, GIF, AVIF, HEIC, BMP, ZIP, gzip); otherwise the output is a download named `decoded.<ext>`. In Encode, Open file encodes the file (worker); in Decode, it opens Base64 saved as text. Data URL output (files only) always uses the standard alphabet on one line, so URL-safe and Wrap are disabled with it.
 
 ### 5.4 url-encode-decode
 - **Modes:** Encode / Decode / **Parse**.
