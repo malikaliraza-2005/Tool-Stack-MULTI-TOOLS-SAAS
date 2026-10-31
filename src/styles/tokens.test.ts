@@ -63,6 +63,12 @@ function contrast(a: Oklch, b: Oklch): number {
 
 const TEXT = 4.5;
 const UI = 3;
+/**
+ * Text on solid accent fills: 4.5 plus a margin, because browsers render
+ * OKLCH slightly differently (Firefox drew accent-fg on accent at 4.44:1
+ * when the tokens computed to 4.56:1).
+ */
+const TEXT_ON_FILL = 4.7;
 
 // [foreground, background, minimum ratio, where the pair is used]
 const PAIRS: [string, string, number, string][] = [
@@ -80,8 +86,8 @@ const PAIRS: [string, string, number, string][] = [
   ["accent-text", "surface-2", TEXT, "selected menu check"],
   ["accent-text", "accent-soft", TEXT, "accent badge"],
   ["fg", "accent-soft", TEXT, "selected rows, highlights"],
-  ["accent-fg", "accent", TEXT, "primary button"],
-  ["accent-fg", "accent-hover", TEXT, "primary button hover"],
+  ["accent-fg", "accent", TEXT_ON_FILL, "primary button"],
+  ["accent-fg", "accent-hover", TEXT_ON_FILL, "primary button hover"],
   ["danger-fg", "danger", TEXT, "danger button"],
   ["danger-fg", "danger-hover", TEXT, "danger button hover"],
   ["bg", "fg", TEXT, "tooltip (inverted)"],

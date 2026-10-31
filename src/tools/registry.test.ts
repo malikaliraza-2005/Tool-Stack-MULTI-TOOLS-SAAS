@@ -54,7 +54,18 @@ describe("the real registry", () => {
   });
 
   it("contains the pilots as live tools", () => {
-    expect(publishedTools().map((t) => t.slug)).toEqual(["merge-pdf", "json-formatter"]);
+    expect(publishedTools().map((t) => t.slug)).toEqual([
+      "merge-pdf",
+      "json-formatter",
+      "unix-timestamp-converter",
+      "base64-encode-decode",
+      "url-encode-decode",
+      "uuid-generator",
+      "hash-generator",
+      "jwt-decoder",
+      "diff-checker",
+      "regex-tester",
+    ]);
     expect(getTool("merge-pdf")?.name).toBe("Merge PDF");
     expect(getTool("split-pdf")).toBeUndefined();
   });

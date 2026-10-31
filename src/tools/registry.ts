@@ -3,12 +3,31 @@
 // at build time, so an invalid entry fails the build.
 
 import { detectorIds } from "@/lib/detect";
+import { meta as base64EncodeDecode } from "./base64-encode-decode/meta";
 import { meta as jsonFormatter } from "./json-formatter/meta";
 import { meta as mergePdf } from "./merge-pdf/meta";
+import { meta as unixTimestampConverter } from "./unix-timestamp-converter/meta";
+import { meta as urlEncodeDecode } from "./url-encode-decode/meta";
+import { meta as uuidGenerator } from "./uuid-generator/meta";
+import { meta as hashGenerator } from "./hash-generator/meta";
+import { meta as jwtDecoder } from "./jwt-decoder/meta";
+import { meta as diffChecker } from "./diff-checker/meta";
+import { meta as regexTester } from "./regex-tester/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
-export const TOOLS: readonly ToolDefinition[] = [mergePdf, jsonFormatter];
+export const TOOLS: readonly ToolDefinition[] = [
+  mergePdf,
+  jsonFormatter,
+  unixTimestampConverter,
+  base64EncodeDecode,
+  urlEncodeDecode,
+  uuidGenerator,
+  hashGenerator,
+  jwtDecoder,
+  diffChecker,
+  regexTester,
+];
 
 /**
  * Final MVP slugs (D-11, mvp-scope §2) not built yet. `related` and `handoff`
@@ -24,14 +43,6 @@ export const PLANNED_SLUGS: readonly string[] = [
   "convert-image",
   "resize-image",
   "remove-exif-data",
-  "jwt-decoder",
-  "base64-encode-decode",
-  "url-encode-decode",
-  "diff-checker",
-  "regex-tester",
-  "unix-timestamp-converter",
-  "uuid-generator",
-  "hash-generator",
 ];
 
 export const REGISTRY_CONTEXT: RegistryContext = {

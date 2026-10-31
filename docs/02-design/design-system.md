@@ -46,7 +46,7 @@ All colors use **OKLCH** (perceptually even; supported in all current browsers).
 | `--fg-subtle` | Placeholders, helper icons, disabled text | `oklch(0.54 0.01 75)` | `oklch(0.66 0.008 75)` |
 | `--border` | Default 1px rules | `oklch(0.9 0.006 85)` | `oklch(0.3 0.006 70)` |
 | `--border-strong` | Input, checkbox, radio and switch boundaries (≥ 3:1) | `oklch(0.63 0.008 80)` | `oklch(0.53 0.008 70)` |
-| `--accent` | "Signal" accent: primary actions, focus, active indicators | `oklch(0.575 0.18 47)` | `oklch(0.72 0.17 48)` |
+| `--accent` | "Signal" accent: primary actions, focus, active indicators | `oklch(0.56 0.18 47)` | `oklch(0.72 0.17 48)` |
 | `--accent-hover` | Accent hover | `oklch(0.53 0.17 45)` | `oklch(0.76 0.16 50)` |
 | `--accent-fg` | Text/icons on accent fills | `oklch(0.99 0.005 85)` | `oklch(0.17 0.01 60)` |
 | `--accent-text` | Accent used **as text** on bg (links) | `oklch(0.53 0.17 38)` | `oklch(0.78 0.14 52)` |
@@ -90,6 +90,7 @@ Values changed from v0.1 because they failed:
 | `--success` | `0.55` | 4.4:1 on `--bg` | `0.51` |
 | `--warning` | `0.62 0.14 75` | 3.6:1 on `--bg` | `0.53 0.12 70` |
 | `--info` | `0.55` | 4.2:1 on `--info-soft` | `0.52` |
+| `--accent` (Phase 4) | `0.575 0.18 47` | `--accent-fg` on it 4.56:1, rendered 4.44:1 in Firefox (axe failure in CI) | `0.56 0.18 47` (4.84:1); the token test now requires 4.7:1 for text on accent fills |
 
 Disabled controls use 50% opacity and are exempt from contrast (WCAG 1.4.3).
 

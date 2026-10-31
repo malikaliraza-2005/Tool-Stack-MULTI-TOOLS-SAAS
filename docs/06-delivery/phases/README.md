@@ -12,7 +12,7 @@ Status: ⬜ Not started · 🟨 In progress · ✅ Done · ⏸ Blocked
 | 1 | [Setup & technical spikes](phase-01-setup-and-spikes.md) | 🟨 | M1 | 3–5 days |
 | 2 | [Design system & app shell](phase-02-design-system-and-shell.md) | ✅ | M2 | 6–8 days |
 | 3 | [Tool platform + pilot tools](phase-03-tool-platform.md) | ✅ | M3 | 7–9 days |
-| 4 | [Developer tools](phase-04-developer-tools.md) | ⬜ | | 6–8 days |
+| 4 | [Developer tools](phase-04-developer-tools.md) | 🟨 | | 6–8 days |
 | 5 | [PDF tools](phase-05-pdf-tools.md) | ⬜ | | 8–10 days |
 | 6 | [Image tools](phase-06-image-tools.md) | ⬜ | M4 | 6–8 days |
 | 7 | [Homepage, discovery & PWA](phase-07-homepage-discovery-pwa.md) | ⬜ | M5 (with P8) | 5–7 days |

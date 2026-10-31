@@ -7,6 +7,18 @@ import { expect, test } from "./fixtures";
 const TOOLS = [
   { slug: "merge-pdf", name: "Merge PDF", hub: "PDF tools" },
   { slug: "json-formatter", name: "JSON Formatter", hub: "Developer tools" },
+  {
+    slug: "unix-timestamp-converter",
+    name: "Unix Timestamp Converter",
+    hub: "Developer tools",
+  },
+  { slug: "base64-encode-decode", name: "Base64 Encode & Decode", hub: "Developer tools" },
+  { slug: "url-encode-decode", name: "URL Encode & Decode", hub: "Developer tools" },
+  { slug: "uuid-generator", name: "UUID Generator", hub: "Developer tools" },
+  { slug: "hash-generator", name: "Hash Generator", hub: "Developer tools" },
+  { slug: "jwt-decoder", name: "JWT Decoder", hub: "Developer tools" },
+  { slug: "diff-checker", name: "Diff Checker", hub: "Developer tools" },
+  { slug: "regex-tester", name: "Regex Tester", hub: "Developer tools" },
 ];
 
 for (const tool of TOOLS) {
@@ -66,6 +78,8 @@ test("the workspace is in the static HTML (no JavaScript)", async ({ browser }) 
   await expect(page.getByRole("button", { name: "Choose files" })).toBeVisible();
   await page.goto("/json-formatter");
   await expect(page.getByRole("textbox", { name: "JSON input" })).toBeVisible();
+  await page.goto("/unix-timestamp-converter");
+  await expect(page.getByRole("textbox", { name: "Unix timestamp" })).toBeVisible();
   await context.close();
 });
 
@@ -74,7 +88,19 @@ test("sitemap lists the home page and published tools", async ({ request }) => {
   expect(res.status()).toBe(200);
   const xml = await res.text();
   const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]!).pathname);
-  expect(urls).toEqual(["/", "/merge-pdf", "/json-formatter"]);
+  expect(urls).toEqual([
+    "/",
+    "/merge-pdf",
+    "/json-formatter",
+    "/unix-timestamp-converter",
+    "/base64-encode-decode",
+    "/url-encode-decode",
+    "/uuid-generator",
+    "/hash-generator",
+    "/jwt-decoder",
+    "/diff-checker",
+    "/regex-tester",
+  ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");
 });

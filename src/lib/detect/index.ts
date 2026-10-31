@@ -1,12 +1,26 @@
-// Detector registry. Other detectors are added with their tools (Phase 4);
-// smart paste on the homepage uses them in Phase 7.
+// Detector registry (tool-registry §5): one detector per smart-paste type.
+// Smart paste on the homepage uses them in Phase 7. Precedence and speed
+// across all detectors are tested in detect.test.ts.
 
+import { base64Detector } from "./base64";
 import { jsonDetector } from "./json";
+import { jwtDetector } from "./jwt";
 import type { Detector } from "./types";
+import { unixTimestampDetector } from "./unix-timestamp";
+import { urlDetector, urlEncodedDetector } from "./url";
+import { uuidDetector } from "./uuid";
 
 export type { Detector } from "./types";
 
-export const DETECTORS: readonly Detector[] = [jsonDetector];
+export const DETECTORS: readonly Detector[] = [
+  jwtDetector,
+  jsonDetector,
+  unixTimestampDetector,
+  base64Detector,
+  urlDetector,
+  urlEncodedDetector,
+  uuidDetector,
+];
 
 /** Tie-break order (tool-registry §5). Ids not listed rank last. */
 export const DETECTOR_PRECEDENCE = [

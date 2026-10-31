@@ -55,6 +55,15 @@ test.describe("json-formatter", () => {
     await bothThemesAccessible(page);
   });
 
+  test("focus carries over when the editor upgrades", async ({ page }) => {
+    await page.goto("/json-formatter");
+    await input(page).focus();
+    await expect(page.locator(".cm-editor")).toBeVisible();
+    await expect(input(page)).toBeFocused();
+    await page.keyboard.type('{"typed":true}');
+    await expect(output(page)).toContainText('"typed": true');
+  });
+
   test("minify and sort keys", async ({ page }) => {
     await page.goto("/json-formatter");
     await fill(page, '{ "b": 1, "a": [ true, null ] }');

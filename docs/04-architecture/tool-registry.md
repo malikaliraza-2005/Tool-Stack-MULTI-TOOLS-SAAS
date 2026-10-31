@@ -239,7 +239,7 @@ Updated after the Phase 3 pilots (P3-T25).
    - `content.tsx`: supporting content (default export) built from `src/components/tool/content.tsx`
    - `constants.ts` (optional): small values the UI needs eagerly, so it never imports `logic.ts` at module level
 5. Register it in three places: the meta in `src/tools/registry.ts` (`TOOLS`), the UI in `src/components/tool/ToolLoader.tsx`, the content in `src/tools/content.ts`. A missing UI or content fails the build.
-6. **Keep heavy code out of `ui.tsx`'s static imports.** Import `logic.ts` with `import type` only, and load libraries with `import()` on intent. Check the page's JS with Lighthouse (`npm run lhci`).
+6. **Keep heavy code out of `ui.tsx`'s static imports.** Import `logic.ts` with `import type` only, and load libraries with `import()` on intent. Exception: a small `logic.ts` with no dependencies that the UI needs on first render (e.g. `unix-timestamp-converter`) may be imported directly; say so in a comment. Check the page's JS with Lighthouse (`npm run lhci`).
 7. Add `e2e/tools/<slug>.spec.ts` (import `test` from `../fixtures`, so the **no-network** and CSP checks run): main flow, every error case, keyboard-only use, `expectNoA11yViolations` in both themes for the empty, working and result states. Add the page URL to `lighthouserc.cjs`.
 8. Run `typecheck`, `lint`, `test`, `build`, `e2e`, `lhci`, `licenses`; fix everything.
 9. Check the Definition of Done in [mvp-scope.md](../01-product/mvp-scope.md) §6.
@@ -248,6 +248,13 @@ Lessons from the pilots:
 - Files chosen before the page hydrated fire no React event (seen in WebKit). `DropZone` picks them up on mount; tool-specific file inputs must do the same.
 - Never put large text in a plain `<textarea>` or other unvirtualized element: layout of 20 MB of text froze the page for 30+ s. `CodeEditor` handles this; use it for any large text.
 - Number and string values must be copied from the source, not round-tripped through `JSON.parse`, or big integers change.
+
+Lessons from Phase 4:
+- Text typed into a plain `<input>` before hydration is lost too: read the DOM value on mount (see `unix-timestamp-converter`, `uuid-generator`).
+- `CodeEditor` sets its label and placeholder once. If they change with a mode, remount it with `key={mode}`.
+- `cn` doesn't merge classes: to hide a component responsively, wrap it (`<div className="hidden lg:block">`) instead of passing `hidden` next to its own `inline-flex`.
+- Labelled values with copy buttons: use `ResultList` (`src/components/tool/ResultList.tsx`).
+- E2E: wait for `data-app-started` before the first click or key press, and clear a CodeMirror editor (its Clear button) before `fill()`; replacing a multi-line document with `fill()` can leave it empty in Firefox.
 
 ## 8. MVP registry summary
 

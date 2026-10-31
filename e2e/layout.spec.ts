@@ -10,7 +10,20 @@ test.use({ viewport: { width: 320, height: 640 } });
 const fits = async (page: Parameters<typeof horizontalOverflow>[0]) =>
   expect(await horizontalOverflow(page), "elements wider than the viewport").toEqual([]);
 
-for (const path of ["/", "/merge-pdf", "/json-formatter", "/does-not-exist"]) {
+for (const path of [
+  "/",
+  "/merge-pdf",
+  "/json-formatter",
+  "/unix-timestamp-converter",
+  "/base64-encode-decode",
+  "/url-encode-decode",
+  "/uuid-generator",
+  "/hash-generator",
+  "/jwt-decoder",
+  "/diff-checker",
+  "/regex-tester",
+  "/does-not-exist",
+]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {
     await page.goto(path);
     await fits(page);

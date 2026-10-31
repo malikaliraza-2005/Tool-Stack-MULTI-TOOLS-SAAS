@@ -42,7 +42,7 @@ This document defines how every MVP tool behaves. **Acceptance tests listed here
 - Last-used **options** (not content) persist in `localStorage`.
 - Input content is never persisted and never placed in the URL.
 - Sample button inserts a realistic example for first-time users.
-- *Clarified in Phase 3:* the editor is a plain text area until CodeMirror loads on intent (hover, focus, or content to show); the text, selection and focus carry over.
+- *Clarified in Phase 3:* the editor is a plain text area until CodeMirror loads on intent (hover, focus, or content to show); the text, selection and focus carry over. *Phase 4:* focus did not carry over (fixed; covered by an E2E test). `CodeEditor` sets its label and placeholder once, so a tool whose labels change by mode remounts it with `key`. Long single-line content (Base64) uses the `wrap` prop.
 
 ### 2.4 Error taxonomy (`src/lib/errors.ts`)
 
@@ -205,6 +205,7 @@ All use the Workbench (§2.3) unless stated.
 - **Verify (optional panel):** algorithm from header; secret (HS256/384/512) or public key as PEM/JWK (RS*, PS*, ES*, EdDSA) → verify with `jose`. Result: "Signature verified" / "Invalid signature" / "Key type doesn't match algorithm".
 - **Safety:** `alg: none` flagged as insecure; tokens never stored; no share link; a note explains that decoding is not verification.
 - **Acceptance tests:** decode fixtures for HS256, RS256, ES256; verification true/false cases; malformed token (2 segments, bad base64url, non-JSON header) → located error; `Bearer ` prefix trimmed; expiry status computed with a mocked clock.
+- *Clarified in Phase 4:* decoding needs no library (base64url + JSON); line breaks inside the token are removed and error positions point into the original input. Five-part tokens are recognised as JWE and explained. Verification uses jose `compactVerify` (signature only, `algorithms` pinned to the header's alg), loaded on Verify. HS secrets are text (UTF-8). Keys: SPKI PEM, X.509 certificate, JWK or JWKS (by `kid`); private keys and PKCS#1 RSA keys are refused with an explanation. Status is computed when the token is entered, from the device clock. The relative-time formatter moved to `src/lib/time.ts` (shared with the timestamp converter).
 
 ### 5.3 base64-encode-decode
 - **Modes:** Encode / Decode (SegmentedControl; Swap moves output to input).
@@ -212,6 +213,7 @@ All use the Workbench (§2.3) unless stated.
 - **File mode:** file → Base64 or data URL (`data:<mime>;base64,…`); Base64/data URL → downloadable file, type detected from magic bytes or data-URL MIME.
 - **Errors:** invalid characters or length → `E_INVALID_INPUT` with position; decoded bytes that aren't valid UTF-8 → offer "Download as file" instead of showing garbled text.
 - **Acceptance tests:** UTF-8 round trip incl. emoji and non-Latin scripts; URL-safe variant; padding handling; binary file round trip byte-identical; data-URL parsing.
+- *Clarified in Phase 4:* URL-safe output also drops `=` padding (as in JWTs). Decoding accepts both alphabets, missing padding, and spaces and line breaks anywhere; wrong padding (e.g. `Zg=`) and `=` before the end are errors. Data URLs without `;base64` are percent-decoded. Decoded bytes are shown as text only when they are valid UTF-8, contain no NUL byte and aren't a detected file type (PDF, JPEG, PNG, WebP, GIF, AVIF, HEIC, BMP, ZIP, gzip); otherwise the output is a download named `decoded.<ext>`. In Encode, Open file encodes the file (worker); in Decode, it opens Base64 saved as text. Data URL output (files only) always uses the standard alphabet on one line, so URL-safe and Wrap are disabled with it.
 
 ### 5.4 url-encode-decode
 - **Modes:** Encode / Decode / **Parse**.
@@ -219,6 +221,7 @@ All use the Workbench (§2.3) unless stated.
 - **Decode:** `decodeURIComponent` with `+` → space option; malformed `%` sequence → error with position.
 - **Parse:** `new URL()` → protocol, username (password masked), host, port, path, query parameters table (decoded key/value, duplicates shown), fragment. Copy any part.
 - **Acceptance tests:** reserved characters per mode; round trip; malformed sequence error; parser handles IPv6 hosts, ports, repeated params, and Unicode (IDN shown in both Unicode and punycode).
+- *Clarified in Phase 4:* "Space as +" applies to Component only (encodeURI leaves "+" unescaped, so it would be ambiguous). Decoding reports two errors with position: "%" not followed by two hex digits, and escapes that aren't valid UTF-8 (e.g. Latin-1 `%E9`); "+ as space" converts literal "+" only, never `%2B`. Parse shows the default port with a "default" badge when none is given, the decoded path when it differs, and the password masked (Copy copies it). Punycode is decoded by a small built-in function (no dependency). Input limit: 1 MB soft, 10 MB hard (no worker).
 
 ### 5.5 diff-checker
 - **Input:** original and changed text (paste or load files).
@@ -226,6 +229,7 @@ All use the Workbench (§2.3) unless stated.
 - **Processing:** `diff` library in a worker; results virtualized for large inputs.
 - **Output:** highlighted additions/removals (soft status colors + `+`/`−` markers, not color alone); counts of added/removed lines; next/previous change navigation (keyboard `n`/`p` or buttons); copy as unified diff.
 - **Acceptance tests:** known fixture pairs produce expected hunks; ignore-whitespace/case options; unified diff output parses with `patch`-compatible format; 50k-line inputs stay responsive.
+- *Clarified in Phase 4:* lines are diffed as arrays (`diffArrays`) on normalized keys, so Ignore whitespace (runs of whitespace collapsed, ends trimmed) and Ignore case apply to line matching; each side still shows its own text. A last line without a newline differs from the same line with one, as in `diff -u`. Changed line pairs are then diffed by word (`diffWordsWithSpace`) or character (default granularity: Word). The unified diff is generated from the same rows (3 lines of context, ` No newline at end of file`) and is checked with jsdiff's `parsePatch`/`applyPatch`; with ignore options on, context lines come from the original. The diff always runs in the worker, debounced 300 ms, with a 10 s timeout ("too different to compare quickly"). Side by side is offered from `lg`; narrower screens always show the inline view. Results are virtualized (TanStack Virtual); the 50k-line E2E test measured a 317 ms longest frame gap.
 
 ### 5.6 regex-tester
 - **Input:** pattern, flags (`g i m s u y d v`, toggles), test text.
@@ -234,17 +238,20 @@ All use the Workbench (§2.3) unless stated.
 - **Safety:** always runs in a **dedicated worker**, killed and recreated after **1000ms** → `E_TIMEOUT` message: "This pattern took too long (possible catastrophic backtracking). Try making quantifiers more specific."
 - **Flavor note:** JavaScript (ECMAScript) regex flavor; stated visibly.
 - **Acceptance tests:** match/group results equal native `matchAll`; invalid pattern error message shown; `(a+)+$` against a long string times out and the UI stays responsive; replacement preview correct with named groups.
+- *Clarified in Phase 4:* without `g`, only the first match is shown (as `exec`), and the status says so. Matching always adds `d` internally for group positions (it doesn't change results). The worker returns up to 5,000 matches (all are counted); the page lists 200 and highlights the first 200,000 characters, with a note when cut. `u` with `v` is refused with an explanation, and so is `v` where the browser lacks it. The explanation (shipped, not deferred) covers escapes, classes, groups (numbered, named, non-capturing), lookarounds, backreferences, quantifiers (greedy/lazy), anchors, alternation and literals; anything else is shown as "not explained". It reads the pattern without running it, so it runs on the page. Pattern, text and replacement are never stored; flags and mode are. The E2E test measured a 17 ms longest frame gap while `(a+)+$` was stopped. JavaScriptCore on Linux (CI WebKit) sometimes finishes `(a+)+$` and other catastrophic patterns at once with no match, so the timeout can't always be shown there. The test tries four catastrophic patterns (`(a+)+$`, `(a|aa)+$`, `(.*a){24}$`, a backreference): Chromium and Firefox must stop one with the timeout; WebKit may instead show the engine's own result. In every browser the page must stay responsive (frame gap under the 1 s timeout).
 
 ### 5.7 unix-timestamp-converter
 - **Timestamp → date:** auto-detect unit by digit count (10 = seconds, 13 = milliseconds, 16 = microseconds; manual override). Shows ISO 8601 UTC, local time, chosen time zone, RFC 2822, relative time, day of week.
 - **Date → timestamp:** date-time picker + time zone (from `Intl.supportedValuesOf("timeZone")`, default local) → seconds and milliseconds.
 - **Live clock:** current Unix time updating each second, with a pause control. The value must not be in an `aria-live` region (screen readers must not announce every tick); a "Copy current" button provides it on demand.
 - **Acceptance tests:** known timestamps ↔ dates in UTC and two zones including a DST boundary; unit auto-detection; negative timestamps (pre-1970); invalid input messages.
+- *Clarified in Phase 4:* auto-detection by digit count (sign excluded): ≤ 11 digits seconds, 12–14 milliseconds, 15–17 microseconds; longer is rejected. Spaces, `_` and `,` are ignored; decimals are rejected with a hint to use milliseconds. One time zone picker (toolbar) serves both directions; the choice is remembered as an option. A date-time that doesn't exist (clocks moved forward) converts to the time the same distance after the change; one that happens twice (clocks moved back) converts to the first occurrence; both show a note. Zones the browser lists under old names (e.g. `Asia/Calcutta`) are shown under their current IANA name, and the old name stays searchable. RFC 2822 is shown for years 1900–9999 only.
 
 ### 5.8 uuid-generator
 - **Generate:** UUID v4 (`crypto.randomUUID`, default), UUID v7 (time-ordered, implemented per RFC 9562 using `crypto.getRandomValues`), ULID (`ulid`). Quantity 1–1000 (default 1); options uppercase, without hyphens. Copy one / copy all / download `.txt`.
 - **Inspect:** paste a UUID → version, variant, and embedded timestamp for v1/v6/v7; invalid format explained.
 - **Acceptance tests:** format regex per version; version/variant bits correct; v7 values generated in sequence sort in time order; 1000 values unique; inspect decodes v7 timestamp correctly.
+- *Clarified in Phase 4:* v4 uses `crypto.getRandomValues` (works outside secure contexts, unlike `crypto.randomUUID`). v7 uses RFC 9562 §6.2 method 1: `rand_a` is a 12-bit counter seeded in its lower half, so a batch sorts in order; on overflow the timestamp moves 1 ms ahead, and it never goes back if the clock does. ULIDs are implemented in the tool (no `ulid` dependency) and are monotonic within a millisecond; Uppercase/Hyphens don't apply to them. Values are generated after the page loads (never in the static HTML), on load and whenever type or quantity changes. Inspect accepts braces, `urn:uuid:` and missing hyphens; it decodes v1, v6 and v7 times (checked against RFC 9562 appendix A vectors), and recognises nil, max, non-RFC variants and ULIDs pasted by mistake.
 
 ### 5.9 hash-generator
 - **Input:** text (UTF-8) or file.
@@ -254,3 +261,4 @@ All use the Workbench (§2.3) unless stated.
 - **Verify:** "Compare with expected hash" field → match / no match (case-insensitive, whitespace trimmed).
 - **Labels:** MD5 and SHA-1 marked "Not secure for passwords or signatures; fine for checksums."
 - **Acceptance tests:** known test vectors for every algorithm (empty string, "abc", long string); HMAC vectors (RFC 4231 for SHA-256); 1 GB file hashed with flat memory usage (desktop); compare field logic.
+- *Clarified in Phase 4:* text is hashed with hash-wasm too (not WebCrypto), so text and files share one code path and HMAC works the same for both; hash-wasm loads on the first input. Files are read in 4 MB slices in the worker (no full-file buffer); the 1 GB E2E test checks the SHA-256 against Node's, but memory isn't measured automatically. The HMAC key is text (UTF-8), held in memory only; MD5 is disabled with HMAC. Compare checks every selected algorithm: hex case-insensitively, Base64 exactly, ignoring whitespace and a `sha256:`-style prefix. File limits: desktop 1 GB soft / 8 GB hard, mobile 500 MB / 2 GB (streaming means memory isn't the constraint).
