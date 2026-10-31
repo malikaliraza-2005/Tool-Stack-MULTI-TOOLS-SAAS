@@ -12,6 +12,7 @@ import { meta as uuidGenerator } from "./uuid-generator/meta";
 import { meta as hashGenerator } from "./hash-generator/meta";
 import { meta as jwtDecoder } from "./jwt-decoder/meta";
 import { meta as diffChecker } from "./diff-checker/meta";
+import { meta as regexTester } from "./regex-tester/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
@@ -25,6 +26,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   hashGenerator,
   jwtDecoder,
   diffChecker,
+  regexTester,
 ];
 
 /**
@@ -41,7 +43,6 @@ export const PLANNED_SLUGS: readonly string[] = [
   "convert-image",
   "resize-image",
   "remove-exif-data",
-  "regex-tester",
 ];
 
 export const REGISTRY_CONTEXT: RegistryContext = {

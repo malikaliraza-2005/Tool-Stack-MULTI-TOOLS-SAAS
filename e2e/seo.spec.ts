@@ -18,6 +18,7 @@ const TOOLS = [
   { slug: "hash-generator", name: "Hash Generator", hub: "Developer tools" },
   { slug: "jwt-decoder", name: "JWT Decoder", hub: "Developer tools" },
   { slug: "diff-checker", name: "Diff Checker", hub: "Developer tools" },
+  { slug: "regex-tester", name: "Regex Tester", hub: "Developer tools" },
 ];
 
 for (const tool of TOOLS) {
@@ -98,6 +99,7 @@ test("sitemap lists the home page and published tools", async ({ request }) => {
     "/hash-generator",
     "/jwt-decoder",
     "/diff-checker",
+    "/regex-tester",
   ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");

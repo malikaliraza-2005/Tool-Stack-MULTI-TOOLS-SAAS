@@ -11,6 +11,7 @@ import UuidGeneratorContent from "./uuid-generator/content";
 import HashGeneratorContent from "./hash-generator/content";
 import JwtDecoderContent from "./jwt-decoder/content";
 import DiffCheckerContent from "./diff-checker/content";
+import RegexTesterContent from "./regex-tester/content";
 
 export const TOOL_CONTENT: Record<string, ComponentType> = {
   "base64-encode-decode": Base64Content,
@@ -22,4 +23,5 @@ export const TOOL_CONTENT: Record<string, ComponentType> = {
   "hash-generator": HashGeneratorContent,
   "jwt-decoder": JwtDecoderContent,
   "diff-checker": DiffCheckerContent,
+  "regex-tester": RegexTesterContent,
 };

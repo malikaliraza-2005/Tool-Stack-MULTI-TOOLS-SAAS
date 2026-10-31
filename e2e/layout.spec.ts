@@ -21,6 +21,7 @@ for (const path of [
   "/hash-generator",
   "/jwt-decoder",
   "/diff-checker",
+  "/regex-tester",
   "/does-not-exist",
 ]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {

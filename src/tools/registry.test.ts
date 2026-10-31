@@ -64,6 +64,7 @@ describe("the real registry", () => {
       "hash-generator",
       "jwt-decoder",
       "diff-checker",
+      "regex-tester",
     ]);
     expect(getTool("merge-pdf")?.name).toBe("Merge PDF");
     expect(getTool("split-pdf")).toBeUndefined();
