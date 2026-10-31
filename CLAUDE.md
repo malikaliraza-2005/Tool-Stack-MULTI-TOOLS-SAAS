@@ -10,9 +10,9 @@ Full context: [docs/README.md](docs/README.md).
 
 ## Current phase
 
-**Phase 3: Tool platform + pilot tools** → [docs/06-delivery/phases/phase-03-tool-platform.md](docs/06-delivery/phases/phase-03-tool-platform.md)
+**Phase 4: Developer tools** → [docs/06-delivery/phases/phase-04-developer-tools.md](docs/06-delivery/phases/phase-04-developer-tools.md)
 
-Phase 2 (design system & shell) is done: components in `src/components/ui/`, shell in `src/components/layout/`, gallery at `/_gallery`. Still open from Phase 1: P1-T18 rollback test (owner).
+Phase 3 (tool platform + pilots) is done: registry in `src/tools/`, shared tool UI in `src/components/tool/`, pilots `json-formatter` and `merge-pdf`. Its deferrals (performance budget R-14, real Safari, screen reader, content review, `pako` licence) are tracked in Phases 8–9. Still open from Phase 1: P1-T18 rollback test (owner).
 
 Carried over from Phase 0 (owner actions, see [risks-and-decisions.md](docs/06-delivery/risks-and-decisions.md)): register `sprigkit.com` (D-1); manual trademark search for "Sprigkit" (D-5); manual Google Trends check before the first production deploy (P0-T05).
 

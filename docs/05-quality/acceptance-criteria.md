@@ -35,7 +35,9 @@ Release gates: what must be true before a tool or page ships. The Definition of 
 | 320 px width, 200% zoom: no horizontal page scroll | Manual (accessibility.md §2) |
 | Lighthouse: Performance ≥ 90, Accessibility 100, Best Practices ≥ 95, SEO 100 | `npm run lhci` |
 
-## 3. Pilot status (2026-10-14)
+## 3. Pilot status (2026-10-31)
+
+Phase 3 closed with owner-approved deferrals (2026-10-31); ⏳ items name the task that closes them.
 
 | Gate | json-formatter | merge-pdf |
 |---|---|---|
@@ -43,11 +45,13 @@ Release gates: what must be true before a tool or page ships. The Definition of 
 | G2 | ✅ | ✅ |
 | G3 | ✅ all projects | ✅ all projects |
 | G4 | ⏳ Phase 7 (`processing.offline: false`) | ⏳ Phase 7 |
-| G5 | ✅ automated (axe all states, keyboard tree and editors). ❌ screen-reader spot check not done | ✅ automated (axe all states, keyboard reorder/remove, focus on result). ❌ screen-reader spot check not done |
-| G6 | ❌ Lighthouse Performance 73–79 (LCP ≈ 3.8 s, TBT 350–580 ms); motion checklist not done on devices | ❌ Performance 82–84 (LCP ≈ 3.7 s); touch drag not checked on a device |
-| G7 | ⚠️ Playwright engines pass; real Safari/iOS/Android not tested (P3-T24) | ⚠️ same |
-| G8 | ✅ registry + JSON-LD tests. ❌ Rich Results Test on preview not run | ✅ / ❌ same |
-| G9 | ⚠️ written; owner review pending | ⚠️ written; owner review pending |
-| G10 | ✅ | ✅ (`pako` exception awaits owner review) |
+| G5 | ✅ automated (axe all states, keyboard tree and editors). ⏳ screen-reader check → P9-T06 | ✅ automated (axe all states, keyboard reorder/remove, focus on result). ⏳ screen-reader check → P9-T06 |
+| G6 | ⏳ Lighthouse Performance 73–79 (LCP ≈ 3.8 s, TBT 350–580 ms), accepted until P9-T08 (R-14); motion checklist on devices → P9-T11 | ⏳ Performance 82–84 (LCP ≈ 3.7 s), accepted until P9-T08 (R-14). ✅ touch drag on a real Android phone |
+| G7 | ✅ Playwright Chromium/Firefox/WebKit/Pixel 7/iPhone 14; ✅ real Android phone (Chrome). ⏳ real Safari macOS/iOS → P9-T01 | ✅ / ⏳ same |
+| G8 | ✅ registry + JSON-LD tests; JSON-LD and metadata checked on the preview; Rich Results Test valid (Breadcrumbs, Software app) | ✅ same |
+| G9 | ⏳ written; owner review → P8-T04 | ⏳ same |
+| G10 | ✅ | ✅ (`pako` exception: owner review → P9-T15) |
+
+All pages also pass the `noOverflow` E2E fixture (no content wider than the viewport, 320px included), added after Merge PDF overflowed on a 360px phone.
 
 Accessibility 100, Best Practices 100 and SEO 100 in Lighthouse for both pilots. Performance details: [performance.md §2.2](performance.md#22-phase-3-tool-pages).

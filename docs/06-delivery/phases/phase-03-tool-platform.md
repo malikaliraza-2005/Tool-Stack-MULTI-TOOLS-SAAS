@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | 🟨 In progress (code complete; device testing, preview checks and performance open) |
+| **Status** | ✅ Done 2026-10-31 (with owner-approved deferrals to P8/P9, see exit criteria) |
 | **Effort** | 7–9 days [Estimate] |
 | **Milestone** | M3: Platform proven |
 
@@ -36,9 +36,9 @@ Build everything that all tools share (registry, page template, SEO generation, 
 
 ### SEO generation
 - [x] **P3-T06** `lib/seo.ts`: `generateMetadata` (title, description, canonical from `SITE_URL`, OG, Twitter).
-- [ ] **P3-T07** JSON-LD builders: `BreadcrumbList`, `WebApplication`, `FAQPage` (only with visible FAQs); validate with Rich Results Test on preview. — *Builders and tests done; Rich Results Test on a preview not run yet (needs a pushed preview).*
+- [x] **P3-T07** JSON-LD builders: `BreadcrumbList`, `WebApplication`, `FAQPage` (only with visible FAQs); validate with Rich Results Test on preview. — *Done 2026-10-31. On the preview: one `@graph` per pilot with all three types, 5 FAQ entries matching the 5 visible FAQs; hub links in the breadcrumb 404 until P7-T09 (known, seo-strategy). Rich Results Test (owner, `/merge-pdf` on the preview; json-formatter uses the same builders): Breadcrumbs valid, Software app valid with non-critical warnings; FAQ not listed (Google limits FAQ rich results). The test reports "URL is not available to Google" because previews send `X-Robots-Tag: noindex` (intended, P1-T16); production indexability is P9-T17.*
 - [x] **P3-T08** `app/sitemap.ts` and `app/robots.ts` (force-static); verify output files.
-- [x] **P3-T09** OG image generation using the approach chosen in P1-T23. — *Done (`app/[tool]/opengraph-image.tsx`); `Content-Type` rule to be confirmed on a Cloudflare preview.*
+- [x] **P3-T09** OG image generation using the approach chosen in P1-T23. — *Done (`app/[tool]/opengraph-image.tsx`); `Content-Type: image/png` confirmed on the Cloudflare preview 2026-10-31.*
 
 ### Shared libraries
 - [x] **P3-T10** `lib/errors.ts`: `ToolError` codes and message helpers (tool-specifications §2.4).
@@ -59,18 +59,18 @@ Build everything that all tools share (registry, page template, SEO generation, 
 ### Pilot tools
 - [x] **P3-T22** `json-formatter`: meta, logic + tests (spec §5.1 acceptance tests), worker for > 1 MB, UI, content draft, E2E incl. no-network + axe.
 - [x] **P3-T23** `merge-pdf`: meta, logic + tests (spec §3.1), worker, UI, content draft, E2E incl. no-network + axe.
-- [ ] **P3-T24** Test both pilots against the full Definition of Done on Chrome, Firefox, Safari (macOS + iOS), mid-range Android. — *Open: Playwright Chromium, Firefox, WebKit and mobile viewport pass; real Safari (macOS/iOS) and Android not tested.*
+- [x] **P3-T24** Test both pilots against the full Definition of Done on Chrome, Firefox, Safari (macOS + iOS), mid-range Android. — *Done 2026-10-31 with one deferral. Playwright Chromium, Firefox, WebKit, Pixel 7 and iPhone 14 pass. Real Android phone (Chrome): full checklist passed by the owner after fixing a 360px overflow in Merge PDF (now guarded by the `noOverflow` E2E fixture). Real Safari (macOS/iOS) is not available to the owner: deferred to P9-T01 (owner decision 2026-10-31).*
 - [x] **P3-T25** Retrospective: adjust shared components and the "add a tool" checklist (tool-registry §7) based on what was painful. — *Checklist updated in tool-registry §7 (lessons: hydration race, large text, `import type` for logic).*
 
 ## Docs to write / update
 security-privacy.md (threat model, CSP, data rules as implemented) · acceptance-criteria.md (release gates per tool/page) · seo-strategy.md (technical SEO as implemented) · tool-registry.md (any schema changes) · tool-specifications.md (clarifications found while building)
 
 ## Exit criteria
-- [ ] Both pilots meet **every** Definition of Done item. *Open: DoD 6 (performance), 7 (real devices), screen-reader check, owner review of content; DoD 4 waits for Phase 7. Status per item: [acceptance-criteria.md §3](../../05-quality/acceptance-criteria.md#3-pilot-status-2026-10-14).*
+- [x] Both pilots meet **every** Definition of Done item. *Met with owner-approved deferrals (2026-10-31): DoD 6 performance → P9-T08 (R-14); real Safari → P9-T01; screen-reader check → P9-T06; content review → P8-T04; DoD 4 (offline) → Phase 7. Status per item: [acceptance-criteria.md §3](../../05-quality/acceptance-criteria.md#3-pilot-status-2026-10-31).*
 - [x] Registry validation fails the build on a deliberately broken entry (tested). *Unit tests per rule, and a manual `next build` with a broken `related` entry failed (2026-10-14).*
-- [ ] Generated metadata, canonical, sitemap, robots, and JSON-LD correct on preview; Rich Results Test passes. *Correct in the local production build (`e2e/seo.spec.ts`); preview and Rich Results Test not run.*
+- [x] Generated metadata, canonical, sitemap, robots, and JSON-LD correct on preview; Rich Results Test passes. *Correct in the local production build (`e2e/seo.spec.ts`) and on the preview `p3-mobile-file-picker.sprigkit.pages.dev` (2026-10-31): title, description, canonical and `og:url` on `https://sprigkit.com`, OG image `image/png`, sitemap with all 3 URLs, robots with sitemap, previews `noindex`. Rich Results Test: structured data valid (see P3-T07).*
 - [x] No-network E2E passes for both pilots (Chromium, Firefox, WebKit, mobile).
-- [ ] Lighthouse for both pilot pages meets budgets (architecture §14). *Not met: Performance 73–84, tool-page JS 267/291 KB vs 120 KB (framework + shell baseline 247 KB, R-14). A11y, Best Practices, SEO 100. See [performance.md §2.2](../../05-quality/performance.md#22-phase-3-tool-pages).*
+- [x] Lighthouse for both pilot pages meets budgets (architecture §14). *Accepted overrun, deferred to P9-T08 (owner decision 2026-10-31, R-14): Performance 73–84, tool-page JS 267/291 KB vs 120 KB, while the framework + shell baseline alone is 247 KB. A11y, Best Practices, SEO 100. See [performance.md §2.2](../../05-quality/performance.md#22-phase-3-tool-pages).*
 
 ## Risks & fallbacks
 | Risk | Fallback |
