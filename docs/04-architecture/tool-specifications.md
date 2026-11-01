@@ -126,6 +126,7 @@ Libraries: **pdf-lib** for creating/modifying, **pdfjs-dist** for rendering thum
 - **Limits:** canvas area capped per device; known small limit on iOS Safari (≈16.7 megapixels **[verify]**). If a page exceeds it, reduce the scale and tell the user.
 - **Output:** single image or ZIP.
 - **Acceptance tests:** output count = selected pages; dimensions match DPI × page size (± 1px); 300 DPI on large page triggers downscale message under mobile limits; JPG has no alpha.
+- *Clarified in Phase 5:* **Deviation:** pages are painted on the main thread, one at a time, like the Organize PDF thumbnails; pdf.js parses the file in its own worker (`openPdfRenderer` in `src/lib/pdf/render.ts`). Cancel stops between pages. pdf.js validates the file too, so no pdf-lib load: `PasswordException`, or a failure on a file that declares `/Encrypt`, is reported as password-protected; other failures as damaged. Pages are drawn on white. Canvas cap: 16,777,216 px on phones and tablets (the iOS Safari limit), 100 megapixels on desktop; a larger page keeps its aspect ratio at a lower DPI and the result names it (`plan.ts`, unit-tested). Output: `<name>-page-N.jpg|png`, several as `<name>-images.zip`; the page lists the first 100 for single download.
 
 ### 3.6 sign-pdf
 - **Input:** 1 PDF.

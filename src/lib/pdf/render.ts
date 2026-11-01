@@ -4,6 +4,7 @@
 // worker; painting a page at thumbnail size happens on the page.
 
 import type * as PdfJs from "pdfjs-dist";
+import { toolErrors } from "@/lib/errors";
 
 /** Must match the installed pdfjs-dist version (scripts/copy-pdfjs-assets.mjs). */
 export const PDFJS_VERSION = "6.4.299";
@@ -131,6 +132,63 @@ export async function openPdfPreview(data: Uint8Array): Promise<PdfPreview> {
     async destroy() {
       destroyed = true;
       for (const request of queue.splice(0)) request.resolve(null);
+      await task.destroy();
+    },
+  };
+}
+
+export type PdfRenderer = {
+  pageCount: number;
+  /** Size of a page (0-based) in points as displayed, with its own rotation applied. */
+  pageSize(index: number): Promise<[number, number]>;
+  /**
+   * Renders a page at `scale` (pixels per point) on a white background and
+   * encodes it. Throws E_OUT_OF_MEMORY when the browser can't allocate the canvas.
+   */
+  renderPage(
+    index: number,
+    scale: number,
+    type: "image/jpeg" | "image/png",
+    quality?: number,
+  ): Promise<Blob>;
+  destroy(): Promise<void>;
+};
+
+/** Opens a PDF for full-resolution export (PDF to JPG); call destroy() when done. */
+export async function openPdfRenderer(data: Uint8Array): Promise<PdfRenderer> {
+  const task = await openDocument(data);
+  const doc = await task.promise;
+  return {
+    pageCount: doc.numPages,
+    async pageSize(index) {
+      const viewport = (await doc.getPage(index + 1)).getViewport({ scale: 1 });
+      return [viewport.width, viewport.height];
+    },
+    async renderPage(index, scale, type, quality) {
+      const page = await doc.getPage(index + 1);
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.floor(viewport.width));
+      canvas.height = Math.max(1, Math.floor(viewport.height));
+      const context = canvas.getContext("2d");
+      try {
+        if (!context) throw toolErrors.outOfMemory();
+        // White, not transparent: JPEG has no alpha, and pages are white.
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        await page.render({ canvas, viewport }).promise;
+        const blob = await new Promise<Blob | null>((resolve) =>
+          canvas.toBlob(resolve, type, quality),
+        );
+        // A null blob means the browser couldn't allocate the canvas (iOS limits).
+        if (!blob) throw toolErrors.outOfMemory();
+        return blob;
+      } finally {
+        canvas.width = 0;
+        canvas.height = 0;
+      }
+    },
+    async destroy() {
       await task.destroy();
     },
   };

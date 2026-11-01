@@ -35,6 +35,7 @@ module.exports = {
         "http://127.0.0.1:4174/split-pdf",
         "http://127.0.0.1:4174/organize-pdf",
         "http://127.0.0.1:4174/jpg-to-pdf",
+        "http://127.0.0.1:4174/pdf-to-jpg",
       ],
       numberOfRuns: 3,
     },

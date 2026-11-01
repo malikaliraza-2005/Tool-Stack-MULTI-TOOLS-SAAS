@@ -22,6 +22,7 @@ const TOOLS = [
   { slug: "split-pdf", name: "Split PDF", hub: "PDF tools" },
   { slug: "organize-pdf", name: "Organize PDF", hub: "PDF tools" },
   { slug: "jpg-to-pdf", name: "JPG to PDF", hub: "PDF tools" },
+  { slug: "pdf-to-jpg", name: "PDF to JPG", hub: "PDF tools" },
 ];
 
 for (const tool of TOOLS) {
@@ -106,6 +107,7 @@ test("sitemap lists the home page and published tools", async ({ request }) => {
     "/split-pdf",
     "/organize-pdf",
     "/jpg-to-pdf",
+    "/pdf-to-jpg",
   ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");
@@ -119,6 +121,6 @@ test("robots.txt allows all and points to the sitemap", async ({ request }) => {
 });
 
 test("unknown tool slugs are 404", async ({ page }) => {
-  const response = await page.goto("/pdf-to-jpg");
+  const response = await page.goto("/sign-pdf");
   expect(response?.status()).toBe(404);
 });

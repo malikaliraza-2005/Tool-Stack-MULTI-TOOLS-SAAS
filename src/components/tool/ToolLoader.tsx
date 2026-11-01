@@ -23,6 +23,7 @@ const TOOL_UIS: Record<string, ComponentType> = {
   "split-pdf": dynamic(() => import("@/tools/split-pdf/ui")),
   "organize-pdf": dynamic(() => import("@/tools/organize-pdf/ui")),
   "jpg-to-pdf": dynamic(() => import("@/tools/jpg-to-pdf/ui")),
+  "pdf-to-jpg": dynamic(() => import("@/tools/pdf-to-jpg/ui")),
 };
 
 export function ToolLoader({ slug }: { slug: string }) {

@@ -15,6 +15,7 @@ import RegexTesterContent from "./regex-tester/content";
 import SplitPdfContent from "./split-pdf/content";
 import OrganizePdfContent from "./organize-pdf/content";
 import JpgToPdfContent from "./jpg-to-pdf/content";
+import PdfToJpgContent from "./pdf-to-jpg/content";
 
 export const TOOL_CONTENT: Record<string, ComponentType> = {
   "base64-encode-decode": Base64Content,
@@ -30,4 +31,5 @@ export const TOOL_CONTENT: Record<string, ComponentType> = {
   "split-pdf": SplitPdfContent,
   "organize-pdf": OrganizePdfContent,
   "jpg-to-pdf": JpgToPdfContent,
+  "pdf-to-jpg": PdfToJpgContent,
 };
