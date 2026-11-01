@@ -22,6 +22,9 @@ module.exports = {
       startServerReadyPattern: "Serving",
       url: [
         "http://127.0.0.1:4174/",
+        "http://127.0.0.1:4174/pdf-tools",
+        "http://127.0.0.1:4174/image-tools",
+        "http://127.0.0.1:4174/developer-tools",
         "http://127.0.0.1:4174/merge-pdf",
         "http://127.0.0.1:4174/json-formatter",
         "http://127.0.0.1:4174/unix-timestamp-converter",

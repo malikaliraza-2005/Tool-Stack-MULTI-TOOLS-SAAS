@@ -70,6 +70,23 @@ Findings:
 
 Not yet done: tracing on a mid-range Android phone (P9-T11). The owner accepted these results to close Phase 3 (2026-10-31, R-14); the budget decision is P9-T08.
 
+### Phase 7: homepage and hubs
+
+Measured 2026-11-02 with `lhci collect` (3 runs per page, same machine and settings as Phase 3). The hubs are now in `lighthouserc.cjs`.
+
+| Page | Performance | A11y | BP | SEO | LCP | TBT | CLS | Script transfer |
+|---|---|---|---|---|---|---|---|---|
+| `/` | 85 | 100 | 100 | 100 | 3.58–3.59 s | 228–244 ms | 0.001 | 265 KB (+18 KB vs Phase 3) |
+| `/pdf-tools` | 85–89 | 100 | 100 | 100 | 3.27–3.35 s | 200–289 ms | 0.004 | 280 KB |
+
+Findings:
+- **Homepage budget (≤ 100 KB) not met** (Phase 7 exit criterion); the cause is the R-14 baseline, not the homepage itself. The hero adds about 18 KB (hero component, detectors, suggestion logic, tool icons). Fuse.js loads on search focus, the palette on intent, `@serwist/window` after `load`.
+- LCP is the hero headline (not animated). It rose from 2.3–3.0 s to about 3.6 s, as render delay behind JavaScript evaluation on the simulated slow CPU, as in Phase 3. Over the 2.5 s target.
+- The hubs ship no client code of their own; the extra script over the homepage is `<Link>` prefetching of the tool pages in view.
+- Accessibility, Best Practices and SEO are 100; no layout shift from the entrance animation (opacity and transform only).
+
+Deferred to Phase 9 with R-14 (P9-T08 budget decision, P9-T11 device traces).
+
 ## 3. Rules that keep us inside the budgets
 
 - Server components by default; `"use client"` only for interactive parts.
