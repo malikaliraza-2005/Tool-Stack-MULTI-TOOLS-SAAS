@@ -10,7 +10,9 @@ Full context: [docs/README.md](docs/README.md).
 
 ## Current phase
 
-**Phase 4: Developer tools** → [docs/06-delivery/phases/phase-04-developer-tools.md](docs/06-delivery/phases/phase-04-developer-tools.md)
+**Phase 5: PDF tools** → [docs/06-delivery/phases/phase-05-pdf-tools.md](docs/06-delivery/phases/phase-05-pdf-tools.md)
+
+Phase 4 (developer tools) is done: 8 tools in `src/tools/`, all smart-paste detectors in `src/lib/detect/`. Its deferrals (real Android/Safari, screen reader, content review, performance budget) join Phase 3's in Phases 8–9.
 
 Phase 3 (tool platform + pilots) is done: registry in `src/tools/`, shared tool UI in `src/components/tool/`, pilots `json-formatter` and `merge-pdf`. Its deferrals (performance budget R-14, real Safari, screen reader, content review, `pako` licence) are tracked in Phases 8–9. Still open from Phase 1: P1-T18 rollback test (owner).
 
