@@ -25,6 +25,7 @@ import type { Margin, Orientation, PageSize } from "./layout";
 // Types only: pdf-lib stays in the worker chunk.
 import type { JpgToPdfJob, JpgToPdfJobResult } from "./logic";
 import { meta } from "./meta";
+import { UseInAnotherTool } from "@/components/tool/UseInAnotherTool";
 
 const optionsSchema = z.object({
   pageSize: z.enum(["fit", "a4", "letter"]),
@@ -418,9 +419,12 @@ export default function JpgToPdfUI() {
               </Button>
             }
             secondary={
-              <Button variant="secondary" onClick={startOver}>
-                Start over
-              </Button>
+              <>
+                <UseInAnotherTool outputs={[{ blob: result.blob, name: fileName }]} />
+                <Button variant="secondary" onClick={startOver}>
+                  Start over
+                </Button>
+              </>
             }
           />
         )}

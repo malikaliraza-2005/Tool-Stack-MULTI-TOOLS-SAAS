@@ -3,7 +3,7 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Container } from "@/components/layout/Container";
 import { SITE_NAME } from "@/config/site";
 import { toolJsonLd } from "@/lib/seo";
-import { CATEGORIES, relatedTools } from "@/tools/registry";
+import { CATEGORIES, getTool, relatedTools } from "@/tools/registry";
 import type { ToolDefinition } from "@/tools/types";
 import { Code, ContentSection, List, Paragraph } from "./content";
 import { FavoriteButton } from "./FavoriteButton";
@@ -46,7 +46,7 @@ export function ToolPage({ tool, content }: { tool: ToolDefinition; content: Rea
           aria-label={`${tool.name} workspace`}
           className="rounded-lg border border-border bg-surface shadow-1"
         >
-          <ToolLoader slug={tool.slug} />
+          <ToolLoader slug={tool.slug} handoff={handoffTargets(tool)} />
         </section>
       </Container>
       <Container size="content" className="section-stack pb-(--section-gap)">
@@ -57,6 +57,16 @@ export function ToolPage({ tool, content }: { tool: ToolDefinition; content: Rea
       </Container>
     </>
   );
+}
+
+/** "Use in another tool" targets that have a page (G-11). */
+function handoffTargets(tool: ToolDefinition) {
+  return (tool.handoff ?? []).flatMap((slug) => {
+    const target = getTool(slug);
+    return target
+      ? [{ slug, name: target.name, multiple: target.input.accepts?.multiple ?? false }]
+      : [];
+  });
 }
 
 /** Shared explanation the PrivacyMeter links to (literal and verifiable: content-voice §3). */

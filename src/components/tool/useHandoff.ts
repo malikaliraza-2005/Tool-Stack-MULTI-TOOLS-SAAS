@@ -3,11 +3,18 @@
 import { createContext, use, useEffect, useEffectEvent } from "react";
 import { takeHandoff, type Handoff } from "@/lib/handoff";
 
-/** Slug of the tool on this page, provided by ToolLoader. */
-export const ToolSlugContext = createContext<string | null>(null);
+/** A tool that accepts this tool's output (registry `handoff`, G-11). */
+export type HandoffTarget = { slug: string; name: string; multiple: boolean };
+
+/** The tool on this page, provided by ToolLoader. */
+export const ToolContext = createContext<{ slug: string; handoff: HandoffTarget[] } | null>(null);
 
 export function useToolSlug(): string | null {
-  return use(ToolSlugContext);
+  return use(ToolContext)?.slug ?? null;
+}
+
+export function useHandoffTargets(): HandoffTarget[] {
+  return use(ToolContext)?.handoff ?? [];
 }
 
 /**

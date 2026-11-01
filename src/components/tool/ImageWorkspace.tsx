@@ -14,6 +14,7 @@ import { downloadBlob } from "@/lib/files/download";
 import { formatBytes, plural } from "@/lib/files/format";
 import { createZipBlob } from "@/lib/image/zip";
 import type { ToolDefinition } from "@/tools/types";
+import { UseInAnotherTool } from "./UseInAnotherTool";
 
 type ImageWorkspaceProps = {
   batch: ImageBatch;
@@ -201,9 +202,12 @@ export function ImageWorkspace({
               )
             }
             secondary={
-              <Button variant="secondary" onClick={batch.reset}>
-                Start over
-              </Button>
+              <>
+                <UseInAnotherTool outputs={batch.done.map((item) => item.result!)} />
+                <Button variant="secondary" onClick={batch.reset}>
+                  Start over
+                </Button>
+              </>
             }
           />
         )}

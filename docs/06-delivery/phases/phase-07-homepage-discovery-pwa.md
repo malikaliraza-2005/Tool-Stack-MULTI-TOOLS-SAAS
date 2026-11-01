@@ -37,7 +37,7 @@ Homepage, category hubs, full command palette, smart paste, drop-zone suggestion
 - [x] **P7-T09** Category hubs `/pdf-tools`, `/image-tools`, `/developer-tools` (G-8): intro, tool list, short guide links; metadata + JSON-LD.
 - [x] **P7-T10** Build script generating `search-index.json` from the registry; CommandPalette with Fuse.js search, Recent, Favorites, actions (theme toggle) (G-1).
 - [x] **P7-T11** Favorites and recent tools (G-6) in localStorage.
-- [ ] **P7-T12** **Use in another tool (G-11):** ResultPanel hand-off to `handoff` targets, passing output files in memory.
+- [x] **P7-T12** **Use in another tool (G-11):** ResultPanel hand-off to `handoff` targets, passing output files in memory.
 
 ### PWA (G-5)
 - [ ] **P7-T13** Serwist (per P1-T22 outcome): precache shell, pages, fonts; runtime-cache on-intent libraries and WASM.
