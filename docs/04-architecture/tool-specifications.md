@@ -147,7 +147,9 @@ Libraries: **pdf-lib** for creating/modifying, **pdfjs-dist** for rendering thum
 
 ## 4. Image tools
 
-Libraries: **@jsquash/*** codecs (jpeg/mozjpeg, png, webp, avif, oxipng, resize); **exifr**, **piexifjs** for metadata. All codecs loaded on intent in a worker.
+Libraries: **@jsquash/*** codecs (jpeg/mozjpeg, png, webp, avif, oxipng, resize); **exifr** to read metadata. All codecs loaded on intent in a worker.
+
+*Phase 6:* the four tools share `src/lib/image` (pipeline, codecs, metadata) and one worker (`image.worker.ts`) run on a pool of 2 (1 on phones). Files are checked from their header when added (type, upright size, alpha, animation), and images above 120 MP (50 MP on phones) are rejected with `E_TOO_LARGE`. Photos are decoded by the browser (colour-managed, EXIF orientation applied) with the WASM decoder as fallback; PNG is decoded with WASM so lossless output keeps exact pixels. Metadata is removed in-house at segment/chunk level; piexifjs is not used.
 
 ### 4.1 compress-image
 - **Input:** JPG, PNG, WebP, AVIF; multiple.
@@ -175,10 +177,11 @@ Libraries: **@jsquash/*** codecs (jpeg/mozjpeg, png, webp, avif, oxipng, resize)
 - **Input:** JPG, PNG, WebP (HEIC not supported in MVP); multiple.
 - **Step 1, Inspect:** read with exifr and show what was found, grouped: **Location (GPS)** highlighted first, Camera & device, Date & time, Software, Other. GPS shown as text coordinates **only** (no map: map tiles would require external requests).
 - **Step 2, Remove:**
-  - **JPEG:** lossless removal of EXIF/XMP/IPTC segments (piexifjs for EXIF; segment-level removal of APP1 XMP and APP13 IPTC in-house). **Orientation** kept by default so the photo doesn't appear rotated; option "Remove everything" bakes the rotation into pixels (re-encode at quality 95) and removes the tag.
-  - **PNG:** remove `eXIf`, `tEXt`, `iTXt`, `zTXt` chunks; pixels untouched.
+  - **JPEG:** lossless removal of EXIF/XMP/IPTC segments, done in-house at segment level. *Phase 6:* also removes comments (COM), JFXX thumbnails, other camera APP segments and data after the end of the image; JFIF, the ICC colour profile and the Adobe segment are kept (they only describe how to show the pixels). **Orientation** kept by default so the photo doesn't appear rotated; option "Remove everything" bakes the rotation into pixels (re-encode at quality 95) and removes the tag.
+  - **PNG:** remove `eXIf`, `tEXt`, `iTXt`, `zTXt` chunks (*Phase 6:* and `tIME`); pixels untouched.
   - **WebP:** remove `EXIF` and `XMP ` chunks from the RIFF container; update chunk sizes.
 - **Output:** cleaned files; summary per file ("Removed: GPS location, camera model, date taken").
+- *Clarified in Phase 6:* exifr can't read WebP, so the inspect view reads the WebP EXIF chunk's TIFF data directly (XMP is listed as present). When one metadata block is damaged, exifr returns nothing, so reading is retried without IPTC, then without XMP. Output names: `<original>-no-metadata.<original ext>`.
 - **Acceptance tests:** GPS fixture → output has no GPS (verified by re-reading with exifr); JPEG pixel data unchanged in default mode (byte-compare scan data); orientation preserved by default; PNG text chunks removed; WebP container still valid.
 
 ---

@@ -110,6 +110,7 @@ test("sitemap lists the home page and published tools", async ({ request }) => {
     "/jpg-to-pdf",
     "/pdf-to-jpg",
     "/sign-pdf",
+    "/remove-exif-data",
   ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");

@@ -37,6 +37,7 @@ module.exports = {
         "http://127.0.0.1:4174/jpg-to-pdf",
         "http://127.0.0.1:4174/pdf-to-jpg",
         "http://127.0.0.1:4174/sign-pdf",
+        "http://127.0.0.1:4174/remove-exif-data",
       ],
       numberOfRuns: 3,
     },
