@@ -1,4 +1,12 @@
-import { ContentSection, Facts, List, Paragraph, Steps, Strong } from "@/components/tool/content";
+import {
+  ContentSection,
+  Facts,
+  List,
+  Paragraph,
+  Steps,
+  Strong,
+  TextLink,
+} from "@/components/tool/content";
 
 /** Supporting content for JPG to PDF (no heavy imports: rendered at build time). */
 export default function JpgToPdfContent() {
@@ -49,7 +57,7 @@ export default function JpgToPdfContent() {
           JPG and PNG images are placed in the PDF exactly as they are, without re-compressing, so
           there is no quality loss and transparent PNGs stay transparent. Phone photos that were
           taken sideways are turned upright using their orientation tag, again without re-encoding.
-          WebP, GIF (first frame), BMP and AVIF are converted once: to PNG when they have
+          WebP, GIF (first frame), BMP, AVIF and HEIC are converted once: to PNG when they have
           transparency, otherwise to high-quality JPEG.
         </Paragraph>
       </ContentSection>
@@ -57,7 +65,18 @@ export default function JpgToPdfContent() {
       <ContentSection id="formats" title="Formats and limits">
         <Facts
           items={[
-            { term: "Input", description: "JPG, PNG, WebP, GIF, BMP and AVIF; HEIC in Safari." },
+            { term: "Input", description: "JPG, PNG, WebP, GIF, BMP, AVIF and HEIC/HEIF." },
+            {
+              term: "HEIC",
+              description: (
+                <>
+                  Safari opens HEIC itself. In other browsers, HEIC photos are decoded with libheif,
+                  open-source software licensed under the LGPL-3.0, loaded only when needed. Its
+                  license and source code are on the{" "}
+                  <TextLink href="/licenses#libheif">licenses page</TextLink>.
+                </>
+              ),
+            },
             { term: "Size", description: "Up to 100 MB per image and 100 images (50 on phones)." },
             {
               term: "Output",
@@ -71,9 +90,9 @@ export default function JpgToPdfContent() {
         <List
           items={[
             <>
-              <Strong>“… is a HEIC photo, which this browser can’t open yet.”</Strong> Use Safari,
-              or set your iPhone to save photos as JPG (Settings › Camera › Formats › Most
-              Compatible). HEIC support for every browser is coming.
+              <Strong>“… is a HEIC photo that couldn’t be opened.”</Strong> The file may be damaged,
+              or the decoder didn’t load. Try again, or set your iPhone to save photos as JPG
+              (Settings › Camera › Formats › Most Compatible).
             </>,
             <>
               <Strong>“… couldn’t be read.”</Strong> The image is damaged or incomplete. Open it in

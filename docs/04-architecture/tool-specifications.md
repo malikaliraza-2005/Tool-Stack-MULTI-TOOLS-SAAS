@@ -147,7 +147,9 @@ Libraries: **pdf-lib** for creating/modifying, **pdfjs-dist** for rendering thum
 
 ## 4. Image tools
 
-Libraries: **@jsquash/*** codecs (jpeg/mozjpeg, png, webp, avif, oxipng, resize); **exifr**, **piexifjs** for metadata. All codecs loaded on intent in a worker.
+Libraries: **@jsquash/*** codecs (jpeg/mozjpeg, png, webp, avif, oxipng, resize); **exifr** to read metadata. All codecs loaded on intent in a worker.
+
+*Phase 6:* the four tools share `src/lib/image` (pipeline, codecs, metadata) and one worker (`image.worker.ts`) run on a pool of 2 (1 on phones). Files are checked from their header when added (type, upright size, alpha, animation), and images above 120 MP (50 MP on phones) are rejected with `E_TOO_LARGE`. Photos are decoded by the browser (colour-managed, EXIF orientation applied) with the WASM decoder as fallback; PNG is decoded with WASM so lossless output keeps exact pixels. Metadata is removed in-house at segment/chunk level; piexifjs is not used.
 
 ### 4.1 compress-image
 - **Input:** JPG, PNG, WebP, AVIF; multiple.
@@ -156,12 +158,14 @@ Libraries: **@jsquash/*** codecs (jpeg/mozjpeg, png, webp, avif, oxipng, resize)
 - **Output UX:** ComparisonSlider for the selected image; per-file sizes and percentage saved; batch list with totals.
 - **Rule:** if the result is **larger** than the original, keep the original and say so ("Already well optimized, original kept").
 - **Acceptance tests:** JPEG at q75 is smaller than a high-quality JPEG fixture; PNG lossless output decodes to identical pixels; larger-result rule; batch of 10 completes with correct totals; metadata stripped when on.
+- *Clarified in Phase 6:* max dimension is a "Longest side" choice (keep, 3840, 2560, 1920, 1280, 1024 px; never enlarges). Keeping metadata works only when a JPG stays a JPG (EXIF/XMP/IPTC copied, orientation reset to 1); other outputs never carry metadata. When the original is kept, its metadata is still removed (losslessly) unless "Remove metadata" is off. The slider hides when every output is PNG. AVIF is labelled "smallest, slower". Output: `<original>-compressed.<ext>`.
 
 ### 4.2 convert-image
 - **Input:** JPG, PNG, WebP, AVIF, GIF (first frame), BMP, HEIC/HEIF (decoded with `libheif-js` under the D-6 conditions).
 - **Options:** output format JPG (default when input has no alpha) / PNG (default when input has alpha) / WebP / AVIF; quality (lossy formats, default 85); background color for transparency → JPG (default white).
 - **Processing:** decode → (flatten alpha onto background if target lacks alpha) → encode. Apply EXIF orientation so output is upright.
 - **Acceptance tests:** each format pair round-trips; alpha to JPG uses background color; animated GIF warns "first frame only"; HEIC fixture converts correctly; if the HEIC decoder fails to load, a clear "HEIC could not be opened" message is shown (D-6 fallback: "not supported yet").
+- *Clarified in Phase 6:* the default is "Auto": JPG, or PNG when the decoded image actually has transparent pixels (decided per image in the worker). Background choices: white (default), black or a custom colour, shown only when JPG output can meet a transparent input. HEIC: the browser decoder first (Safari), libheif otherwise (D-6). GIF (first frame) and BMP have small JavaScript decoders as a fallback for browsers whose workers lack OffscreenCanvas. Output keeps the original name with the new extension (`IMG_1234.jpg`), or `-converted` when the format doesn't change.
 
 ### 4.3 resize-image
 - **Input:** JPG, PNG, WebP, AVIF; multiple.
@@ -170,15 +174,17 @@ Libraries: **@jsquash/*** codecs (jpeg/mozjpeg, png, webp, avif, oxipng, resize)
   - **Crop:** free or fixed aspect (1:1, 4:3, 16:9, 3:2, 9:16); drag handles; keyboard adjustable.
 - **Options:** resampling Lanczos (default) via @jsquash/resize; output format Same as input (default); quality 85 for lossy; "Don't enlarge" (default on).
 - **Acceptance tests:** exact output dimensions; aspect lock math (rounding to nearest px); "don't enlarge" respected; crop coordinates correct; EXIF orientation applied before crop.
+- *Clarified in Phase 6:* width and height may each be left empty. With proportions kept and both set, "Fit inside" keeps the whole image within the box and "Fill and crop" fills it exactly with a centred crop; presets with both sides use Fill and crop. With one image, typing one side fills in the other. Presets: 3840/1920/1280 wide, 1080 × 1080, 1080 × 1350, 1080 × 1920, 1200 × 630, 1500 × 500. Percentage 1–400%. Crop: each image has its own crop area (select it in the list); keyboard: arrows move, Shift + arrows resize, Alt for 10% steps. Output: `<original>-resized|-cropped.<ext>`.
 
 ### 4.4 remove-exif-data
 - **Input:** JPG, PNG, WebP (HEIC not supported in MVP); multiple.
 - **Step 1, Inspect:** read with exifr and show what was found, grouped: **Location (GPS)** highlighted first, Camera & device, Date & time, Software, Other. GPS shown as text coordinates **only** (no map: map tiles would require external requests).
 - **Step 2, Remove:**
-  - **JPEG:** lossless removal of EXIF/XMP/IPTC segments (piexifjs for EXIF; segment-level removal of APP1 XMP and APP13 IPTC in-house). **Orientation** kept by default so the photo doesn't appear rotated; option "Remove everything" bakes the rotation into pixels (re-encode at quality 95) and removes the tag.
-  - **PNG:** remove `eXIf`, `tEXt`, `iTXt`, `zTXt` chunks; pixels untouched.
+  - **JPEG:** lossless removal of EXIF/XMP/IPTC segments, done in-house at segment level. *Phase 6:* also removes comments (COM), JFXX thumbnails, other camera APP segments and data after the end of the image; JFIF, the ICC colour profile and the Adobe segment are kept (they only describe how to show the pixels). **Orientation** kept by default so the photo doesn't appear rotated; option "Remove everything" bakes the rotation into pixels (re-encode at quality 95) and removes the tag.
+  - **PNG:** remove `eXIf`, `tEXt`, `iTXt`, `zTXt` chunks (*Phase 6:* and `tIME`); pixels untouched.
   - **WebP:** remove `EXIF` and `XMP ` chunks from the RIFF container; update chunk sizes.
 - **Output:** cleaned files; summary per file ("Removed: GPS location, camera model, date taken").
+- *Clarified in Phase 6:* exifr can't read WebP, so the inspect view reads the WebP EXIF chunk's TIFF data directly (XMP is listed as present). When one metadata block is damaged, exifr returns nothing, so reading is retried without IPTC, then without XMP. Output names: `<original>-no-metadata.<original ext>`.
 - **Acceptance tests:** GPS fixture → output has no GPS (verified by re-reading with exifr); JPEG pixel data unchanged in default mode (byte-compare scan data); orientation preserved by default; PNG text chunks removed; WebP container still valid.
 
 ---

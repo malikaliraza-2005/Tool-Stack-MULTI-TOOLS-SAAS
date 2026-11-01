@@ -104,6 +104,8 @@
   --section-gap: calc(var(--spacing) * 14);
   --header-height: calc(var(--spacing) * 16);
   --sheet-max-height: 85dvh;
+  /* Image tools: tallest the ComparisonSlider gets, so portrait photos fit on screen (§10.5). */
+  --comparison-max-height: 70dvh;
 }
 
 @media (width >= 48rem) {
@@ -339,6 +341,18 @@
   transition-property: transform, opacity;
   transition-duration: var(--dur-standard), var(--dur-quick);
   transition-timing-function: var(--ease-out);
+}
+
+/* Transparent areas of images (ComparisonSlider, thumbnails): a quiet checkerboard. */
+@utility bg-checker {
+  background-color: var(--surface);
+  background-image: conic-gradient(
+    var(--surface-3) 25%,
+    transparent 0 50%,
+    var(--surface-3) 0 75%,
+    transparent 0
+  );
+  background-size: calc(var(--spacing) * 4) calc(var(--spacing) * 4);
 }
 
 /* Page container: centered, max width set with `max-w-content|tool|wide` (§4.2). */

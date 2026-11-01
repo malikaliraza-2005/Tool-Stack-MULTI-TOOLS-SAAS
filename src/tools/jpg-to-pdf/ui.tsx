@@ -141,11 +141,11 @@ export default function JpgToPdfUI() {
         { transfer: [bytes] },
       );
       if (!live.current.has(entry.id) || checked.op !== "inspect") return;
-      // The browser can show it (the worker just decoded it): the file itself is the thumbnail.
+      // The file itself is the thumbnail, except HEIC, which most browsers can't show.
       update(entry.id, {
         status: "ready",
         size: { width: checked.width, height: checked.height },
-        thumbnail: URL.createObjectURL(entry.file),
+        thumbnail: checked.kind === "heic" ? undefined : URL.createObjectURL(entry.file),
       });
     } catch (error) {
       if (!live.current.has(entry.id)) return;

@@ -3,6 +3,7 @@ import type { Download, Page } from "@playwright/test";
 import { PDFDocument } from "pdf-lib";
 import {
   halfTransparentPng,
+  heic,
   redBlueJpeg,
   withExifOrientation,
 } from "../../src/lib/files/__fixtures__/images";
@@ -122,7 +123,7 @@ test.describe("jpg-to-pdf", () => {
     expect(await pagesOf(download)).toEqual(["23×8"]);
   });
 
-  test("explains files it can't use", async ({ page, browserName }) => {
+  test("explains files it can't use", async ({ page }) => {
     test.slow(); // Axe in both themes after checking several files.
     await open(page);
     await addImages(page, [
@@ -133,24 +134,35 @@ test.describe("jpg-to-pdf", () => {
       list(page).getByText(/doc\.jpg is a PDF document\. JPG to PDF accepts JPG, PNG/),
     ).toBeVisible();
     await expect(page.getByText("1 image with problems will be left out.")).toBeVisible();
-    if (browserName === "chromium") {
-      // Chromium can't decode HEIC: a clear message (full support ships in Phase 6).
-      const heic = Buffer.from([
-        0,
-        0,
-        0,
-        24,
-        ...Buffer.from("ftypheic"),
-        0,
-        0,
-        0,
-        0,
-        ...Buffer.from("mif1heic"),
-      ]);
-      await addImages(page, [{ name: "IMG_0001.HEIC", mimeType: "image/heic", buffer: heic }]);
-      await expect(list(page).getByText(/IMG_0001\.HEIC is a HEIC photo/)).toBeVisible();
-    }
     await bothThemesAccessible(page);
+  });
+
+  test("HEIC photos become pages in every browser (libheif, P6-T11)", async ({ page }) => {
+    await open(page);
+    await addImages(page, [
+      { name: "IMG_0001.HEIC", mimeType: "image/heic", buffer: Buffer.from(heic()) },
+    ]);
+    await expect(list(page).getByText(/64 × 64$/)).toBeVisible();
+    // 64 px at 96 DPI = 48 pt.
+    expect(await pagesOf(await convertAndDownload(page))).toEqual(["48×48"]);
+  });
+
+  test("a damaged HEIC says it couldn't be opened", async ({ page }) => {
+    await open(page);
+    await addImages(page, [
+      {
+        name: "broken.HEIC",
+        mimeType: "image/heic",
+        buffer: Buffer.from(heic().slice(0, 400)),
+      },
+    ]);
+    await expect(list(page).getByText(/64 × 64$/)).toBeVisible();
+    await page.getByRole("button", { name: /^Convert/ }).click();
+    await expect(
+      page
+        .getByText("broken.HEIC is a HEIC photo that couldn’t be opened.", { exact: false })
+        .first(),
+    ).toBeVisible();
   });
 
   test("keyboard only: reorder and convert", async ({ page, isMobile }) => {

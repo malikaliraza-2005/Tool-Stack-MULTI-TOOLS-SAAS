@@ -2,6 +2,7 @@
 // how to use, formats and limits, explanation, troubleshooting. Server
 // components; body text 16px at a 65ch measure (design-system §3.2).
 
+import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
@@ -79,6 +80,19 @@ export function Code(props: ComponentProps<"code">) {
   return (
     <code
       className="rounded-sm border border-border bg-surface-2 px-1 font-mono text-code text-fg"
+      {...props}
+    />
+  );
+}
+
+/** A link inside body text: underlined, so it doesn't rely on colour alone (WCAG 1.4.1). */
+export function TextLink({ className, ...props }: ComponentProps<typeof Link>) {
+  return (
+    <Link
+      className={cn(
+        "rounded-sm text-accent-text underline underline-offset-4 transition-control hover:text-fg",
+        className,
+      )}
       {...props}
     />
   );

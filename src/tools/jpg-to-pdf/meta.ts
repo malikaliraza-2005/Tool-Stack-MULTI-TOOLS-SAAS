@@ -32,7 +32,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Does it work with PNG and iPhone photos?",
-        a: "PNG, WebP, GIF (first frame), BMP and AVIF work in every current browser, and transparent PNGs keep their transparency. iPhone HEIC photos work in Safari; in other browsers, save them as JPG first (Settings › Camera › Formats › Most Compatible). Full HEIC support for every browser is coming.",
+        a: "PNG, WebP, GIF (first frame), BMP and AVIF work in every current browser, and transparent PNGs keep their transparency. iPhone HEIC photos work too, in every current browser.",
       },
       {
         q: "Can I convert without uploading?",
@@ -40,7 +40,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Will the quality be reduced?",
-        a: "Not for JPG and PNG: they are placed in the PDF exactly as they are, without re-compressing. Photos taken sideways are turned upright without re-encoding. Other formats are converted once, to PNG if they have transparency or to high-quality JPEG otherwise.",
+        a: "Not for JPG and PNG: they are placed in the PDF exactly as they are, without re-compressing. Photos taken sideways are turned upright without re-encoding. Other formats, including HEIC, are converted once, to PNG if they have transparency or to high-quality JPEG otherwise.",
       },
       {
         q: "How do I convert JPG to PDF on iPhone?",

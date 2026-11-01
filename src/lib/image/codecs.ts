@@ -1,0 +1,107 @@
+// Codecs for the image pipeline (P6-T01), used inside the image worker. Each
+// WASM codec is imported on first use, so only the formats a job needs load.
+//
+// Decoding: the browser decoder first for photos (fast, colour-managed, EXIF
+// orientation applied), the WASM decoder when it fails (very large images,
+// formats the browser lacks, HEIC via libheif). PNG goes the other way: the WASM decoder keeps
+// exact pixel values, which lossless output must preserve.
+
+import { AVIF_SPEED, KIND_MIME, type ImageKind, type OutputFormat } from "./formats";
+import { decodeHeic } from "./heic";
+import type { Codecs } from "./pipeline";
+import type { Pixels } from "./pixels";
+
+function toImageData(pixels: Pixels): ImageData {
+  if (typeof ImageData === "undefined" || pixels instanceof ImageData) return pixels as ImageData;
+  return new ImageData(pixels.data, pixels.width, pixels.height);
+}
+
+async function decodeNative(bytes: ArrayBuffer, kind: ImageKind): Promise<Pixels> {
+  if (typeof createImageBitmap === "undefined" || typeof OffscreenCanvas === "undefined") {
+    throw new Error("No browser decoder here");
+  }
+  const bitmap = await createImageBitmap(new Blob([bytes], { type: KIND_MIME[kind] }));
+  try {
+    const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    if (!context) throw new Error("No 2D canvas in this worker");
+    context.drawImage(bitmap, 0, 0);
+    return context.getImageData(0, 0, bitmap.width, bitmap.height);
+  } finally {
+    bitmap.close();
+  }
+}
+
+async function decodeWasm(bytes: ArrayBuffer, kind: ImageKind): Promise<Pixels | null> {
+  switch (kind) {
+    case "jpeg":
+      return (await import("@jsquash/jpeg/decode")).default(bytes);
+    case "png":
+      return (await import("@jsquash/png/decode")).default(bytes);
+    case "webp":
+      return (await import("@jsquash/webp/decode")).default(bytes);
+    case "avif":
+      return (await import("@jsquash/avif/decode")).default(bytes);
+    case "gif":
+      return (await import("./simple-decoders")).decodeGif(new Uint8Array(bytes));
+    case "bmp":
+      return (await import("./simple-decoders")).decodeBmp(new Uint8Array(bytes));
+    default:
+      return null;
+  }
+}
+
+const decode: Codecs["decode"] = async (bytes, kind) => {
+  if (kind === "png") {
+    const pixels = await decodeWasm(bytes, kind).catch(() => null);
+    if (pixels) return { pixels, oriented: false };
+  }
+  let nativeError: unknown;
+  try {
+    return { pixels: await decodeNative(bytes, kind), oriented: true };
+  } catch (error) {
+    nativeError = error;
+  }
+  // HEIC: Safari decodes it natively; elsewhere libheif (D-6), loaded now.
+  if (kind === "heic") return { pixels: await decodeHeic(bytes), oriented: true };
+  const pixels = kind === "png" ? null : await decodeWasm(bytes, kind);
+  if (!pixels) throw nativeError;
+  return { pixels, oriented: false };
+};
+
+const encode: Codecs["encode"] = async (pixels, format: OutputFormat, quality, options = {}) => {
+  const image = toImageData(pixels);
+  switch (format) {
+    case "jpeg":
+      return (await import("@jsquash/jpeg/encode")).default(image, { quality });
+    case "webp":
+      return (await import("@jsquash/webp/encode")).default(image, { quality });
+    case "avif":
+      return (await import("@jsquash/avif/encode")).default(image, {
+        quality,
+        speed: options.avifSpeed ?? AVIF_SPEED.desktop,
+      });
+    case "png":
+      // Lossless: oxipng picks the smallest PNG encoding of exactly these pixels.
+      // optimiseAlpha off, so fully transparent pixels keep their colour values too.
+      return (await import("@jsquash/oxipng/optimise")).default(image, {
+        level: 2,
+        interlace: false,
+        optimiseAlpha: false,
+      });
+  }
+};
+
+const resize: Codecs["resize"] = async (pixels, width, height) => {
+  const { default: resizeImage } = await import("@jsquash/resize");
+  return resizeImage(toImageData(pixels), {
+    width,
+    height,
+    method: "lanczos3",
+    fitMethod: "stretch",
+    premultiply: true,
+    linearRGB: true,
+  });
+};
+
+export const codecs: Codecs = { decode, encode, resize };
