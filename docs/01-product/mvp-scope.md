@@ -85,7 +85,7 @@ All share the **Workbench** layout (see [design-system.md](../02-design/design-s
 
 ## 4. File and input limits **[Target]**
 
-Validated during device testing and then stored per tool in the registry.
+Validated during device testing and then stored per tool in the registry. *PDF tools (Phase 5) use these targets as registry limits; real-device validation is P9-T01.*
 
 | Context | Soft warning | Hard limit |
 |---|---|---|
