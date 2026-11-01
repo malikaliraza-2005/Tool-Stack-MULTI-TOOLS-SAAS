@@ -9,7 +9,7 @@ import {
   makeJpegBytes,
   makePdf,
   toArrayBuffer,
-} from "./__fixtures__/pdfs";
+} from "@/lib/pdf/__fixtures__/pdfs";
 import { inspectPdf, mergePdfs, type PdfInput } from "./logic";
 
 const input = async (name: string, sizes: [number, number][], rotation = 0): Promise<PdfInput> => ({

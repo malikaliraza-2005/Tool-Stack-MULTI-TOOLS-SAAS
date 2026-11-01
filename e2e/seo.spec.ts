@@ -19,6 +19,7 @@ const TOOLS = [
   { slug: "jwt-decoder", name: "JWT Decoder", hub: "Developer tools" },
   { slug: "diff-checker", name: "Diff Checker", hub: "Developer tools" },
   { slug: "regex-tester", name: "Regex Tester", hub: "Developer tools" },
+  { slug: "split-pdf", name: "Split PDF", hub: "PDF tools" },
 ];
 
 for (const tool of TOOLS) {
@@ -100,6 +101,7 @@ test("sitemap lists the home page and published tools", async ({ request }) => {
     "/jwt-decoder",
     "/diff-checker",
     "/regex-tester",
+    "/split-pdf",
   ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");
@@ -113,6 +115,6 @@ test("robots.txt allows all and points to the sitemap", async ({ request }) => {
 });
 
 test("unknown tool slugs are 404", async ({ page }) => {
-  const response = await page.goto("/split-pdf");
+  const response = await page.goto("/organize-pdf");
   expect(response?.status()).toBe(404);
 });

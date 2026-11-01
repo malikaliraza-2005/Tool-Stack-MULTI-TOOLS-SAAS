@@ -30,7 +30,7 @@ This document says **how** Sprigkit is tested and which command runs each layer.
 - `logic.ts` is pure (no DOM, no React), so tests run in Node (`environment: "node"`). Use a DOM environment only where a test really needs it.
 - Registry tests (`src/tools/registry.test.ts`): one test per validation rule (tool-registry §3), plus `assertValidRegistry` throwing on a deliberately broken entry. Verified once by hand that a broken entry fails `next build`.
 - Shared libraries: `src/lib/files/files.test.ts` (magic bytes, limits, names, ZIP), `src/lib/worker/runner.test.ts` (a fake worker running the real `expose()`: results, transferables, progress, error mapping, cancel, timeout, recovery), `src/lib/shared.test.ts` (errors, storage, detectors incl. the ≤ 1 ms budget, pdf.js asset version), `src/lib/seo.test.ts` (metadata, JSON-LD).
-- Pilot fixtures are generated in code (`src/tools/merge-pdf/__fixtures__/pdfs.ts`) and shared by unit and E2E tests.
+- PDF fixtures are generated in code (`src/lib/pdf/__fixtures__/pdfs.ts`) and shared by the unit and E2E tests of all PDF tools.
 - Design tokens (`src/styles/tokens.test.ts`): WCAG contrast of every token pair in both themes, and parity between CSS tokens and their TypeScript mirrors (`src/lib/motion.ts`, `THEME_BG`).
 - Theme (`src/lib/theme.test.ts`): preference parsing and the inline pre-paint script, run in a `node:vm` sandbox.
 - Lint rule (`scripts/eslint/no-hardcoded-design.test.mjs`): ESLint `RuleTester` cases.

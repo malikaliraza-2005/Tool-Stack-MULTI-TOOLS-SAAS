@@ -65,9 +65,10 @@ describe("the real registry", () => {
       "jwt-decoder",
       "diff-checker",
       "regex-tester",
+      "split-pdf",
     ]);
     expect(getTool("merge-pdf")?.name).toBe("Merge PDF");
-    expect(getTool("split-pdf")).toBeUndefined();
+    expect(getTool("organize-pdf")).toBeUndefined();
   });
 
   it("does not list planned slugs as registered tools", () => {
@@ -76,8 +77,9 @@ describe("the real registry", () => {
 
   it("relatedTools returns only published tools", () => {
     const merge = getTool("merge-pdf")!;
-    expect(relatedTools(merge)).toEqual([]);
-    const withPilot = { ...merge, related: ["json-formatter", "split-pdf"] };
+    // merge-pdf relates to split-pdf (live) and to planned tools, which are skipped.
+    expect(relatedTools(merge).map((t) => t.slug)).toEqual(["split-pdf"]);
+    const withPilot = { ...merge, related: ["json-formatter", "organize-pdf"] };
     expect(relatedTools(withPilot).map((t) => t.slug)).toEqual(["json-formatter"]);
   });
 });

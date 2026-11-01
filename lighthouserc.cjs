@@ -32,6 +32,7 @@ module.exports = {
         "http://127.0.0.1:4174/jwt-decoder",
         "http://127.0.0.1:4174/diff-checker",
         "http://127.0.0.1:4174/regex-tester",
+        "http://127.0.0.1:4174/split-pdf",
       ],
       numberOfRuns: 3,
     },

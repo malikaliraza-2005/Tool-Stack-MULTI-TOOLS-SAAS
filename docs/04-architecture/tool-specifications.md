@@ -99,6 +99,7 @@ Libraries: **pdf-lib** for creating/modifying, **pdfjs-dist** for rendering thum
 - **Output:** PDF or ZIP; files named `<name>-pages-1-3.pdf`, `<name>-part-2.pdf`, `<name>-page-7.pdf`.
 - **Errors:** invalid range → `E_INVALID_INPUT` with the exact offending token ("'12' is beyond the last page (10)"); plus shared file errors.
 - **Acceptance tests:** range parser unit tests (valid, reversed `5-3` → error, duplicates de-duplicated in order, out of bounds, open-ended); each mode's output page counts; ZIP contains expected file names.
+- *Clarified in Phase 5:* the parser (`src/lib/pdf/page-range.ts`, shared with pdf-to-jpg) also accepts `-3` (first page to 3) and ignores empty parts (`1,,2`, a trailing comma); two numbers without a dash (`1 2`) are an error. Extracted pages come out in the order typed. The extract file name lists the pages with `_` between parts (`report-pages-1-3_5.pdf`) and falls back to `report-extract.pdf` when the list is longer than 40 characters. Several outputs download as `<name>-split.zip` (PDFs stored, not recompressed) or one by one; the page lists the first 100. Ranges are validated and the file count previewed as the user types (`plan.ts`, no pdf-lib); building the files runs in the worker. `loadPdf` moved to `src/lib/pdf/load.ts` and the generated fixtures to `src/lib/pdf/__fixtures__/pdfs.ts`, shared by all PDF tools.
 
 ### 3.3 organize-pdf
 - **Input:** 1 PDF.

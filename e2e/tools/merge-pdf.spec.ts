@@ -7,7 +7,7 @@ import {
   makeEncryptedPdf,
   makeJpegBytes,
   makePdf,
-} from "../../src/tools/merge-pdf/__fixtures__/pdfs";
+} from "../../src/lib/pdf/__fixtures__/pdfs";
 import { expect, expectNoA11yViolations, test } from "../fixtures";
 
 // Merge PDF end to end (tool-specifications §3.1). The noNetwork and csp
