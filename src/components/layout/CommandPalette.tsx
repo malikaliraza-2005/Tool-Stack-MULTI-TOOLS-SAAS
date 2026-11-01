@@ -2,7 +2,7 @@
 
 import { Command } from "cmdk";
 import Fuse from "fuse.js";
-import { CornerDownLeft, FolderOpen, History, House, Star } from "lucide-react";
+import { CornerDownLeft, Download, FolderOpen, History, House, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { ToolIcon } from "@/components/tool/ToolIcon";
@@ -13,6 +13,7 @@ import { cn } from "@/lib/cn";
 import { CATEGORIES, CATEGORY_ORDER } from "@/tools/categories";
 import { SEARCH_OPTIONS, searchTools, type SearchEntry } from "@/tools/search-index";
 import { THEME_OPTIONS } from "./ThemeToggle";
+import { promptInstall, useCanInstall } from "./useInstallPrompt";
 import { setThemePreference } from "./useTheme";
 import { useFavorites, useRecent } from "./useToolPrefs";
 
@@ -80,6 +81,7 @@ export function CommandPalette({ open, onOpenChange, onCloseAutoFocus }: Command
   const index = useSearchIndex(open);
   const favorites = useFavorites();
   const recent = useRecent();
+  const canInstall = useCanInstall();
 
   const entries = index.status === "ready" ? index.entries : null;
   const fuse = useMemo(() => entries && new Fuse(entries, SEARCH_OPTIONS), [entries]);
@@ -106,13 +108,27 @@ export function CommandPalette({ open, onOpenChange, onCloseAutoFocus }: Command
       run: () => go(CATEGORIES[category].href),
     })),
   ];
-  const actions: PaletteCommand[] = THEME_OPTIONS.map(({ value, label, icon: Icon }) => ({
-    id: `theme:${value}`,
-    label: `Theme: ${label}`,
-    keywords: ["theme", "appearance", "mode", label.toLowerCase()],
-    icon: <Icon aria-hidden />,
-    run: () => run(() => setThemePreference(value)),
-  }));
+  const actions: PaletteCommand[] = [
+    ...THEME_OPTIONS.map(({ value, label, icon: Icon }) => ({
+      id: `theme:${value}`,
+      label: `Theme: ${label}`,
+      keywords: ["theme", "appearance", "mode", label.toLowerCase()],
+      icon: <Icon aria-hidden />,
+      run: () => run(() => setThemePreference(value)),
+    })),
+    // Only where the browser offers it (P7-T14); never shown as a pop-up.
+    ...(canInstall
+      ? [
+          {
+            id: "install",
+            label: "Install Sprigkit as an app",
+            keywords: ["install", "app", "offline", "pwa", "desktop"],
+            icon: <Download aria-hidden />,
+            run: () => run(() => void promptInstall()),
+          },
+        ]
+      : []),
+  ];
 
   const trimmed = query.trim().toLowerCase();
   const bySlug = new Map(entries?.map((entry) => [entry.slug, entry]));

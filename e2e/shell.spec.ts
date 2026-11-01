@@ -199,6 +199,8 @@ test.describe("command palette", () => {
       "true",
     );
     await page.goto("/merge-pdf");
+    // The shortcut listener exists only after hydration.
+    await page.waitForFunction(() => document.documentElement.hasAttribute("data-app-started"));
     await page.keyboard.press("ControlOrMeta+k");
     const dialog = page.getByRole("dialog", { name: "Search tools and actions" });
     await expect(dialog.getByRole("group", { name: "Favorites" })).toContainText("JSON Formatter");

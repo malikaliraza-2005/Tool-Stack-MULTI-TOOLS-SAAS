@@ -77,6 +77,8 @@ Placeholders show an example of the expected format ("merged.pdf", `{ "paste": "
 | Drop suggestions | Open contract.pdf in · Open 3 files in · No tool here converts this type of file. You can still check its hash or encode it. |
 | Paste choice | Open the pasted text in · Looks like JSON |
 | Favorite toast | JSON Formatter added to favorites · Favorites are listed first in search (Ctrl K or ⌘K). |
+| Update toast | A new version of Sprigkit is available · Refresh to update. Finish what you’re doing first: refreshing clears the page. · Refresh |
+| Install action (palette) | Install Sprigkit as an app |
 | Palette footer | ↑ ↓ to move · ↵ to select · Esc to close |
 | Theme menu | Theme: Light / Dark / System |
 | Mobile menu | Menu · Tools · Sprigkit |

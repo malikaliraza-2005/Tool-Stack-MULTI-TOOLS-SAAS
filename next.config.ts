@@ -20,6 +20,12 @@ const nextConfig: NextConfig = {
         contextRegExp: /@jsquash[\\/](avif|oxipng)$/,
       }),
     );
+    // The service-worker route (app/serwist) runs only at build time; it reads
+    // the browserslist config through a dynamic require, which webpack flags.
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings ?? []),
+      { module: /node_modules[\\/]browserslist[\\/]node\.js$/ },
+    ];
     return config;
   },
 };

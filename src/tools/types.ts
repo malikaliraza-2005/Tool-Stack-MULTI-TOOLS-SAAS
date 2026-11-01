@@ -69,7 +69,7 @@ export interface ToolDefinition {
     /** Literal true: non-local tools are not allowed in the MVP. */
     local: true;
     worker: boolean;
-    /** Works offline after first load (true once the service worker ships, G-5). */
+    /** Works offline (G-5): pages after the first visit, file tools after their first use. */
     offline: boolean;
   };
 

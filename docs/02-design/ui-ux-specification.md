@@ -69,6 +69,12 @@ Privacy strip · All tools (3 columns) · Popular tools (4 cards) · FAQ · foot
 
 **Entrance (P7-T08):** the subline, hero surface, privacy strip and index rise 8px and fade in (`animate-rise-in`, `--dur-standard`), 40ms apart (`stagger`). The headline isn't animated (it is the LCP element). It is CSS only, so input works from the first frame. With reduced motion there is no delay and no movement.
 
+## 3b. Offline and updates (built, Phase 7)
+
+- No offline banner or install pop-up. Pages open offline after the first visit; the homepage FAQ explains what works offline and how to install.
+- **Install:** the command palette lists "Install Sprigkit as an app" under Actions while the browser offers installation (Chromium).
+- **Update available:** a persistent info toast, "A new version of Sprigkit is available · Refresh to update. Finish what you’re doing first: refreshing clears the page." with a **Refresh** button and a close button. It never refreshes by itself.
+
 ## 3a. Category hubs (built, Phase 7)
 
 `/pdf-tools`, `/image-tools`, `/developer-tools`: breadcrumbs (Sprigkit › PDF tools), H1 and intro with the PrivacyMeter, "6 PDF tools" as cards (icon, name, full tagline; 3 columns on `lg`), then **Guides** (4 links to tools' "How to use" sections) and **More tools** (the other hubs) side by side on `lg`.

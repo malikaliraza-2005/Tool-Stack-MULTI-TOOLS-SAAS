@@ -61,8 +61,7 @@ export const meta: ToolDefinition = {
     desktop: { softBytes: 25 * MB, hardBytes: 100 * MB, maxFiles: 50 },
     mobile: { softBytes: 25 * MB, hardBytes: 100 * MB, maxFiles: 50 },
   },
-  // offline becomes true when the service worker ships (G-5, Phase 7).
-  processing: { local: true, worker: true, offline: false },
+  processing: { local: true, worker: true, offline: true },
   handoff: ["resize-image", "jpg-to-pdf"],
   addedAt: "2026-11-01",
   updatedAt: "2026-11-01",

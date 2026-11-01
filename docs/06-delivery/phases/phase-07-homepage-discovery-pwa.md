@@ -40,10 +40,10 @@ Homepage, category hubs, full command palette, smart paste, drop-zone suggestion
 - [x] **P7-T12** **Use in another tool (G-11):** ResultPanel hand-off to `handoff` targets, passing output files in memory.
 
 ### PWA (G-5)
-- [ ] **P7-T13** Serwist (per P1-T22 outcome): precache shell, pages, fonts; runtime-cache on-intent libraries and WASM.
-- [ ] **P7-T14** Web app manifest, icons, install prompt behaviour (no nagging).
-- [ ] **P7-T15** Offline E2E: visit, go offline, reload a tool, run it successfully.
-- [ ] **P7-T16** Update flow: new version available → unobtrusive "Refresh to update" toast.
+- [x] **P7-T13** Serwist (per P1-T22 outcome): precache shell, pages, fonts; runtime-cache on-intent libraries and WASM.
+- [x] **P7-T14** Web app manifest, icons, install prompt behaviour (no nagging).
+- [x] **P7-T15** Offline E2E: visit, go offline, reload a tool, run it successfully.
+- [x] **P7-T16** Update flow: new version available → unobtrusive "Refresh to update" toast.
 
 ## Docs to write / update
 ui-ux-specification.md (homepage as built) · information-architecture.md · architecture.md (PWA as built)

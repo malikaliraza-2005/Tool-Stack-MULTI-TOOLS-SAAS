@@ -48,8 +48,7 @@ export const meta: ToolDefinition = {
     mobile: { softBytes: 50 * MB, hardBytes: 150 * MB, maxFiles: 50 },
     per: "total",
   },
-  // offline becomes true when the service worker ships (G-5, Phase 7).
-  processing: { local: true, worker: true, offline: false },
+  processing: { local: true, worker: true, offline: true },
   handoff: ["organize-pdf", "sign-pdf", "split-pdf"],
   addedAt: "2026-10-14",
   updatedAt: "2026-10-14",

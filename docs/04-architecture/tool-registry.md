@@ -79,7 +79,7 @@ export interface ToolDefinition {
   processing: {
     local: true;                    // literal true: non-local tools are not allowed in the MVP
     worker: boolean;                // runs heavy work in a Web Worker
-    offline: boolean;               // works offline after first load; false until the service worker ships (G-5, Phase 7)
+    offline: boolean;               // works offline (G-5): pages after the first visit, file tools after their first use (architecture §10)
   };
 
   /** Hand-off targets for "Use in another tool" */

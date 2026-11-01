@@ -5,6 +5,7 @@ import { MotionProvider } from "@/components/motion/MotionProvider";
 import { Toaster } from "@/components/ui/Toast";
 import { TooltipProvider } from "@/components/ui/Tooltip";
 import { STARTUP_ATTRIBUTE } from "@/lib/startup-check";
+import { ServiceWorker } from "./ServiceWorker";
 
 export function Providers({ children }: { children: ReactNode }) {
   // The app runs: the startup notice (src/lib/startup-check.ts) must not show.
@@ -14,6 +15,7 @@ export function Providers({ children }: { children: ReactNode }) {
       <TooltipProvider>
         {children}
         <Toaster />
+        <ServiceWorker />
       </TooltipProvider>
     </MotionProvider>
   );

@@ -22,6 +22,10 @@ const HOME_FAQS = [
     a: "Yes. Every tool is free to use, with no account, no sign-up and no watermarks.",
   },
   {
+    q: "Does Sprigkit work offline?",
+    a: "Yes. After your first visit, every page opens without a connection. A tool’s larger parts, such as the PDF and image engines, are saved the first time you use it, so it works offline from then on. In Chrome and Edge you can also install Sprigkit as an app: open search (Ctrl+K) and choose “Install Sprigkit as an app”.",
+  },
+  {
     q: "Which browsers does Sprigkit work in?",
     a: "Current versions of Chrome, Edge, Firefox and Safari, on computers and phones. Very large files work best on a computer, because phones have less memory.",
   },

@@ -57,12 +57,23 @@ export function Toaster() {
   );
 }
 
-type NotifyOptions = { description?: ReactNode };
+type NotifyOptions = {
+  description?: ReactNode;
+  /** One button in the toast, e.g. "Refresh". */
+  action?: { label: string; onClick: () => void };
+  /** Stays until acted on or closed, like errors (e.g. "update available"). */
+  persistent?: boolean;
+};
+
+const sonnerOptions = ({ persistent, ...options }: NotifyOptions = {}) =>
+  persistent ? { ...options, duration: Infinity, closeButton: true } : options;
 
 /** Toasts auto-dismiss after 4s, except errors, which stay until closed (§8). */
 export const notify = {
-  success: (message: ReactNode, options?: NotifyOptions) => toast.success(message, options),
-  info: (message: ReactNode, options?: NotifyOptions) => toast.info(message, options),
+  success: (message: ReactNode, options?: NotifyOptions) =>
+    toast.success(message, sonnerOptions(options)),
+  info: (message: ReactNode, options?: NotifyOptions) =>
+    toast.info(message, sonnerOptions(options)),
   warning: (message: ReactNode, options?: NotifyOptions) => toast.warning(message, options),
   error: (message: ReactNode, options?: NotifyOptions) =>
     toast.error(message, { ...options, duration: Infinity, closeButton: true }),

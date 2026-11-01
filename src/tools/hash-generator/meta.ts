@@ -59,8 +59,7 @@ export const meta: ToolDefinition = {
     desktop: { softBytes: 1 * GB, hardBytes: 8 * GB },
     mobile: { softBytes: 500 * MB, hardBytes: 2 * GB },
   },
-  // offline becomes true when the service worker ships (G-5, Phase 7).
-  processing: { local: true, worker: true, offline: false },
+  processing: { local: true, worker: true, offline: true },
   addedAt: "2026-10-31",
   updatedAt: "2026-10-31",
 };

@@ -18,3 +18,9 @@ https://:subdomain.:project.pages.dev/*
 # OG images from app/[tool]/opengraph-image.tsx are emitted without a file extension (P1-T23).
 /*/opengraph-image
   Content-Type: image/png
+
+# Service worker (P7-T13, architecture §10): scope "/" and always revalidated,
+# so a new version is found on the next visit.
+/serwist/sw.js
+  Service-Worker-Allowed: /
+  Cache-Control: no-cache
