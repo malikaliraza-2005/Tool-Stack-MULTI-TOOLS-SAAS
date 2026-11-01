@@ -29,6 +29,8 @@ export type Codecs = {
 
 export type ProcessOptions = {
   format: OutputFormat;
+  /** Use this format instead when the image has transparent pixels (convert-image's Auto). */
+  alphaFormat?: OutputFormat;
   /** 0–100, for lossy formats. */
   quality: number;
   /** In upright source pixels. */
@@ -98,6 +100,15 @@ export function checkPixels(name: string, info: ImageInfo, limits: ImageLimits):
   );
 }
 
+/** HEIC that neither the browser nor libheif could decode (tool-specifications §4.2, D-6). */
+export function heicCouldNotOpen(name: string, cause?: unknown): ToolError {
+  return new ToolError(
+    "E_CORRUPT",
+    `${name} is a HEIC photo that couldn’t be opened. It may be damaged, or the decoder didn’t load. Try again, or save it as JPG first (on iPhone: Settings › Camera › Formats › Most Compatible).`,
+    { fileName: name, cause },
+  );
+}
+
 /** Decodes and turns upright: the starting point of every operation. */
 export async function decodeUpright(
   name: string,
@@ -111,6 +122,7 @@ export async function decodeUpright(
   } catch (error) {
     if (error instanceof ToolError) throw error;
     if (isOutOfMemory(error)) throw toolErrors.outOfMemory(error);
+    if (info.kind === "heic") throw heicCouldNotOpen(name, error);
     throw toolErrors.corrupt(name, error);
   }
   return decoded.oriented ? decoded.pixels : orient(decoded.pixels, info.orientation);
@@ -152,14 +164,16 @@ export async function processImage(
       );
       changedSize = true;
     }
+    const transparent = hasTransparency(pixels);
+    const format = options.alphaFormat && transparent ? options.alphaFormat : options.format;
     let flattened = false;
-    if (!formatHasAlpha(options.format) && hasTransparency(pixels)) {
+    if (!formatHasAlpha(format) && transparent) {
       pixels = flatten(pixels, options.background ?? WHITE);
       flattened = true;
     }
     hooks.onStep?.(`Encoding ${name}`);
-    let bytes = await codecs.encode(pixels, options.format, options.quality);
-    if (options.keepMetadata && options.format === "jpeg" && info.kind === "jpeg") {
+    let bytes = await codecs.encode(pixels, format, options.quality);
+    if (options.keepMetadata && format === "jpeg" && info.kind === "jpeg") {
       bytes = toArrayBuffer(copyJpegMetadata(new Uint8Array(input.bytes), new Uint8Array(bytes)));
     }
 
@@ -182,7 +196,7 @@ export async function processImage(
     }
     return {
       bytes,
-      format: options.format,
+      format,
       width: pixels.width,
       height: pixels.height,
       keptOriginal: false,

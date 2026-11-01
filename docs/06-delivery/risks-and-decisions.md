@@ -116,6 +116,13 @@ D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; th
   3. **Corresponding source available.** The `/licenses` page links to the exact upstream source: libheif tag, libde265 version, and the libheif-js / libheif-emscripten build scripts for that version. **We also self-host the source tarballs** so availability does not depend on a third party (GPL-3.0 §6(d) via LGPL-3.0 §4(d)(0)/(e)). The tarballs must be under the 25 MiB per-file limit.
   4. **Prominent notice.** convert-image's "Formats & limits" content states that HEIC decoding uses libheif (LGPL-3.0), with a link to `/licenses`.
   5. **CI.** The license gate allows `LGPL-3.0` **only** for `libheif-js`, by exact package name. Any other LGPL package still fails.
+- **Implemented (Phase 6, 2026-11-01; owner chose to ship HEIC now rather than wait for the Phase 8 licenses page):**
+  1. `scripts/copy-libheif-assets.mjs` copies `libheif-wasm/` unmodified to `/vendor/libheif-js-1.23.5/`; the image worker imports `libheif-bundle.mjs` from there at run time (`webpackIgnore`) when a HEIC file is processed and the browser can't decode it.
+  2. The LGPL-3.0 + GPL-3.0 texts are served next to it; `/licenses#libheif` shows the notices (libheif © 2017–2025 Dirk Farin; libde265 © 2013–2014 struktur AG, Dirk Farin).
+  3. Source tarballs (libheif v1.23.5, libde265 1.0.15, libheif-emscripten v1.23.5, libheif-js 1.23.5; 3.1 MB in total) are committed in `vendor-src/` and served from `/vendor/libheif-js-1.23.5/source/`; the build fails if they don't match the installed version.
+  4. convert-image and jpg-to-pdf "Formats and limits" say HEIC uses libheif (LGPL-3.0) and link to `/licenses`.
+  5. The license gate allows LGPL-3.0 for `libheif-js` only (unchanged).
+  - Linked codecs confirmed: libheif's `build-emscripten.sh` at v1.23.5 enables only libde265; AOM and OpenJPEG are off, so the dav1d/OpenJPEG/vvdec names found in P0-T04 are registry strings.
 - **Consequences:**
   - [dependencies-licenses.md §4](../04-architecture/dependencies-licenses.md#4-under-review), [mvp-scope.md](../01-product/mvp-scope.md) and [tool-specifications.md](../04-architecture/tool-specifications.md) updated.
   - Phase 6 tasks P6-T04/T08/T09 apply.

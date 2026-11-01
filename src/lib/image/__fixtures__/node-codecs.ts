@@ -5,6 +5,7 @@
 import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+import type { LibHeif } from "../heic";
 
 const require = createRequire(import.meta.url);
 
@@ -46,6 +47,9 @@ export function loadNodeCodecs(): Promise<void> {
         ((await module).init as Init)(await wasm(pkg, file)),
       ),
     );
+    // libheif's Node build (the browser loads the same build from /vendor/).
+    const { setLibHeifLoader } = await import("../heic");
+    setLibHeifLoader(async () => require("libheif-js/wasm-bundle") as LibHeif);
     const { initResize } = await import("@jsquash/resize");
     await (initResize as Init)(await wasm("resize", "lib/resize/pkg/squoosh_resize_bg.wasm"));
   })();

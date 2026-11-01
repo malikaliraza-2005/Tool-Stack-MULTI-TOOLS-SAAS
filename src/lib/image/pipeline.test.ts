@@ -3,6 +3,8 @@ import {
   gif,
   gpsJpeg,
   halfTransparentPng,
+  heic,
+  heicWithAlpha,
   makePng,
   metadataWebp,
   redBlueJpeg,
@@ -248,5 +250,37 @@ describe("savings", () => {
     expect(savings(1000, 380).percent).toBe(62);
     expect(savings(1000, 380).label).toMatch(/ → /);
     expect(savings(0, 10).percent).toBe(0);
+  });
+});
+
+describe("HEIC (libheif, D-6)", () => {
+  it("reads the size from the header and decodes upright pixels", async () => {
+    const bytes = heic();
+    expect(readImageInfo(bytes)).toMatchObject({ kind: "heic", width: 64, height: 64 });
+    const out = await run(bytes, { format: "png", quality: 75 });
+    expect(out).toMatchObject({ width: 64, height: 64, format: "png" });
+    expect(near(await pixelAt(out.bytes, 63, 0), [5, 0, 250, 255])).toBe(true); // blue
+    expect(near(await pixelAt(out.bytes, 63, 63), [253, 0, 0, 255])).toBe(true); // red
+  });
+
+  it("keeps transparency", async () => {
+    const out = await run(heicWithAlpha(), { format: "png", quality: 75 });
+    const [, , , alpha] = await pixelAt(out.bytes, 0, 0);
+    expect(alpha).toBeLessThan(200);
+    expect(readImageInfo(heicWithAlpha())?.alpha).toBe(true);
+  });
+
+  it("says a damaged HEIC couldn't be opened", async () => {
+    const broken = heic().slice(0, 400);
+    await expect(run(broken, { format: "jpeg", quality: 75 })).rejects.toThrow(
+      "photo is a HEIC photo that couldn’t be opened.",
+    );
+  });
+
+  it("serves the installed libheif-js version from /vendor/", async () => {
+    const { LIBHEIF_VERSION } = await import("./heic");
+    const { createRequire } = await import("node:module");
+    const pkg = createRequire(import.meta.url)("libheif-js/package.json") as { version: string };
+    expect(LIBHEIF_VERSION).toBe(pkg.version);
   });
 });

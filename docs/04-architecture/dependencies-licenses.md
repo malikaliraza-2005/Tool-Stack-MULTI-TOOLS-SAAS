@@ -74,7 +74,7 @@ Note: `pdf-lib` has not had a release in a long time (1.17.1). It is stable and 
 | `@jsquash/resize` | 2.1.1 📌 | Apache-2.0 | ✅ | Lanczos resampling, previews | On intent |
 | `exifr` | 7.1.3 📌 | MIT | ✅ | Read metadata tags for remove-exif-data's inspect view | On intent (image worker) |
 | `piexifjs` | 1.0.6 | MIT | ✅ | Lossless JPEG EXIF removal | **Not used** (Phase 6): segment-level removal in `src/lib/image/metadata.ts` covers EXIF, XMP and IPTC, so no dependency was added |
-| `libheif-js` | 1.23.5 | **LGPL-3.0** | ✅ under D-6 conditions only | HEIC/HEIF decoding (convert-image, jpg-to-pdf input) | On intent (worker); `libheif-wasm` build served as a separate, unmodified file, never bundled |
+| `libheif-js` | 1.23.5 📌 | **LGPL-3.0** | ✅ under D-6 conditions only | HEIC/HEIF decoding (convert-image, jpg-to-pdf input) | On intent (worker); `libheif-wasm/libheif-bundle.mjs` served unmodified from `/vendor/libheif-js-1.23.5/` (`scripts/copy-libheif-assets.mjs`), never bundled. Contains libheif v1.23.5 and libde265 1.0.15 only (AOM/OpenJPEG disabled in the build); sources self-hosted from `vendor-src/` |
 | `pica` | 10.0.3 | MIT | ✅ (optional) | Alternative resampler if `@jsquash/resize` is unsuitable | Not planned |
 
 **Upstream codec licenses** (package tarballs read 2026-10-13 **[Verified]**; package code itself is Apache-2.0):
@@ -86,9 +86,9 @@ Note: `pdf-lib` has not had a release in a long time (1.17.1). It is stable and 
 | `@jsquash/png` | BSD-3-Clause-style (Google) |
 | `@jsquash/oxipng` | oxipng: MIT |
 | `@jsquash/resize` | hqx: Apache-2.0; magic-kernel: MIT; resize: MIT |
-| `@jsquash/avif` | **No codec license file shipped.** Upstream libavif and libaom are BSD-2-Clause **[Unverified]**; confirm and add notices before Phase 6 |
+| `@jsquash/avif` | No codec license file shipped. **[Verified] Phase 6:** libavif v1.0.1 (BSD-2-Clause) and libaom v3.7.0 (BSD-2-Clause + AOM Patent License 1.0) in the encoder, libavif and libyuv (BSD-3-Clause) in the decoder (versions from the codec READMEs and strings in the `.wasm` files). Their notices are kept in `src/app/licenses/notices/` |
 
-All permissive. The `/licenses` page must reproduce these notices (BSD/IJG attribution terms).
+All permissive. The `/licenses` page reproduces these notices (BSD/IJG attribution terms); *Phase 6:* the page exists early (`src/app/licenses/page.tsx`) with the codec notices, the libheif section and a package list generated from `package.json`; Phase 8 completes it.
 
 ### 2.4 Developer tools
 

@@ -344,3 +344,121 @@ export function metadataWebp(): Uint8Array {
     ...body,
   ]);
 }
+
+/**
+ * 64 × 64 HEIC test images from libheif's own test corpus
+ * (fuzzing/data/corpus/colors-*.heic at libheif v1.23.5, LGPL-3.0; part of the
+ * source we redistribute under D-6). Corners: top-left teal, top-right blue,
+ * bottom-left green, bottom-right red. The alpha one is semi-transparent.
+ */
+export const heic = () =>
+  fromBase64(
+    "AAAAGGZ0eXBoZWljAAAAAG1pZjFoZWljAAABLm1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAHBpY3QAAAAAAAAAAAAAAAAAAAAADnBpdG0AAAAAAAEAAAAiaWxvYwAAAABEQAABAAEAAAAAAU4AAQAAAAAAAAClAAAAI2lpbmYAAAAAAAEAAAAVaW5mZQIAAAAAAQAAaHZjMQAAAACuaXBycAAAAJFpcGNvAAAAdWh2Y0MBA3AAAAAAAAAAAAAe8AD8/fj4AAAPAyAAAQAYQAEMAf//A3AAAAMAkAAAAwAAAwAeugJAIQABAChCAQEDcAAAAwCQAAADAAADAB6gIIEFlupJKa5sCAAAAwAIAAADAAhAIgABAAdEAcFysCJAAAAAFGlzcGUAAAAAAAAAQAAAAEAAAAAVaXBtYQAAAAAAAAABAAECgQIAAACtbWRhdAAAAKEmAa8TgIGSEXXAGM2sfMMD8HKXsBNBYjkEW6//QKl1HfLCc/SN/bWOG2ARaa8rk4JsxRuKJFz/vIlnrSBv0Pk7pYMv503LniUfVt0RGOMyTBZVcbnDhlXs0nsTVObq7679Fh7MfXPARYndCrwpKWSNTQcCjNVYWPVOenDxU81lLBnE070xnN107IoLiTNywdiNWzedf/q6zzV3iwZflrO94A==",
+  );
+export const heicWithAlpha = () =>
+  fromBase64(
+    "AAAAGGZ0eXBoZWljAAAAAG1pZjFoZWljAAACJW1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAHBpY3QAAAAAAAAAAAAAAAAAAAAADnBpdG0AAAAAAAEAAAA0aWxvYwAAAABEQAACAAIAAAAAAkUAAQAAAAAAAABHAAEAAAAAAowAAQAAAAAAAAClAAAAOGlpbmYAAAAAAAIAAAAVaW5mZQIAAAAAAQAAaHZjMQAAAAAVaW5mZQIAAAAAAgAAaHZjMQAAAAFkaXBycAAAAUFpcGNvAAAAdWh2Y0MBA3AAAAAAAAAAAAAe8AD8/fj4AAAPAyAAAQAYQAEMAf//A3AAAAMAkAAAAwAAAwAeugJAIQABAChCAQEDcAAAAwCQAAADAAADAB6gIIEFlupJKa5sCAAAAwAIAAADAAhAIgABAAdEAcFysCJAAAAAFGlzcGUAAAAAAAAAQAAAAEAAAAAnYXV4QwAAAAB1cm46bXBlZzpoZXZjOjIwMTU6YXV4aWQ6MQAAAAB1aHZjQwEDcAAAAAAAAAAAAB7wAPz9+PgAAA8DIAABABhAAQwB//8DcAAAAwCQAAADAAADAB66AkAhAAEAKEIBAQNwAAADAJAAAAMAAAMAHqAggQWW6kkprmwIAAADAAgAAAMACEAiAAEAB0QBwXKwIkAAAAAUaXNwZQAAAAAAAABAAAAAQAAAABtpcG1hAAAAAAAAAAIAAgOBAoMAAQKEBQAAABppcmVmAAAAAAAAAA5hdXhsAAIAAQABAAAA9G1kYXQAAABDJgGvE4DmDP1rszijmJBTfRvkzIZ25h0kMSJpsNDLsZ4ic51aszaf+fAqoXebmNbXrsS5cYaizfAw/X+OpqcGY75NUwAAAKEmAa8TgIGSEXXAGM2sfMMD8HKXsBNBYjkEW6//QKl1HfLCc/SN/bWOG2ARaa8rk4JsxRuKJFz/vIlnrSBv0Pk7pYMv503LniUfVt0RGOMyTBZVcbnDhlXs0nsTVObq7679Fh7MfXPARYndCrwpKWSNTQcCjNVYWPVOenDxU81lLBnE070xnN107IoLiTNywdiNWzedf/q6zzV3iwZflrO94A==",
+  );
+
+/**
+ * A GIF of `width` × `height` with up to 4 colours: `index(x, y)` picks the
+ * palette entry (red, green, blue, white). Uncompressed LZW (a clear code
+ * before the table grows), optionally interlaced, with `transparent` as the
+ * transparent index.
+ */
+export function makeGif(
+  width: number,
+  height: number,
+  index: (x: number, y: number) => number,
+  options: { interlaced?: boolean; transparent?: number } = {},
+): Uint8Array {
+  const rows = Array.from({ length: height }, (_, y) => y);
+  const order = options.interlaced
+    ? [
+        ...rows.filter((y) => y % 8 === 0),
+        ...rows.filter((y) => y % 8 === 4),
+        ...rows.filter((y) => y % 4 === 2),
+        ...rows.filter((y) => y % 2 === 1),
+      ]
+    : rows;
+  const minCodeSize = 2;
+  const clear = 4;
+  const codes: number[] = [clear];
+  let sinceClear = 0;
+  for (const y of order) {
+    for (let x = 0; x < width; x++) {
+      codes.push(index(x, y));
+      // Keep the code size at 3 bits: clear before the table would grow.
+      if (++sinceClear === 2) {
+        codes.push(clear);
+        sinceClear = 0;
+      }
+    }
+  }
+  codes.push(5); // end
+  const data: number[] = [];
+  let bits = 0;
+  let count = 0;
+  for (const code of codes) {
+    bits |= code << count;
+    count += 3;
+    while (count >= 8) {
+      data.push(bits & 255);
+      bits >>>= 8;
+      count -= 8;
+    }
+  }
+  if (count > 0) data.push(bits & 255);
+  const blocks: number[] = [];
+  for (let i = 0; i < data.length; i += 255) {
+    const chunk = data.slice(i, i + 255);
+    blocks.push(chunk.length, ...chunk);
+  }
+  const t = options.transparent;
+  return Uint8Array.from([
+    ...bytesOf("GIF89a"),
+    width & 255,
+    width >> 8,
+    height & 255,
+    height >> 8,
+    0x81, // global colour table of 4
+    0,
+    0,
+    ...[255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 255],
+    ...(t === undefined ? [] : [0x21, 0xf9, 4, 1, 0, 0, t, 0]),
+    ...[0x2c, 0, 0, 0, 0, width & 255, width >> 8, height & 255, height >> 8],
+    options.interlaced ? 0x40 : 0,
+    minCodeSize,
+    ...blocks,
+    0,
+    0x3b,
+  ]);
+}
+
+/** A 24-bit bottom-up BMP; `pixel(x, y)` returns [r, g, b]. */
+export function makeBmp(
+  width: number,
+  height: number,
+  pixel: (x: number, y: number) => [number, number, number],
+): Uint8Array {
+  const rowSize = Math.ceil((24 * width) / 32) * 4;
+  const size = 54 + rowSize * height;
+  const out = new Uint8Array(size);
+  const view = new DataView(out.buffer);
+  out.set(bytesOf("BM"), 0);
+  view.setUint32(2, size, true);
+  view.setUint32(10, 54, true);
+  view.setUint32(14, 40, true);
+  view.setInt32(18, width, true);
+  view.setInt32(22, height, true);
+  view.setUint16(26, 1, true);
+  view.setUint16(28, 24, true);
+  for (let y = 0; y < height; y++) {
+    const row = 54 + (height - 1 - y) * rowSize;
+    for (let x = 0; x < width; x++) {
+      const [r, g, b] = pixel(x, y);
+      out.set([b, g, r], row + x * 3);
+    }
+  }
+  return out;
+}

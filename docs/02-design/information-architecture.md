@@ -19,7 +19,7 @@
 ├─ /about                 Product facts                                Phase 8
 ├─ /privacy               How local processing works, how to verify    Phase 8
 ├─ /terms                                                              Phase 8
-├─ /licenses              Third-party licenses (generated)             Phase 8
+├─ /licenses              Third-party licenses (generated)             Phase 8 (started in Phase 6 for HEIC, D-6)
 ├─ /guides/[slug]         After MVP content starts
 ├─ /sitemap.xml, /robots.txt                                           Phase 8
 └─ /_gallery              Component gallery: not linked, noindex, not in sitemap (Phase 2)

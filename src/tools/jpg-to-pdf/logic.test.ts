@@ -152,11 +152,9 @@ describe("imagesToPdf", () => {
     ]);
     const heicError = await expectToolError(
       imagesToPdf([input("IMG_1.HEIC", heic)], FIT, failingDecoder),
-      "E_UNSUPPORTED_FORMAT",
+      "E_CORRUPT",
     );
-    expect(heicError.message).toMatch(
-      /^IMG_1\.HEIC is a HEIC photo, which this browser can’t open yet/,
-    );
+    expect(heicError.message).toMatch(/^IMG_1\.HEIC is a HEIC photo that couldn’t be opened/);
     await expectToolError(imagesToPdf([], FIT, fakeDecoder), "E_INVALID_INPUT");
   });
 });

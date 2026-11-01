@@ -201,6 +201,7 @@ Workers are created per job for regex (so a runaway pattern can be killed) and r
 - WASM files are served from our own origin (no CDNs) and cached by the service worker.
 - Every deployed file < 25 MiB (Cloudflare Pages limit).
 - jSquash WASM loading and pdf.js worker bundling were proven in Phase 1 with webpack builds (§8.4).
+- **HEIC decoder (Phase 6, D-6):** `scripts/copy-libheif-assets.mjs` (run by `predev`/`prebuild` after the pdf.js copy) copies the unmodified `libheif-js` WASM build, its license texts and the committed source tarballs (`vendor-src/`) to `public/vendor/libheif-js-<version>/` (git-ignored). `src/lib/image/heic.ts` imports `libheif-bundle.mjs` from there at run time with `/* webpackIgnore: true */`, so it never enters a Sprigkit chunk; a unit test keeps `LIBHEIF_VERSION` equal to the installed package.
 - pdf.js 6 loads optional WASM decoders (JPX/ICC), CMaps and standard fonts by URL. **Implemented in Phase 3:** `scripts/copy-pdfjs-assets.mjs` (run by `predev`/`prebuild`) copies `wasm/` (without the unused QuickJS engine), `cmaps/`, `standard_fonts/` and `iccs/` to `public/vendor/pdfjs-<version>/` (git-ignored); `src/lib/pdf/render.ts` (thumbnails and page previews, since Phase 5) passes `wasmUrl`, `cMapUrl`, `standardFontDataUrl` and `iccUrl`, and a unit test keeps its version equal to the installed package. Never use CDN defaults.
 
 ### 8.3 Memory hygiene

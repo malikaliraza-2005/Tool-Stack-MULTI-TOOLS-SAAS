@@ -73,6 +73,7 @@ describe("the real registry", () => {
       "remove-exif-data",
       "compress-image",
       "resize-image",
+      "convert-image",
     ]);
     expect(getTool("merge-pdf")?.name).toBe("Merge PDF");
     // Planned slugs have no page until they are built.

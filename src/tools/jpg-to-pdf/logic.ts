@@ -12,6 +12,7 @@ import {
 } from "pdf-lib";
 import { isOutOfMemory, toolErrors, ToolError } from "@/lib/errors";
 import { describeKind, detectFileType, type FileKind } from "@/lib/files/sniff";
+import { heicCouldNotOpen } from "@/lib/image/pipeline";
 import {
   jpegOrientation,
   orientationMatrix,
@@ -50,15 +51,6 @@ export function imageKind(input: ImageInput): FileKind {
   return kind;
 }
 
-/** The message for a HEIC file the browser can't decode (D-6: full HEIC support ships in Phase 6). */
-export function heicUnsupported(name: string): ToolError {
-  return new ToolError(
-    "E_UNSUPPORTED_FORMAT",
-    `${name} is a HEIC photo, which this browser can’t open yet. Use Safari, or save the photo as JPG first (on iPhone: Settings › Camera › Formats › Most Compatible).`,
-    { fileName: name },
-  );
-}
-
 async function embed(
   doc: PDFDocument,
   input: ImageInput,
@@ -89,7 +81,7 @@ async function embed(
   } catch (error) {
     if (error instanceof ToolError) throw error;
     if (isOutOfMemory(error)) throw toolErrors.outOfMemory(error);
-    if (kind === "heic") throw heicUnsupported(input.name);
+    if (kind === "heic") throw heicCouldNotOpen(input.name, error);
     throw toolErrors.corrupt(input.name, error);
   }
   // Browser decoding already applies EXIF orientation.

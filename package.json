@@ -7,9 +7,9 @@
     "node": ">=24"
   },
   "scripts": {
-    "predev": "node scripts/copy-pdfjs-assets.mjs",
+    "predev": "node scripts/copy-pdfjs-assets.mjs && node scripts/copy-libheif-assets.mjs",
     "dev": "next dev --webpack",
-    "prebuild": "node scripts/copy-pdfjs-assets.mjs",
+    "prebuild": "node scripts/copy-pdfjs-assets.mjs && node scripts/copy-libheif-assets.mjs",
     "build": "next build --webpack",
     "serve": "node scripts/serve-out.mjs",
     "typecheck": "next typegen && tsc --noEmit",
@@ -55,6 +55,7 @@
     "hash-wasm": "4.12.0",
     "jose": "6.2.12",
     "jsonc-parser": "3.3.1",
+    "libheif-js": "1.23.5",
     "lucide-react": "1.56.0",
     "motion": "14.2.0",
     "next": "16.4.3",

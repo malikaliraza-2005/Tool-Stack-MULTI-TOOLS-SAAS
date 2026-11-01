@@ -40,6 +40,7 @@ module.exports = {
         "http://127.0.0.1:4174/remove-exif-data",
         "http://127.0.0.1:4174/resize-image",
         "http://127.0.0.1:4174/compress-image",
+        "http://127.0.0.1:4174/convert-image",
       ],
       numberOfRuns: 3,
     },

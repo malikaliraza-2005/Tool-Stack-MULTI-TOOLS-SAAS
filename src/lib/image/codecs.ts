@@ -3,11 +3,11 @@
 //
 // Decoding: the browser decoder first for photos (fast, colour-managed, EXIF
 // orientation applied), the WASM decoder when it fails (very large images,
-// formats the browser lacks). PNG goes the other way: the WASM decoder keeps
+// formats the browser lacks, HEIC via libheif). PNG goes the other way: the WASM decoder keeps
 // exact pixel values, which lossless output must preserve.
 
-import { ToolError } from "@/lib/errors";
 import { KIND_MIME, type ImageKind, type OutputFormat } from "./formats";
+import { decodeHeic } from "./heic";
 import type { Codecs } from "./pipeline";
 import type { Pixels } from "./pixels";
 
@@ -45,17 +45,13 @@ async function decodeWasm(bytes: ArrayBuffer, kind: ImageKind): Promise<Pixels |
       return (await import("@jsquash/webp/decode")).default(bytes);
     case "avif":
       return (await import("@jsquash/avif/decode")).default(bytes);
+    case "gif":
+      return (await import("./simple-decoders")).decodeGif(new Uint8Array(bytes));
+    case "bmp":
+      return (await import("./simple-decoders")).decodeBmp(new Uint8Array(bytes));
     default:
       return null;
   }
-}
-
-export function heicUnsupported(name?: string): ToolError {
-  return new ToolError(
-    "E_UNSUPPORTED_FORMAT",
-    `${name ?? "This file"} is a HEIC photo, which this browser can’t open yet. Use Safari, or save the photo as JPG first (on iPhone: Settings › Camera › Formats › Most Compatible).`,
-    { fileName: name },
-  );
 }
 
 const decode: Codecs["decode"] = async (bytes, kind) => {
@@ -69,7 +65,8 @@ const decode: Codecs["decode"] = async (bytes, kind) => {
   } catch (error) {
     nativeError = error;
   }
-  if (kind === "heic") throw heicUnsupported();
+  // HEIC: Safari decodes it natively; elsewhere libheif (D-6), loaded now.
+  if (kind === "heic") return { pixels: await decodeHeic(bytes), oriented: true };
   const pixels = kind === "png" ? null : await decodeWasm(bytes, kind);
   if (!pixels) throw nativeError;
   return { pixels, oriented: false };

@@ -24,18 +24,18 @@ Build the 4 image tools on a shared codec pipeline, with the ComparisonSlider as
 
 ### Shared
 - [x] **P6-T01** Image pipeline worker: decode (jSquash per format / `createImageBitmap`), apply EXIF orientation, optional resize, encode; batch with concurrency 2; progress; cancel.
-- [ ] **P6-T02** ComparisonSlider (drag + keyboard, sizes shown, works with large images via downscaled previews). *Built (`src/components/tool/ComparisonSlider.tsx`, previews above 16 MP from the worker); ticked when compress-image uses it.*
+- [x] **P6-T02** ComparisonSlider (drag + keyboard, sizes shown, works with large images via downscaled previews). *Used by compress, resize and convert; previews above 16 MP come from the worker (a 40 MP photo is E2E-tested).*
 - [x] **P6-T03** Batch list UI with per-file status and totals; "Download all (ZIP)".
-- [ ] **P6-T04** Image fixture set: EXIF-rotated JPEG, GPS JPEG, transparent PNG, animated GIF, large (40+ MP), WebP with EXIF/XMP, AVIF, HEIC (if D-6 approved). *Done so far (generated in `src/lib/files/__fixtures__/images.ts`):* EXIF-rotated and GPS JPEG (with XMP, IPTC, comment, trailer), transparent PNG and PNG with metadata, animated GIF, WebP with EXIF/XMP, AVIF. *Still to do:* 40+ MP (generated in the browser in E2E) and HEIC (with P6-T09).
+- [x] **P6-T04** Image fixture set: EXIF-rotated JPEG, GPS JPEG, transparent PNG, animated GIF, large (40+ MP), WebP with EXIF/XMP, AVIF, HEIC (if D-6 approved). *Done so far (generated in `src/lib/files/__fixtures__/images.ts`):* EXIF-rotated and GPS JPEG (with XMP, IPTC, comment, trailer), transparent PNG and PNG with metadata, animated GIF, WebP with EXIF/XMP, AVIF. *Added later in Phase 6:* 40 MP JPEG (drawn in the browser in `e2e/tools/compress-image.spec.ts`), HEIC with and without alpha (from libheif's test corpus), GIF and BMP generators.
 
 ### Tools (in order)
 - [x] **P6-T05** `remove-exif-data` (spec §4.4): inspect view (GPS first, text coordinates only), lossless JPEG/PNG/WebP stripping, orientation handling.
-- [ ] **P6-T06** `compress-image` (spec §4.1): quality, format, "keep original if larger" rule.
-- [ ] **P6-T07** `resize-image` (spec §4.3): resize + crop modes, aspect presets, "don't enlarge".
-- [ ] **P6-T08** `convert-image` (spec §4.2): format matrix, alpha → background, GIF first frame; HEIC per D-6.
-- [ ] **P6-T09** If HEIC ships: separate, unmodified LGPL decoder file + license notice + source link (dependencies-licenses §4).
+- [x] **P6-T06** `compress-image` (spec §4.1): quality, format, "keep original if larger" rule.
+- [x] **P6-T07** `resize-image` (spec §4.3): resize + crop modes, aspect presets, "don't enlarge".
+- [x] **P6-T08** `convert-image` (spec §4.2): format matrix, alpha → background, GIF first frame; HEIC per D-6.
+- [x] **P6-T09** If HEIC ships: separate, unmodified LGPL decoder file + license notice + source link (dependencies-licenses §4).
 - [ ] **P6-T10** Cross-browser/mobile pass; AVIF encode timing on low-end devices (show estimate/warning if slow); tune limits.
-- [ ] **P6-T11** Connect `jpg-to-pdf` (P5) to the shared image pipeline if not already.
+- [x] **P6-T11** Connect `jpg-to-pdf` (P5) to the shared image pipeline if not already.
 
 ## Docs to write / update
 tool-specifications.md · dependencies-licenses.md (codec upstream licenses confirmed) · mvp-scope.md §4 limits · browser-device-support.md

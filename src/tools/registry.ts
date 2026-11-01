@@ -21,6 +21,7 @@ import { meta as signPdf } from "./sign-pdf/meta";
 import { meta as removeExifData } from "./remove-exif-data/meta";
 import { meta as compressImage } from "./compress-image/meta";
 import { meta as resizeImage } from "./resize-image/meta";
+import { meta as convertImage } from "./convert-image/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
@@ -43,13 +44,14 @@ export const TOOLS: readonly ToolDefinition[] = [
   removeExifData,
   compressImage,
   resizeImage,
+  convertImage,
 ];
 
 /**
  * Final MVP slugs (D-11, mvp-scope §2) not built yet. `related` and `handoff`
  * may reference them; pages link only to tools that are live.
  */
-export const PLANNED_SLUGS: readonly string[] = ["convert-image"];
+export const PLANNED_SLUGS: readonly string[] = [];
 
 export const REGISTRY_CONTEXT: RegistryContext = {
   detectorIds: detectorIds(),
