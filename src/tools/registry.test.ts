@@ -80,7 +80,11 @@ describe("the real registry", () => {
   it("relatedTools returns only published tools", () => {
     const merge = getTool("merge-pdf")!;
     // merge-pdf relates to live tools and to planned ones, which are skipped.
-    expect(relatedTools(merge).map((t) => t.slug)).toEqual(["split-pdf", "organize-pdf", "jpg-to-pdf"]);
+    expect(relatedTools(merge).map((t) => t.slug)).toEqual([
+      "split-pdf",
+      "organize-pdf",
+      "jpg-to-pdf",
+    ]);
     const withPilot = { ...merge, related: ["json-formatter", "pdf-to-jpg"] };
     expect(relatedTools(withPilot).map((t) => t.slug)).toEqual(["json-formatter"]);
   });
