@@ -111,6 +111,7 @@ test("sitemap lists the home page and published tools", async ({ request }) => {
     "/pdf-to-jpg",
     "/sign-pdf",
     "/remove-exif-data",
+    "/compress-image",
   ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");
@@ -124,6 +125,6 @@ test("robots.txt allows all and points to the sitemap", async ({ request }) => {
 });
 
 test("unknown tool slugs are 404", async ({ page }) => {
-  const response = await page.goto("/compress-image");
+  const response = await page.goto("/not-a-real-tool");
   expect(response?.status()).toBe(404);
 });
