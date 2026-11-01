@@ -135,7 +135,7 @@ export default function MergePdfUI() {
       return;
     }
     // Thumbnail last: pdf.js loads on intent, after the file is known to be good.
-    const { renderPdfThumbnail } = await import("@/lib/pdf/thumbnail");
+    const { renderPdfThumbnail } = await import("@/lib/pdf/render");
     const png = await renderPdfThumbnail(entry.file, THUMBNAIL_WIDTH);
     if (!png) return;
     const url = URL.createObjectURL(png);

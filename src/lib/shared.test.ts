@@ -320,7 +320,7 @@ describe("detectors (tool-registry §5)", () => {
 
 describe("pdf.js assets", () => {
   it("thumbnail asset path matches the installed pdfjs-dist version", async () => {
-    const { PDFJS_VERSION } = await import("./pdf/thumbnail");
+    const { PDFJS_VERSION } = await import("./pdf/render");
     const { readFileSync } = await import("node:fs");
     const pkg = JSON.parse(readFileSync("node_modules/pdfjs-dist/package.json", "utf8"));
     expect(PDFJS_VERSION).toBe(pkg.version);

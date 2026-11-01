@@ -334,6 +334,13 @@
   transition-timing-function: var(--ease-out);
 }
 
+/* Items sliding to a new place after a reorder (PageThumbnailGrid). */
+@utility transition-move {
+  transition-property: transform, opacity;
+  transition-duration: var(--dur-standard), var(--dur-quick);
+  transition-timing-function: var(--ease-out);
+}
+
 /* Page container: centered, max width set with `max-w-content|tool|wide` (§4.2). */
 @utility page-container {
   width: 100%;

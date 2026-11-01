@@ -23,6 +23,7 @@ for (const path of [
   "/diff-checker",
   "/regex-tester",
   "/split-pdf",
+  "/organize-pdf",
   "/does-not-exist",
 ]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {
