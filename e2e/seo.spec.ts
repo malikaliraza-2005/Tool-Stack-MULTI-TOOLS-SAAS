@@ -112,6 +112,7 @@ test("sitemap lists the home page and published tools", async ({ request }) => {
     "/sign-pdf",
     "/remove-exif-data",
     "/compress-image",
+    "/resize-image",
   ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");

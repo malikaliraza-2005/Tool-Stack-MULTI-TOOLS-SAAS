@@ -34,6 +34,10 @@ type ImageWorkspaceProps = {
   zipName: string;
   /** Shown under the action button when nothing is wrong. */
   idleHint?: string;
+  /** Replaces the ComparisonSlider at centre stage (e.g. the crop editor). */
+  stage?: ReactNode;
+  /** Lets every image be selected before processing, e.g. "Crop" to edit its crop. */
+  selectLabel?: string;
 };
 
 /**
@@ -52,6 +56,8 @@ export function ImageWorkspace({
   summary,
   zipName,
   idleHint = "Your images stay on this device.",
+  stage,
+  selectLabel,
 }: ImageWorkspaceProps) {
   const dropZone = useRef<DropZoneHandle>(null);
   const wasEmpty = useRef(true);
@@ -101,7 +107,8 @@ export function ImageWorkspace({
   return (
     <div className="grid grid-cols-1 gap-6 p-4 md:p-6 lg:grid-cols-3">
       <div className="flex min-w-0 flex-col gap-4 lg:col-span-2">
-        {comparable && shown.result?.beforeUrl && shown.result.afterUrl && (
+        {stage}
+        {!stage && comparable && shown.result?.beforeUrl && shown.result.afterUrl && (
           <ComparisonSlider
             key={shown.id}
             before={{
@@ -132,9 +139,9 @@ export function ImageWorkspace({
         <ImageBatchList
           entries={batch.entries}
           label="Images"
-          selectedId={shown?.id}
-          onSelect={batch.done.length > 1 ? batch.select : undefined}
-          selectLabel="Compare"
+          selectedId={selectLabel ? selected?.id : shown?.id}
+          onSelect={selectLabel || batch.done.length > 1 ? batch.select : undefined}
+          selectLabel={selectLabel ?? "Compare"}
           onRemove={batch.remove}
           busy={busy}
           describeResult={(entry) => entry.result?.note}

@@ -19,6 +19,7 @@ import PdfToJpgContent from "./pdf-to-jpg/content";
 import SignPdfContent from "./sign-pdf/content";
 import RemoveExifDataContent from "./remove-exif-data/content";
 import CompressImageContent from "./compress-image/content";
+import ResizeImageContent from "./resize-image/content";
 
 export const TOOL_CONTENT: Record<string, ComponentType> = {
   "base64-encode-decode": Base64Content,
@@ -38,4 +39,5 @@ export const TOOL_CONTENT: Record<string, ComponentType> = {
   "sign-pdf": SignPdfContent,
   "remove-exif-data": RemoveExifDataContent,
   "compress-image": CompressImageContent,
+  "resize-image": ResizeImageContent,
 };
