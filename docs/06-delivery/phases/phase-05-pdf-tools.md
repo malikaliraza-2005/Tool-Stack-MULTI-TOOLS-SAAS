@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | 🟨 In progress |
 | **Effort** | 8–10 days [Estimate] |
 
 ## Goal

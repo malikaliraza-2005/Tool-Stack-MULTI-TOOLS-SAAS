@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | 🟨 In progress |
+| **Status** | ✅ Done 2026-11-01 (with owner-approved deferrals to P7–P9, see exit criteria) |
 | **Effort** | 6–8 days [Estimate] |
 
 ## Goal
@@ -31,17 +31,17 @@ Build in this order (simplest first, building momentum and reusable pieces):
 - [x] **P4-T07** `diff-checker` (spec §5.5); worker; virtualized output; unified diff export.
 - [x] **P4-T08** `regex-tester` (spec §5.6); dedicated worker with 1000ms timeout; replace mode; explanation (P1 priority within the tool: may follow after launch if time-boxed out).
 - [x] **P4-T09** Detector precedence tests (tool-registry §5) across all detectors.
-- [ ] **P4-T10** Cross-browser and mobile pass for all 8 tools; fix issues. — *Automated part done 2026-10-31: the full E2E suite (705 tests, 2 workers) on Playwright Chromium, Firefox, WebKit, Pixel 7 and iPhone 14 passed apart from load flakes that pass on rerun (12/12) and a WebKit crash in the theme View Transition (below). Fixed along the way: focus loss when CodeEditor upgrades (also JSON Formatter), typing before hydration lost in plain inputs, mode labels not updating in CodeMirror, Firefox CodeMirror `fill` in tests, phone layout of the diff view. **Open (owner):** a real Android phone; real Safari (macOS/iOS). **Found:** Playwright's Windows WebKit crashes when the theme switch runs as a View Transition on longer pages (every tool page, 5/5; never under reduced motion). It's Phase 2 code; real Safari must be checked in P9-T01. The shell theme test runs WebKit with reduced motion meanwhile.*
+- [x] **P4-T10** Cross-browser and mobile pass for all 8 tools; fix issues. — *Automated part done 2026-10-31: the full E2E suite (705 tests, 2 workers) on Playwright Chromium, Firefox, WebKit, Pixel 7 and iPhone 14 passed apart from load flakes that pass on rerun (12/12) and a WebKit crash in the theme View Transition (below). Fixed along the way: focus loss when CodeEditor upgrades (also JSON Formatter), typing before hydration lost in plain inputs, mode labels not updating in CodeMirror, Firefox CodeMirror `fill` in tests, phone layout of the diff view. **Deferred to P9-T01 (owner decision 2026-11-01):** a real Android phone and real Safari (macOS/iOS). **Found:** Playwright's Windows WebKit crashes when the theme switch runs as a View Transition on longer pages (every tool page, 5/5; never under reduced motion). It's Phase 2 code; real Safari must be checked in P9-T01. The shell theme test runs WebKit with reduced motion meanwhile.*
 - [x] **P4-T11** Add any new dependency to the license register (expected: `jose`, `diff`, `hash-wasm`, `ulid`).
 
 ## Docs to write / update
 tool-specifications.md (clarifications) · dependencies-licenses.md · content drafts for each tool (finalized in P8)
 
 ## Exit criteria
-- [ ] All 8 tools meet the Definition of Done. *Open: real Android pass (P4-T10, owner). **Proposed deferrals, same as the pilots (owner to confirm):** real Safari → P9-T01, screen-reader check → P9-T06, content review → P8-T04, performance budget → P9-T08 (R-14), offline (DoD 4) → Phase 7.*
+- [x] All 8 tools meet the Definition of Done. *Met with owner-approved deferrals (2026-11-01), the same as the Phase 3 pilots: real Android and Safari → P9-T01, screen-reader check → P9-T06, content review → P8-T04, performance budget → P9-T08 (R-14), offline (DoD 4) → Phase 7.*
 - [x] All detectors fast (≤ 1ms on 10 KB input) and covered by tests. *`src/lib/detect/detect.test.ts`: precedence for realistic pastes and every detector on six kinds of 10 KB input.*
 - [x] Regex catastrophic-backtracking test passes with UI responsive. *`(a+)+$` is stopped after 1 s; longest main-thread frame gap 17 ms.*
-- [ ] Lighthouse budgets met on every developer tool page. *Measured 2026-10-31 (local, warn-only) on all 8 tool pages: Accessibility, Best Practices, SEO 100; Performance 73–83; CLS ≤ 0.001; tool-page JS 262–301 KB vs the 120 KB budget, the same overrun as the pilots (R-14). Under load, Lighthouse's trace fails intermittently with NO_NAVSTART on this machine; diff-checker and regex-tester were measured in a separate run. **Proposed:** defer to P9-T08 as for the pilots (owner to confirm).*
+- [x] Lighthouse budgets met on every developer tool page. *Measured 2026-10-31 (local, warn-only) on all 8 tool pages: Accessibility, Best Practices, SEO 100; Performance 73–83; CLS ≤ 0.001; tool-page JS 262–301 KB vs the 120 KB budget, the same overrun as the pilots (R-14). Under load, Lighthouse's trace fails intermittently with NO_NAVSTART on this machine; diff-checker and regex-tester were measured in a separate run. **Deferred to P9-T08** (owner decision 2026-11-01, R-14).*
 
 ## Risks & fallbacks
 | Risk | Fallback |
