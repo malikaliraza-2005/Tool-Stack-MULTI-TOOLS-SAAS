@@ -24,6 +24,7 @@ for (const path of [
   "/regex-tester",
   "/split-pdf",
   "/organize-pdf",
+  "/jpg-to-pdf",
   "/does-not-exist",
 ]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {

@@ -15,6 +15,7 @@ import { meta as diffChecker } from "./diff-checker/meta";
 import { meta as regexTester } from "./regex-tester/meta";
 import { meta as splitPdf } from "./split-pdf/meta";
 import { meta as organizePdf } from "./organize-pdf/meta";
+import { meta as jpgToPdf } from "./jpg-to-pdf/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
@@ -31,6 +32,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   regexTester,
   splitPdf,
   organizePdf,
+  jpgToPdf,
 ];
 
 /**
@@ -38,7 +40,6 @@ export const TOOLS: readonly ToolDefinition[] = [
  * may reference them; pages link only to tools that are live.
  */
 export const PLANNED_SLUGS: readonly string[] = [
-  "jpg-to-pdf",
   "pdf-to-jpg",
   "sign-pdf",
   "compress-image",

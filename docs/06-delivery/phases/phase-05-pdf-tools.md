@@ -28,7 +28,7 @@ Build the remaining 5 PDF tools. These are the main organic-search pillar, so in
 ### Tools (in order)
 - [x] **P5-T04** `split-pdf` (spec §3.2): three modes; ZIP output.
 - [x] **P5-T05** `organize-pdf` (spec §3.3): uses PageThumbnailGrid; undo/redo; 300-page responsiveness.
-- [ ] **P5-T06** `jpg-to-pdf` (spec §3.4): page size/orientation/margin; EXIF orientation; non-JPG/PNG re-encoding (uses jSquash; coordinate with P6 codecs).
+- [x] **P5-T06** `jpg-to-pdf` (spec §3.4): page size/orientation/margin; EXIF orientation; non-JPG/PNG re-encoding (uses jSquash; coordinate with P6 codecs).
 - [ ] **P5-T07** `pdf-to-jpg` (spec §3.5): DPI options; per-device canvas limit with downscale message.
 - [ ] **P5-T08** `sign-pdf` (spec §3.6): form filling; draw/type/upload signature; text/date/check; drag/resize/keyboard nudge; flatten; visible disclaimer; opt-in "remember signature".
 - [ ] **P5-T09** Cross-browser/mobile pass; measure memory on iOS Safari with large fixtures; tune limits in registry.

@@ -34,6 +34,7 @@ module.exports = {
         "http://127.0.0.1:4174/regex-tester",
         "http://127.0.0.1:4174/split-pdf",
         "http://127.0.0.1:4174/organize-pdf",
+        "http://127.0.0.1:4174/jpg-to-pdf",
       ],
       numberOfRuns: 3,
     },
