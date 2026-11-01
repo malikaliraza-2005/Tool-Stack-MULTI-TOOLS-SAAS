@@ -230,6 +230,18 @@ test.describe("sign-pdf", () => {
     await expectNoA11yViolations(page);
   });
 
+  test("a typed signature still works when a font can't load", async ({ page }) => {
+    // As on Linux without Arial, where a font face that uses local("Arial") fails.
+    await page.addInitScript(() => {
+      document.fonts.load = () => Promise.reject(new DOMException("No font", "NetworkError"));
+    });
+    await open(page);
+    await choosePdf(page, "contract.pdf", await makePdf("contract"));
+    await ready(page, 1);
+    await typeSignature(page, "Ada Lovelace");
+    await expect(page.getByRole("button", { name: "Signature on page 1" })).toBeVisible();
+  });
+
   test("XFA forms show the unsupported message", async ({ page }) => {
     await open(page);
     await choosePdf(page, "tax-form.pdf", await makeXfaPdf());

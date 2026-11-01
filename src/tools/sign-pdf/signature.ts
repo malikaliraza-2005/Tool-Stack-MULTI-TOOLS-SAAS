@@ -82,7 +82,8 @@ export async function typedSignature(
   const size = 96;
   const font = `${size}px ${fontFamily}`;
   // The font is only fetched when used; wait so the canvas doesn't fall back.
-  await document.fonts.load(font, name);
+  // A failed load isn't fatal: the canvas then uses whatever font is available.
+  await document.fonts.load(`${size}px ${fontFamily.split(",")[0]}`, name).catch(() => []);
   const probe = canvas(1, 1).context;
   probe.font = font;
   const width = probe.measureText(name).width + size;
