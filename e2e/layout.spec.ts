@@ -26,6 +26,7 @@ for (const path of [
   "/organize-pdf",
   "/jpg-to-pdf",
   "/pdf-to-jpg",
+  "/sign-pdf",
   "/does-not-exist",
 ]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {

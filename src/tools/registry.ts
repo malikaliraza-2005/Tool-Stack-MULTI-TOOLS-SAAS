@@ -17,6 +17,7 @@ import { meta as splitPdf } from "./split-pdf/meta";
 import { meta as organizePdf } from "./organize-pdf/meta";
 import { meta as jpgToPdf } from "./jpg-to-pdf/meta";
 import { meta as pdfToJpg } from "./pdf-to-jpg/meta";
+import { meta as signPdf } from "./sign-pdf/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
@@ -35,6 +36,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   organizePdf,
   jpgToPdf,
   pdfToJpg,
+  signPdf,
 ];
 
 /**
@@ -42,7 +44,6 @@ export const TOOLS: readonly ToolDefinition[] = [
  * may reference them; pages link only to tools that are live.
  */
 export const PLANNED_SLUGS: readonly string[] = [
-  "sign-pdf",
   "compress-image",
   "convert-image",
   "resize-image",

@@ -10,7 +10,9 @@ Full context: [docs/README.md](docs/README.md).
 
 ## Current phase
 
-**Phase 5: PDF tools** → [docs/06-delivery/phases/phase-05-pdf-tools.md](docs/06-delivery/phases/phase-05-pdf-tools.md)
+**Phase 6: Image tools** → [docs/06-delivery/phases/phase-06-image-tools.md](docs/06-delivery/phases/phase-06-image-tools.md)
+
+Phase 5 (PDF tools) is done: split, organize, jpg-to-pdf, pdf-to-jpg and sign-pdf in `src/tools/`, shared `PageThumbnailGrid` and the page-range parser; generated PDF fixtures in `src/lib/pdf/__fixtures__/`. Its deferrals (real-device memory and limits, Safari, screen reader, content review, performance budget) join the earlier ones in Phases 8–9.
 
 Phase 4 (developer tools) is done: 8 tools in `src/tools/`, all smart-paste detectors in `src/lib/detect/`. Its deferrals (real Android/Safari, screen reader, content review, performance budget) join Phase 3's in Phases 8–9.
 
@@ -25,7 +27,7 @@ Work from the current phase's task checklist. Tick tasks when done and reference
 1. **No backend, database, API routes, auth, or paid service.** The site is a Next.js static export (`output: "export"`).
 2. **No network requests with user data.** Tools must not call any external origin. Never load libraries, fonts, or WASM from a CDN; self-host everything.
 3. **Only permissive licenses.** Allowed: MIT, ISC, BSD, Apache-2.0, OFL (fonts). LGPL/MPL need review. GPL, AGPL, and non-commercial licenses are forbidden. Record every new dependency in [docs/04-architecture/dependencies-licenses.md](docs/04-architecture/dependencies-licenses.md).
-4. **Never store user content** (files, text, tokens) in localStorage, URLs, logs, or analytics. Only preferences/options.
+4. **Never store user content** (files, text, tokens) in localStorage, URLs, logs, or analytics. Only preferences/options. Sole exception: sign-pdf's opt-in "Remember my signature" (tool-specifications §3.6).
 5. **Use design tokens only.** No hard-coded colors, sizes, radii, shadows, durations, or easings. See [docs/02-design/design-system.md](docs/02-design/design-system.md).
 6. **Motion:** animate `transform`/`opacity`; respect `prefers-reduced-motion`; never block input; durations from tokens (≤ 380ms).
 7. **Accessibility:** keyboard-operable everything (including drag-and-drop alternatives), visible focus, labelled controls, WCAG 2.2 AA contrast.

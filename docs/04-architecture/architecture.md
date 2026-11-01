@@ -236,7 +236,7 @@ Build-tool notes:
 
 - **Tool state:** local React state per tool; no global store library. Cross-component state via context only where needed (e.g. files handed from the homepage drop zone to a tool).
 - **Homepage → tool file hand-off:** files are kept in an in-memory module store during client-side navigation. If the page reloads, the user re-selects the file (nothing is persisted).
-- **Preferences:** `src/lib/storage.ts` wraps `localStorage` with try/catch and Zod validation. Keys are versioned (`ts:v1:theme`, `ts:v1:favorites`, `ts:v1:recent`, `ts:v1:opts:<slug>`). **User content (files, text, tokens) is never stored.**
+- **Preferences:** `src/lib/storage.ts` wraps `localStorage` with try/catch and Zod validation. Keys are versioned (`ts:v1:theme`, `ts:v1:favorites`, `ts:v1:recent`, `ts:v1:opts:<slug>`). **User content (files, text, tokens) is never stored.** The one exception is sign-pdf's opt-in "Remember my signature on this device" (tool-specifications §3.6): only after the user ticks it, the signature PNG is kept under `ts:v1:sign-pdf:signature`, with a Delete control; it bypasses the options-only helper on purpose.
 
 ---
 

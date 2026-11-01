@@ -24,6 +24,7 @@ const TOOL_UIS: Record<string, ComponentType> = {
   "organize-pdf": dynamic(() => import("@/tools/organize-pdf/ui")),
   "jpg-to-pdf": dynamic(() => import("@/tools/jpg-to-pdf/ui")),
   "pdf-to-jpg": dynamic(() => import("@/tools/pdf-to-jpg/ui")),
+  "sign-pdf": dynamic(() => import("@/tools/sign-pdf/ui")),
 };
 
 export function ToolLoader({ slug }: { slug: string }) {

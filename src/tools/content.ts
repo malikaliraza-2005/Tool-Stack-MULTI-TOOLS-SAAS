@@ -16,6 +16,7 @@ import SplitPdfContent from "./split-pdf/content";
 import OrganizePdfContent from "./organize-pdf/content";
 import JpgToPdfContent from "./jpg-to-pdf/content";
 import PdfToJpgContent from "./pdf-to-jpg/content";
+import SignPdfContent from "./sign-pdf/content";
 
 export const TOOL_CONTENT: Record<string, ComponentType> = {
   "base64-encode-decode": Base64Content,
@@ -32,4 +33,5 @@ export const TOOL_CONTENT: Record<string, ComponentType> = {
   "organize-pdf": OrganizePdfContent,
   "jpg-to-pdf": JpgToPdfContent,
   "pdf-to-jpg": PdfToJpgContent,
+  "sign-pdf": SignPdfContent,
 };

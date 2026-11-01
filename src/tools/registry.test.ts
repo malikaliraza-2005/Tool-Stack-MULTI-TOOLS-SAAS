@@ -69,9 +69,10 @@ describe("the real registry", () => {
       "organize-pdf",
       "jpg-to-pdf",
       "pdf-to-jpg",
+      "sign-pdf",
     ]);
     expect(getTool("merge-pdf")?.name).toBe("Merge PDF");
-    expect(getTool("sign-pdf")).toBeUndefined();
+    expect(getTool("compress-image")).toBeUndefined();
   });
 
   it("does not list planned slugs as registered tools", () => {
@@ -80,13 +81,13 @@ describe("the real registry", () => {
 
   it("relatedTools returns only published tools", () => {
     const merge = getTool("merge-pdf")!;
-    // merge-pdf relates to live tools and to planned ones, which are skipped.
     expect(relatedTools(merge).map((t) => t.slug)).toEqual([
       "split-pdf",
       "organize-pdf",
       "jpg-to-pdf",
+      "sign-pdf",
     ]);
-    const withPilot = { ...merge, related: ["json-formatter", "sign-pdf"] };
+    const withPilot = { ...merge, related: ["json-formatter", "compress-image"] };
     expect(relatedTools(withPilot).map((t) => t.slug)).toEqual(["json-formatter"]);
   });
 });
