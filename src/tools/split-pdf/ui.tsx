@@ -187,7 +187,7 @@ export default function SplitPdfUI() {
       setAlert(toolError.message);
       return;
     }
-    const { renderPdfThumbnail } = await import("@/lib/pdf/thumbnail");
+    const { renderPdfThumbnail } = await import("@/lib/pdf/render");
     const png = await renderPdfThumbnail(file, THUMBNAIL_WIDTH);
     if (!png || current.current !== file) return;
     thumbnail.current = URL.createObjectURL(png);

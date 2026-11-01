@@ -53,3 +53,5 @@ Playwright's WebKit is close to Safari but is not Safari. Real iOS/macOS Safari 
 ## 4. Device limits
 
 Per-tool limits (file size, page count, megapixels) come from the registry ([tool-registry.md](../04-architecture/tool-registry.md)) and are tuned on real devices in Phase 9 (R-3).
+
+**Phase 5 findings (emulated, 2026-11-01):** every PDF tool passes on Playwright Chromium, Firefox, WebKit, Pixel 7 and iPhone 14. PDF to JPG caps canvases at 16,777,216 px on phones and tablets (iOS Safari's limit) and 100 megapixels on desktop, reducing larger pages and saying so. Organize PDF stays responsive with 300 pages (183 ms longest frame gap, desktop Chromium). Not yet measured: memory on real phones with large PDFs (P9-T01).
