@@ -121,14 +121,14 @@ Also checked: dates are ISO (`YYYY-MM-DD`) and `updatedAt` is not before `addedA
 | JSON-LD | `name`, `seo.faqs`, `category` | `lib/seo.ts` |
 | Page header & breadcrumbs | `name`, `seo.h1`, `tagline`, `category` | `components/tool/ToolPage` |
 | Related tools | `related` | Bottom of tool page |
-| Category hubs | `category`, `name`, `tagline` | `/pdf-tools`, `/image-tools`, `/developer-tools` |
-| Homepage index | all live tools grouped by category | `components/home` |
-| Command palette search | `name`, `shortName`, `keywords`, `category` | Generated `search-index.json` (build script) loaded by Fuse.js |
-| DropZone suggestions | `input.accepts` | Homepage drop zone matches dropped files to tools |
-| Smart paste | `input.detect` | `lib/detect` runs detectors, maps winners to slugs |
+| Category hubs | `category`, `name`, `tagline`, `icon` | `/pdf-tools`, `/image-tools`, `/developer-tools` (`components/home/CategoryHub`; the hubs' own intro, SEO text and guide links are in `src/tools/hubs.ts`) |
+| Homepage index, popular row and hero search | all live tools grouped by category | `components/home` (`ToolIndex`, `PopularTools`; the hero gets a trimmed copy built by `heroTools()`) |
+| Command palette search | `name`, `shortName`, `keywords`, `category`, `icon`, `input.accepts.extensions` | `/search-index.json`, emitted at build time by the force-static route `app/search-index.json/route.ts` (`buildSearchIndex` in `src/tools/search-index.ts`; no SEO text), fetched on first palette open and searched with Fuse.js (`SEARCH_OPTIONS`, `searchTools`) |
+| DropZone suggestions | `input.accepts` | Homepage drop zone matches dropped files to tools (`suggestForFiles` in `components/home/suggest.ts`: type by magic bytes, extension only for files without a signature; `*/*` tools are offered only when nothing else fits) |
+| Smart paste | `input.detect` | `lib/detect` runs detectors; `suggestForText` maps winners to slugs |
 | Sitemap | `slug`, `updatedAt` | `app/sitemap.ts` |
 | Limits | `limits` | `lib/files` checks before reading |
-| Hand-off | `handoff` | ResultPanel "Use in another tool" |
+| Hand-off | `handoff` | ResultPanel "Use in another tool"; input travels in memory via `lib/handoff` |
 
 ---
 
@@ -146,7 +146,7 @@ Detectors live in `src/lib/detect/`, one function per type, returning a confiden
 | `base64` | Base64 alphabet, valid padding/length, ≥ 16 chars, decodes to mostly printable text or known magic bytes | `base64-encode-decode` |
 | `uuid` | RFC 9562 UUID format | `uuid-generator` (inspect mode) |
 
-When several match, the highest confidence wins; ties show a short choice list. Order of precedence for ties: `jwt` > `json` > `url` > `url-encoded` > `unix-timestamp` > `uuid` > `base64`.
+When several match, the highest confidence wins; ties show a short choice list. *As built (Phase 7):* the tool opens directly when the best match is ≥ 0.7 and no other tool is within 0.1 of it; otherwise every tool with a match ≥ 0.5 is offered as a choice; below 0.5 the paste is ordinary text in the search field. The target tool receives the detector id, so pasted Base64 opens in Decode mode and a URL in Parse mode. Order of precedence for ties: `jwt` > `json` > `url` > `url-encoded` > `unix-timestamp` > `uuid` > `base64`.
 
 ---
 

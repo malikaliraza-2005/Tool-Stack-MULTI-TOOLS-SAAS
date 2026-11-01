@@ -1,6 +1,6 @@
-// Site navigation (information-architecture.md). Category hubs are built in
-// Phase 7 and the About/Privacy/Terms/Licenses pages in Phase 8; until then
-// these links lead to the 404 page.
+// Site navigation (information-architecture.md). The About, Privacy, Terms
+// and Licenses pages are built in Phase 8; until then those links lead to
+// the 404 page.
 
 export type NavLink = { href: string; label: string; description?: string };
 

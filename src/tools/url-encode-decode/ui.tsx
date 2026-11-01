@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import * as z from "zod/mini";
 import { CodeEditor, type CodeEditorHandle } from "@/components/tool/CodeEditor";
 import { ResultList, type ResultRow } from "@/components/tool/ResultList";
+import { useHandoff } from "@/components/tool/useHandoff";
 import { useToolOptions } from "@/components/tool/useToolOptions";
 import { ToolbarGroup, Workbench, WorkbenchPane } from "@/components/tool/Workbench";
 import { Badge } from "@/components/ui/Badge";
@@ -74,6 +75,13 @@ const loadLogic = () => import("./logic");
 export default function UrlEncodeDecodeUI() {
   const [options, setOptions] = useToolOptions(meta.slug, optionsSchema, DEFAULTS);
   const [input, setInput] = useState("");
+  // Text pasted on the homepage: a URL opens the parser, encoded text the decoder.
+  useHandoff(({ text, source }) => {
+    if (!text) return;
+    if (source === "url") setOptions({ mode: "parse" });
+    else if (source === "url-encoded") setOptions({ mode: "decode" });
+    setInput(text);
+  });
   const [outcome, setOutcome] = useState<Outcome>({ status: "empty" });
   const editor = useRef<CodeEditorHandle>(null);
   const sequence = useRef(0);

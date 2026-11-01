@@ -91,7 +91,8 @@ Used by canonicals, sitemap, robots, Open Graph, JSON-LD. Changing domain = chan
 |---|---|---|
 | `/` | `app/page.tsx` | Static |
 | `/[tool]` | `app/[tool]/page.tsx` + `generateStaticParams()` from registry, `dynamicParams = false` | Static, one HTML file per tool |
-| `/pdf-tools`, `/image-tools`, `/developer-tools` | `app/(hubs)/<category>/page.tsx` (thin wrappers around one `CategoryHub` component) | Static |
+| `/pdf-tools`, `/image-tools`, `/developer-tools` | `app/(hubs)/<category>/page.tsx` (thin wrappers around one `CategoryHub` component) | Static (Phase 7) |
+| `/search-index.json` | `app/search-index.json/route.ts` (force-static route handler): command palette index | Static file |
 | `/guides`, `/guides/[slug]` | `app/guides/…` | Static (after MVP content starts) |
 | `/about`, `/privacy`, `/terms`, `/licenses` | Static pages (Phase 8) | Static |
 | `/_gallery` | `app/%5Fgallery/page.tsx`: component gallery for design review. `noindex, nofollow`, not linked, excluded from the sitemap | Static |
@@ -228,6 +229,7 @@ Spikes ran as throwaway pages on the local `spikes` branch (commit `P1-T19..T25`
 | P1-T25 | Fonts | **Works** | `geist` package (`next/font/local`): two variable `.woff2` files emitted to `/_next/static/media/` and preloaded; no external font requests (asserted in `e2e/smoke.spec.ts`). `next/font/google` is not used because it downloads from Google at build time |
 
 Build-tool notes:
+- **Segment prefetch files (Phase 7):** Next.js 16's static export writes per-segment prefetch payloads as folders (`merge-pdf/__next.$d$tool/__PAGE__.txt`) while the client requests dotted names (`merge-pdf/__next.$d$tool.__PAGE__.txt`), so every `<Link>` prefetch of a tool or hub was a 404 (navigation still worked). `scripts/flatten-segment-prefetch.mjs` (`postbuild`) writes the dotted copies.
 - Tailwind 4 runs through `@tailwindcss/postcss` (`postcss.config.mjs`), which both bundlers support. The `@tailwindcss/turbopack` loader from the `create-next-app` template was removed with D-14.
 - Bundle baseline (webpack, near-empty homepage): **141 KB gzipped JS** from Next.js + React alone, above the 100 KB homepage budget (§14) before any Sprigkit code. See R-14.
 
@@ -239,6 +241,8 @@ Build-tool notes:
 
 - **Tool state:** local React state per tool; no global store library. Cross-component state via context only where needed (e.g. files handed from the homepage drop zone to a tool).
 - **Homepage → tool file hand-off:** files are kept in an in-memory module store during client-side navigation. If the page reloads, the user re-selects the file (nothing is persisted).
+  - *As built (Phase 7):* `src/lib/handoff.ts` holds one pending `{ slug, payload: { files?, text?, source? } }`; `handOff()` is called right before `router.push`, and `takeHandoff(slug)` returns it once. `ToolLoader` provides the page's slug through `ToolSlugContext`; `useHandoff()` (`components/tool/useHandoff.ts`) receives it after mount. `DropZone` uses it, so every file tool accepts handed-over files without its own code; the text tools with smart-paste detectors and the developer tools that take files call it themselves.
+- **Favorites and recent tools (G-6, Phase 7):** `src/lib/tool-prefs.ts` stores slug lists only (`ts:v1:favorites`, max 30; `ts:v1:recent`, newest 5), validated as kebab-case slugs so no content can be stored there. `useFavorites`/`useRecent` (`components/layout/useToolPrefs.ts`) are external stores shared by the palette and the tool page's Favorite button, synced across tabs. `ToolLoader` records a visit.
 - **Preferences:** `src/lib/storage.ts` wraps `localStorage` with try/catch and Zod validation. Keys are versioned (`ts:v1:theme`, `ts:v1:favorites`, `ts:v1:recent`, `ts:v1:opts:<slug>`). **User content (files, text, tokens) is never stored.** The one exception is sign-pdf's opt-in "Remember my signature on this device" (tool-specifications §3.6): only after the user ticks it, the signature PNG is kept under `ts:v1:sign-pdf:signature`, with a Delete control; it bypasses the options-only helper on purpose.
 
 ---

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-14 (Phase 3: tool page, Workbench, file workspace built) |
+| **Last updated** | 2026-11-01 (Phase 7: homepage, hubs, command palette search) |
 | **Related** | [design-system.md §10](design-system.md#10-layout-patterns) · [information-architecture.md](information-architecture.md) · [tool-specifications.md](../04-architecture/tool-specifications.md) · [motion-design.md](motion-design.md) |
 
 Screen-level layouts. Component behaviour and tokens are in [design-system.md](design-system.md); tool behaviour is in [tool-specifications.md](../04-architecture/tool-specifications.md). Sections marked **Planned** are specified now and built in the phase noted.
@@ -29,18 +29,49 @@ Screen-level layouts. Component behaviour and tokens are in [design-system.md](d
 - Footer stacks to one column on mobile, two on `sm`, four on `lg`.
 - Pages use `Container` (`content` 720 / `tool` 1200 / `wide` 1360) and `Section` (vertical rhythm).
 
-## 2. Command palette (component built, Phase 2; search in Phase 7)
+## 2. Command palette (built, Phase 2; search Phase 7)
 
-Near the top of the viewport on `sm`+ (top 96px, 640px wide); a bottom sheet on mobile. Search input (16px), grouped results with mono keyboard hints in a footer (↑↓ move, ↵ select, Esc close). Empty state suggests example queries. Tools are placeholders marked "Soon" and disabled until the registry exists.
+Near the top of the viewport on `sm`+ (top 96px, 640px wide); a bottom sheet on mobile. Search input (16px), grouped results with mono keyboard hints in a footer (↑↓ move, ↵ select, Esc close).
 
-## 3. Homepage (Planned, Phase 7)
+As built (Phase 7): with an empty query it lists **Favorites** (star), **Recent** (last 5 tools visited), every tool grouped by category (icon, name, category on `sm`+), **Go to** (Home, the three hubs) and **Actions** (theme). Typing searches tools with Fuse.js by name, synonym and accepted file type ("heic" finds Convert Image), up to 8 results, and filters Go to and Actions by text. The tool list loads from `/search-index.json` on first open ("Loading tools…"; if the request fails: "The tool list couldn’t be loaded. Check your connection and try again."). The query is cleared each time the palette opens.
 
-Per design-system §10.1:
-1. **Instrument hero** above the fold: headline (`text-display`), one-line subline, a large command field combined with the drop zone (`--radius-xl`, optional static dot grid ≤ 4% contrast). Paste/drop suggests matching tools inline.
-2. **Privacy strip:** one sentence + PrivacyMeter ("0 bytes uploaded") + "How to verify" link to `/privacy`.
-3. **Index:** three columns (PDF, Image, Developer), typeset like a table of contents: tool name + one-line description per row, keyboard navigable. Stacks on mobile.
-4. **Popular tools:** small curated row; live mini-previews only where meaningful.
-5. Short FAQ, footer.
+Favorites are set with the star button next to the PrivacyMeter on each tool page (`aria-pressed`; a toast says where favorites appear).
+
+## 3. Homepage (built, Phase 7)
+
+Per design-system §10.1, top to bottom:
+
+```
+            [static dot grid behind the hero, fading out]
+              Private tools for PDFs, images and code          (text-display, LCP)
+     Drop a file or paste text, and Sprigkit opens the right tool. …
+   ┌──────────────────────── hero surface (--radius-xl) ────────────────────────┐
+   │ ⌕  Search 19 tools, or paste text…                                          │
+   │ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ │
+   │ [⇪] Or drop files anywhere on this page                  [Choose files]    │
+   └─────────────────────────────────────────────────────────────────────────────┘
+   ┌ suggestions (after a drop or an ambiguous paste) ──────────────────── [×] ┐
+   │ Open contract.pdf in              PDF document · 1.2 MB                     │
+   │ [Merge PDF →] [Split PDF →] [Organize PDF →] …   (2 columns on sm+)        │
+   └─────────────────────────────────────────────────────────────────────────────┘
+Privacy strip · All tools (3 columns) · Popular tools (4 cards) · FAQ · footer
+```
+
+1. **Instrument hero.** One surface, 720px wide:
+   - **Search** (combobox): Fuse.js loads on focus; up to 6 results in a listbox under the field; ↑↓ move, ↵ opens, Esc clears. No match: "No tools match “x”. Try …".
+   - **Drop** files anywhere on the page, choose them with the "Choose files" label (native picker, works before hydration), or paste files. While dragging, the surface turns accent (border, soft fill, scale 1.01) and says "Drop to see which tools can open your files". Files are sniffed by magic bytes; the suggestion panel names the file and size and lists the tools that fit, most common job first. Several files: only multi-file tools. No fitting tool: Hash Generator and Base64 with "No tool here converts this type of file. You can still check its hash or encode it." Mixed files no tool takes together: "No tool takes these files together" + what to do.
+   - **Smart paste** into the field, or anywhere on the page outside another field: a clear detector match opens the tool with the text filled in ("Opening JWT Decoder…" is announced); a close call shows "Open the pasted text in" with one row per tool ("Looks like JSON"); anything else is pasted as a search query.
+   - Choosing a tool hands the files or text over in memory and navigates. Focus moves to the suggestions heading when they appear; × clears them and returns focus to the field.
+2. **Privacy strip:** "Your files never leave your device." + one sentence on the CSP, PrivacyMeter and "How to verify" (both to `/privacy`, built in Phase 8).
+3. **The index:** "All tools", three columns (one on mobile). Each column: an overline with the category name and a mono count over a 1px `--fg` rule, then numbered rows (mono `01`, tool name, first sentence of the tagline) separated by hairlines; each row is one link, in reading order for Tab. "All PDF tools →" leads to the hub.
+4. **Popular tools:** Merge PDF, Compress Image, Convert Image, JSON Formatter, each with a small token-drawn preview of what it does (pages into one PDF, a quality slider, HEIC → JPG, a formatted JSON line). Previews are illustrations, so they show no invented results.
+5. **FAQ** (4 questions, visible) and the footer.
+
+**Entrance (P7-T08):** the subline, hero surface, privacy strip and index rise 8px and fade in (`animate-rise-in`, `--dur-standard`), 40ms apart (`stagger`). The headline isn't animated (it is the LCP element). It is CSS only, so input works from the first frame. With reduced motion there is no delay and no movement.
+
+## 3a. Category hubs (built, Phase 7)
+
+`/pdf-tools`, `/image-tools`, `/developer-tools`: breadcrumbs (Sprigkit › PDF tools), H1 and intro with the PrivacyMeter, "6 PDF tools" as cards (icon, name, full tagline; 3 columns on `lg`), then **Guides** (4 links to tools' "How to use" sections) and **More tools** (the other hubs) side by side on `lg`.
 
 ## 4. Tool page (built, Phase 3)
 

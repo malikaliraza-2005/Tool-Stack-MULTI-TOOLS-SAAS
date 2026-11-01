@@ -34,13 +34,15 @@ Sprigkit wins search by being the best page for one task: a fast tool above the 
 | FAQ | `seo.faqs` (≥ 3 for live tools) | Visible `h3` + answer pairs |
 | Related tools | `related` | Only tools that are live are linked; unbuilt ones are skipped |
 
+**Category hubs (Phase 7):** title and description from `src/tools/hubs.ts` (same length limits, unique against every tool; `hubs.test.ts`), canonical, Open Graph, and JSON-LD `BreadcrumbList` + `CollectionPage` with an `ItemList` of the hub's tools (`hubMetadata`, `hubJsonLd` in `src/lib/seo.ts`).
+
 Validation rules for these fields (uniqueness, lengths, FAQ count) fail the build: [tool-registry.md §3](../04-architecture/tool-registry.md#3-validation-rules).
 
 ## 3. Site-level files
 
 | File | As built |
 |---|---|
-| `/sitemap.xml` | `app/sitemap.ts` (force-static): the homepage and every published tool with `lastmod` = registry `updatedAt`. Pages that don't exist yet (hubs, About, Privacy) are added in their phases. `/_gallery` is never listed |
+| `/sitemap.xml` | `app/sitemap.ts` (force-static): the homepage, the three category hubs, and every published tool with `lastmod` = registry `updatedAt`. Pages that don't exist yet (About, Privacy) are added in their phases. `/_gallery` is never listed |
 | `/robots.txt` | `app/robots.ts`: allow all (D-7) + sitemap URL. `/_gallery` is kept out of the index by its `noindex` meta tag (a Disallow would hide that tag) |
 | Previews | `X-Robots-Tag: noindex` on every `*.pages.dev` host (`public/_headers`, P1-T16) |
 
@@ -50,6 +52,5 @@ Validation rules for these fields (uniqueness, lengths, FAQ count) fail the buil
 |---|---|
 | Rich Results Test on a preview deployment (P3-T07) | **Not done.** Needs a pushed preview URL. Structure is checked by unit tests (`src/lib/seo.test.ts`) and E2E (`e2e/seo.spec.ts`: JSON-LD parses, FAQPage matches the visible FAQs) |
 | OG image `Content-Type` on Cloudflare | Rule in `public/_headers`; verify on the first preview (fallback: render to `public/og/*.png`, architecture §3) |
-| Breadcrumb and JSON-LD links to hub pages | Hubs are built in Phase 7; until then these URLs are 404. Breadcrumb links don't prefetch |
 | Final titles, descriptions, FAQs | Pilot copy follows keyword-research §3; finalized in `page-seo-specs.md` (Phase 8) |
 | Performance as a ranking signal | Lighthouse SEO 100 on both pilots; Performance below target (see [performance.md](../05-quality/performance.md) §2.2, R-14) |

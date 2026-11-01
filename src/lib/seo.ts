@@ -3,8 +3,9 @@
 
 import type { Metadata } from "next";
 import { SITE_NAME, SITE_URL } from "@/config/site";
+import { HUBS } from "@/tools/hubs";
 import { CATEGORIES } from "@/tools/registry";
-import type { ToolDefinition } from "@/tools/types";
+import type { ToolCategory, ToolDefinition } from "@/tools/types";
 
 /** `absoluteUrl("/merge-pdf")` → "https://sprigkit.com/merge-pdf". */
 export function absoluteUrl(path: string): string {
@@ -98,6 +99,48 @@ export function toolJsonLd(tool: ToolDefinition): JsonLdNode {
     (node): node is JsonLdNode => node !== null,
   );
   return { "@context": "https://schema.org", "@graph": graph };
+}
+
+/** Metadata for a category hub (G-8). */
+export function hubMetadata(category: ToolCategory): Metadata {
+  const url = absoluteUrl(CATEGORIES[category].href);
+  const { title, description } = HUBS[category].seo;
+  return {
+    title: { absolute: title },
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "website", url, title, description, siteName: SITE_NAME, locale: "en_US" },
+    twitter: { card: "summary", title, description },
+  };
+}
+
+/** BreadcrumbList and a CollectionPage listing the hub's tools. */
+export function hubJsonLd(category: ToolCategory, tools: ToolDefinition[]): JsonLdNode {
+  const { name, href } = CATEGORIES[category];
+  const url = absoluteUrl(href);
+  const breadcrumb = {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SITE_NAME, item: absoluteUrl("/") },
+      { "@type": "ListItem", position: 2, name, item: url },
+    ],
+  };
+  const collection = {
+    "@type": "CollectionPage",
+    name,
+    url,
+    description: HUBS[category].seo.description,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: tools.map((tool, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: tool.name,
+        url: absoluteUrl(toolPath(tool)),
+      })),
+    },
+  };
+  return { "@context": "https://schema.org", "@graph": [breadcrumb, collection] };
 }
 
 // <, >, & and the line/paragraph separators U+2028 and U+2029.

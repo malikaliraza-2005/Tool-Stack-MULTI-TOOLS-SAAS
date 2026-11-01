@@ -4,6 +4,7 @@ import { CircleAlert, CircleCheck, CircleX, Eraser, ShieldAlert, Sparkles } from
 import { useEffect, useId, useRef, useState } from "react";
 import { CodeEditor, type CodeEditorHandle } from "@/components/tool/CodeEditor";
 import { ResultList, type ResultRow } from "@/components/tool/ResultList";
+import { useHandoff } from "@/components/tool/useHandoff";
 import { Workbench, WorkbenchPane } from "@/components/tool/Workbench";
 import { Badge, type BadgeTone } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -37,6 +38,10 @@ const loadVerify = () => import("./verify");
 export default function JwtDecoderUI() {
   // Tokens are content: in memory only, never stored or put in the URL (§5.2).
   const [input, setInput] = useState("");
+  // A token pasted on the homepage (smart paste), still only in memory.
+  useHandoff(({ text }) => {
+    if (text) setInput(text);
+  });
   // The token after the debounce, with the time it was read: statuses are for that moment.
   const [live, setLive] = useState({ text: "", now: 0 });
   const editor = useRef<CodeEditorHandle>(null);

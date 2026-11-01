@@ -23,6 +23,7 @@ import {
 import * as z from "zod/mini";
 import { CodeEditor } from "@/components/tool/CodeEditor";
 import { ProcessingState } from "@/components/tool/ProcessingState";
+import { useHandoff } from "@/components/tool/useHandoff";
 import { useToolOptions } from "@/components/tool/useToolOptions";
 import { ToolbarGroup, Workbench, WorkbenchPane } from "@/components/tool/Workbench";
 import { Button, buttonClasses } from "@/components/ui/Button";
@@ -101,6 +102,10 @@ export default function DiffCheckerUI() {
   const [options, setOptions] = useToolOptions(meta.slug, optionsSchema, DEFAULTS);
   const [original, setOriginal] = useState("");
   const [changed, setChanged] = useState("");
+  // A text file dropped on the homepage becomes the original.
+  useHandoff(({ files }) => {
+    if (files?.[0]) void openFile(files[0], setOriginal);
+  });
   const [outcome, setOutcome] = useState<Outcome>({ status: "empty" });
   const [busy, setBusy] = useState(false);
   const [fileError, setFileError] = useState<ToolError | null>(null);

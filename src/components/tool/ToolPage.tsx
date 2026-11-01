@@ -6,6 +6,7 @@ import { toolJsonLd } from "@/lib/seo";
 import { CATEGORIES, relatedTools } from "@/tools/registry";
 import type { ToolDefinition } from "@/tools/types";
 import { Code, ContentSection, List, Paragraph } from "./content";
+import { FavoriteButton } from "./FavoriteButton";
 import { JsonLd } from "./JsonLd";
 import { PrivacyMeter } from "./PrivacyMeter";
 import { RelatedTools } from "./RelatedTools";
@@ -36,7 +37,10 @@ export function ToolPage({ tool, content }: { tool: ToolDefinition; content: Rea
             <h1 className="text-h1 text-fg">{tool.seo.h1}</h1>
             <p className="max-w-prose text-body-lg text-fg-muted">{tool.tagline}</p>
           </div>
-          <PrivacyMeter className="self-start md:self-auto" />
+          <div className="flex items-center gap-2 self-start md:self-auto">
+            <PrivacyMeter />
+            <FavoriteButton slug={tool.slug} name={tool.name} />
+          </div>
         </header>
         <section
           aria-label={`${tool.name} workspace`}

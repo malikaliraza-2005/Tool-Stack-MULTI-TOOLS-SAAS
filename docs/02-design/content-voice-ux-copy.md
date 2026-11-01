@@ -69,7 +69,14 @@ Placeholders show an example of the expected format ("merged.pdf", `{ "paste": "
 | Skip link | Skip to content |
 | Search trigger | Search tools… · Ctrl K |
 | Palette input | Search tools and actions… |
-| Palette empty | No matching tools yet. Try “PDF”, “image” or “JSON”. |
+| Palette empty | Nothing matches “x”. Try “PDF”, “compress”, “HEIC” or “JSON”. |
+| Homepage headline (Phase 7) | Private tools for PDFs, images and code |
+| Homepage subline | Drop a file or paste text, and Sprigkit opens the right tool. Everything runs in your browser. Nothing is uploaded. |
+| Homepage search | Search 19 tools, or paste text… |
+| Drop hint | Or drop files anywhere on this page · Drop to see which tools can open your files (while dragging) |
+| Drop suggestions | Open contract.pdf in · Open 3 files in · No tool here converts this type of file. You can still check its hash or encode it. |
+| Paste choice | Open the pasted text in · Looks like JSON |
+| Favorite toast | JSON Formatter added to favorites · Favorites are listed first in search (Ctrl K or ⌘K). |
 | Palette footer | ↑ ↓ to move · ↵ to select · Esc to close |
 | Theme menu | Theme: Light / Dark / System |
 | Mobile menu | Menu · Tools · Sprigkit |

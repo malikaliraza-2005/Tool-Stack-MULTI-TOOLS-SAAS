@@ -12,6 +12,7 @@ import {
 } from "react";
 import { buttonClasses } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
+import { useHandoff } from "./useHandoff";
 
 export type DropZoneHandle = { focus(): void; open(): void };
 
@@ -77,6 +78,11 @@ export function DropZone({
     if (!disabled && files.length > 0) onFiles(multiple ? files : files.slice(0, 1));
   }
   const onPastedFiles = useEffectEvent(deliver);
+
+  // Files handed over from the homepage or another tool (lib/handoff).
+  useHandoff((payload) => {
+    if (payload.files) deliver(payload.files);
+  });
 
   // Files chosen in the static HTML before the page hydrated fired no React
   // event; pick them up now (slow devices, WebKit).

@@ -6,7 +6,7 @@ test("homepage renders under the CSP without errors", async ({ page }) => {
   expect(response?.headers()["content-security-policy"]).toContain(
     "connect-src 'self' blob: data:",
   );
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Sprigkit");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Private tools for PDFs, images and code");
   await expectNoA11yViolations(page);
 });
 

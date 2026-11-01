@@ -42,7 +42,7 @@ Additional rules:
 | `sonner` | 2.0.8 📌 | MIT | ✅ | Toasts (unstyled mode, restyled with tokens). Injects its base CSS via a `<style>` tag (allowed by `style-src 'unsafe-inline'`) | Initial (small) |
 | `motion` | 14.2.0 📌 | MIT | ✅ | Layout animations (`layoutId` indicators), later drag/reorder, via `LazyMotion` + `m`. Pulls in `framer-motion`, `motion-dom`, `motion-utils` (MIT) | Initial: `m` only; `domMax` features loaded async after hydration |
 | `lucide-react` | 1.56.0 📌 | ISC | ✅ | Icons (tree-shaken) | Initial |
-| `fuse.js` | 7.5.0 | Apache-2.0 | ✅ | Fuzzy tool search | On palette open |
+| `fuse.js` | 7.5.0 📌 | Apache-2.0 | ✅ | Fuzzy tool search (command palette, homepage search). Installed Phase 7 | On palette open / homepage search focus |
 | `zod` | 4.6.7 📌 | MIT | ✅ | Registry validation (full `zod`, build time only); tool option schemas in the browser use `zod/mini` (tree-shakable) | Build / small runtime |
 | `@tanstack/react-virtual` | 3.14.18 📌 | MIT | ✅ | Virtualized lists (JSON tree view; later page grid, diff). 3.14.19 was skipped: published the day before install | With tool |
 | `serwist`, `@serwist/turbopack` | 9.5.13 | MIT | ✅ | Service worker / PWA. Spike (P1-T22) used `@serwist/turbopack` (route-handler integration; works with webpack builds), not `@serwist/next`. Needs `esbuild` (MIT) as a dev dependency to bundle the SW. Install in Phase 7 | Build + SW |

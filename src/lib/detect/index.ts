@@ -1,5 +1,5 @@
 // Detector registry (tool-registry §5): one detector per smart-paste type.
-// Smart paste on the homepage uses them in Phase 7. Precedence and speed
+// Smart paste on the homepage uses them (components/home/suggest.ts). Precedence and speed
 // across all detectors are tested in detect.test.ts.
 
 import { base64Detector } from "./base64";

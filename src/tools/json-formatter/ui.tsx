@@ -13,6 +13,7 @@ import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
 import * as z from "zod/mini";
 import { CodeEditor, type CodeEditorHandle } from "@/components/tool/CodeEditor";
 import { ProcessingState } from "@/components/tool/ProcessingState";
+import { useHandoff } from "@/components/tool/useHandoff";
 import { useToolOptions } from "@/components/tool/useToolOptions";
 import { ToolbarGroup, Workbench, WorkbenchPane } from "@/components/tool/Workbench";
 import { Button, buttonClasses } from "@/components/ui/Button";
@@ -71,6 +72,11 @@ const loadLogic = () => import("./logic");
 export default function JsonFormatterUI() {
   const [options, setOptions] = useToolOptions(meta.slug, optionsSchema, DEFAULTS);
   const [input, setInput] = useState("");
+  // Input handed over by the homepage: pasted JSON or a dropped .json file.
+  useHandoff(({ files, text }) => {
+    if (files?.[0]) void openFile(files[0]);
+    else if (text) setInput(text);
+  });
   const [fileName, setFileName] = useState<string | null>(null);
   const [outcome, setOutcome] = useState<Outcome>({ status: "empty" });
   const [busy, setBusy] = useState(false);
