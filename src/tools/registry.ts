@@ -13,6 +13,7 @@ import { meta as hashGenerator } from "./hash-generator/meta";
 import { meta as jwtDecoder } from "./jwt-decoder/meta";
 import { meta as diffChecker } from "./diff-checker/meta";
 import { meta as regexTester } from "./regex-tester/meta";
+import { meta as splitPdf } from "./split-pdf/meta";
 import type { ToolCategory, ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
@@ -27,6 +28,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   jwtDecoder,
   diffChecker,
   regexTester,
+  splitPdf,
 ];
 
 /**
@@ -34,7 +36,6 @@ export const TOOLS: readonly ToolDefinition[] = [
  * may reference them; pages link only to tools that are live.
  */
 export const PLANNED_SLUGS: readonly string[] = [
-  "split-pdf",
   "organize-pdf",
   "jpg-to-pdf",
   "pdf-to-jpg",

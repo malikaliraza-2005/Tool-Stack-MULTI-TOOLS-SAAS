@@ -2,48 +2,12 @@
 
 import { PDFDocument } from "pdf-lib";
 import { toolErrors, ToolError, isOutOfMemory } from "@/lib/errors";
-import { describeKind, detectFileType } from "@/lib/files/sniff";
+import { loadPdf as loadAnyPdf, type PdfInput } from "@/lib/pdf/load";
 import { meta } from "./meta";
 
-const FORMATS = "PDF files";
-const TOOL_NAME = meta.name;
+const loadPdf = (input: PdfInput) => loadAnyPdf(input, meta.name);
 
-export type PdfInput = { name: string; bytes: ArrayBuffer };
-
-/** Checks the magic bytes, then loads the document with pdf-lib, mapping failures to ToolErrors. */
-export async function loadPdf(input: PdfInput): Promise<PDFDocument> {
-  const kind = detectFileType(
-    new Uint8Array(input.bytes, 0, Math.min(input.bytes.byteLength, 1024)),
-  );
-  if (kind !== "pdf") {
-    throw toolErrors.unsupportedFormat({
-      name: input.name,
-      detected: kind ? describeKind(kind) : undefined,
-      tool: TOOL_NAME,
-      formats: FORMATS,
-    });
-  }
-  let doc: PDFDocument;
-  try {
-    doc = await PDFDocument.load(input.bytes, { updateMetadata: false });
-  } catch (error) {
-    if (isOutOfMemory(error)) throw toolErrors.outOfMemory(error);
-    // pdf-lib's EncryptedPDFError loses its class in the ES5 build; match the message.
-    if (error instanceof Error && /is encrypted/i.test(error.message)) {
-      throw toolErrors.encrypted(input.name);
-    }
-    throw toolErrors.corrupt(input.name, error);
-  }
-  let pages: number;
-  try {
-    pages = doc.getPageCount();
-  } catch (error) {
-    throw toolErrors.corrupt(input.name, error);
-  }
-  // pdf-lib parses leniently: a damaged file can "load" without any pages.
-  if (pages === 0) throw toolErrors.corrupt(input.name);
-  return doc;
-}
+export type { PdfInput } from "@/lib/pdf/load";
 
 /** Validates one file when it is added, so problems show next to it right away. */
 export async function inspectPdf(input: PdfInput): Promise<{ pageCount: number }> {

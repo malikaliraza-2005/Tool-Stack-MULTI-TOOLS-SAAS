@@ -21,12 +21,12 @@ Build the remaining 5 PDF tools. These are the main organic-search pillar, so in
 ## Tasks
 
 ### Shared
-- [ ] **P5-T01** Page-range parser (`1-3, 5, 8-`) with full unit tests (spec §3.2); shared by split-pdf and pdf-to-jpg.
+- [x] **P5-T01** Page-range parser (`1-3, 5, 8-`) with full unit tests (spec §3.2); shared by split-pdf and pdf-to-jpg.
 - [ ] **P5-T02** PageThumbnailGrid: virtualized, lazy pdf.js thumbnail rendering in a worker, drag + keyboard reorder, multi-select, rotate/delete actions, undo/redo stack.
 - [ ] **P5-T03** PDF fixture set: normal, large (300+ pages), encrypted, corrupt, mixed page sizes, AcroForm, XFA, scanned.
 
 ### Tools (in order)
-- [ ] **P5-T04** `split-pdf` (spec §3.2): three modes; ZIP output.
+- [x] **P5-T04** `split-pdf` (spec §3.2): three modes; ZIP output.
 - [ ] **P5-T05** `organize-pdf` (spec §3.3): uses PageThumbnailGrid; undo/redo; 300-page responsiveness.
 - [ ] **P5-T06** `jpg-to-pdf` (spec §3.4): page size/orientation/margin; EXIF orientation; non-JPG/PNG re-encoding (uses jSquash; coordinate with P6 codecs).
 - [ ] **P5-T07** `pdf-to-jpg` (spec §3.5): DPI options; per-device canvas limit with downscale message.

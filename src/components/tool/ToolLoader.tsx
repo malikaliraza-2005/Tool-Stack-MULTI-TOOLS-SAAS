@@ -20,6 +20,7 @@ const TOOL_UIS: Record<string, ComponentType> = {
   "jwt-decoder": dynamic(() => import("@/tools/jwt-decoder/ui")),
   "diff-checker": dynamic(() => import("@/tools/diff-checker/ui")),
   "regex-tester": dynamic(() => import("@/tools/regex-tester/ui")),
+  "split-pdf": dynamic(() => import("@/tools/split-pdf/ui")),
 };
 
 export function ToolLoader({ slug }: { slug: string }) {

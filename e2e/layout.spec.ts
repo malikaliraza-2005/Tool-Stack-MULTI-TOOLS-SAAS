@@ -1,4 +1,4 @@
-import { A4, makePdf } from "../src/tools/merge-pdf/__fixtures__/pdfs";
+import { A4, makePdf } from "../src/lib/pdf/__fixtures__/pdfs";
 import { expect, horizontalOverflow, test } from "./fixtures";
 
 // Narrowest supported phone (320px). The noOverflow fixture also checks the
@@ -22,6 +22,7 @@ for (const path of [
   "/jwt-decoder",
   "/diff-checker",
   "/regex-tester",
+  "/split-pdf",
   "/does-not-exist",
 ]) {
   test(`${path} fits a 320px screen`, async ({ page }) => {
