@@ -232,6 +232,8 @@ Build-tool notes:
 
 ---
 
+*Phase 6:* the image tools bundle all six jSquash codecs into one worker (`src/lib/image/image.worker.ts`); each `.wasm` is emitted to `/_next/static/media/` and fetched only when a job needs it. The multithreaded AVIF and oxipng builds need `SharedArrayBuffer` (cross-origin isolation, which the site does not enable), so `next.config.ts` leaves them out with webpack's `IgnorePlugin`; they spawn workers of themselves, which also caused a "circular dependency between chunks" warning.
+
 ## 9. State and storage
 
 - **Tool state:** local React state per tool; no global store library. Cross-component state via context only where needed (e.g. files handed from the homepage drop zone to a tool).

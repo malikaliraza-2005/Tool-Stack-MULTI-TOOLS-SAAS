@@ -309,6 +309,8 @@ Left: PageThumbnailGrid or FileList. Right (or bottom on mobile): options and th
 ### 10.5 Comparison (image tools)
 ComparisonSlider centre stage; options in a side panel; batch list below when multiple images are loaded.
 
+*Phase 6:* the slider is never taller than `--comparison-max-height` (70dvh), so portrait photos fit on screen. Transparent areas (slider, image thumbnails) show the `bg-checker` utility, a checkerboard made from `--surface` and `--surface-3`. remove-exif-data has no visual change to compare, so its centre stage is the metadata inspect panel instead.
+
 ---
 
 ## 11. Theme switching

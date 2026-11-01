@@ -66,14 +66,14 @@ Note: `pdf-lib` has not had a release in a long time (1.17.1). It is stable and 
 
 | Package | Version | License | Status | Used by | Load |
 |---|---|---|---|---|---|
-| `@jsquash/jpeg` | 1.6.0 | Apache-2.0 | ✅ | compress, convert, resize | On intent (worker, WASM) |
-| `@jsquash/png` | 3.1.1 | Apache-2.0 | ✅ | compress, convert, resize | On intent |
-| `@jsquash/webp` | 1.5.0 | Apache-2.0 | ✅ | compress, convert, resize | On intent |
-| `@jsquash/avif` | 2.1.1 | Apache-2.0 | ✅ | compress, convert, resize | On intent |
-| `@jsquash/oxipng` | 2.3.0 | Apache-2.0 | ✅ | Lossless PNG optimization | On intent |
-| `@jsquash/resize` | 2.1.1 | Apache-2.0 | ✅ | High-quality resampling | On intent |
-| `exifr` | 7.1.3 | MIT | ✅ | Read EXIF/GPS (remove-exif-data, orientation) | On intent |
-| `piexifjs` | 1.0.6 | MIT | ✅ | Lossless JPEG EXIF removal | On intent |
+| `@jsquash/jpeg` | 1.6.0 📌 | Apache-2.0 | ✅ | Image pipeline (`src/lib/image`, Phase 6) | On intent (worker, WASM) |
+| `@jsquash/png` | 3.1.1 📌 | Apache-2.0 | ✅ | Image pipeline (exact PNG decoding) | On intent |
+| `@jsquash/webp` | 1.5.0 📌 | Apache-2.0 | ✅ | Image pipeline | On intent |
+| `@jsquash/avif` | 2.1.1 📌 | Apache-2.0 | ✅ | Image pipeline | On intent; the multithreaded encoder is left out of the bundle (`next.config.ts`) |
+| `@jsquash/oxipng` | 2.3.0 📌 | Apache-2.0 | ✅ | Lossless PNG output | On intent; multithreaded build left out of the bundle |
+| `@jsquash/resize` | 2.1.1 📌 | Apache-2.0 | ✅ | Lanczos resampling, previews | On intent |
+| `exifr` | 7.1.3 📌 | MIT | ✅ | Read metadata tags for remove-exif-data's inspect view | On intent (image worker) |
+| `piexifjs` | 1.0.6 | MIT | ✅ | Lossless JPEG EXIF removal | **Not used** (Phase 6): segment-level removal in `src/lib/image/metadata.ts` covers EXIF, XMP and IPTC, so no dependency was added |
 | `libheif-js` | 1.23.5 | **LGPL-3.0** | ✅ under D-6 conditions only | HEIC/HEIF decoding (convert-image, jpg-to-pdf input) | On intent (worker); `libheif-wasm` build served as a separate, unmodified file, never bundled |
 | `pica` | 10.0.3 | MIT | ✅ (optional) | Alternative resampler if `@jsquash/resize` is unsuitable | Not planned |
 

@@ -9,6 +9,19 @@ const nextConfig: NextConfig = {
   trailingSlash: false, // /merge-pdf → out/merge-pdf.html
   reactStrictMode: true,
   poweredByHeader: false,
+  webpack: (config, { webpack }) => {
+    // jSquash's multithreaded AVIF and oxipng builds need SharedArrayBuffer,
+    // which requires cross-origin isolation (COEP) that the site doesn't send,
+    // so they never load (`threads()` is false). Leaving them out of the bundle
+    // also avoids webpack's circular worker-chunk warning (architecture §8.4).
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^\.\/codec\/(enc\/avif_enc_mt|pkg-parallel\/squoosh_oxipng)\.js$/,
+        contextRegExp: /@jsquash[\\/](avif|oxipng)$/,
+      }),
+    );
+    return config;
+  },
 };
 
 export default nextConfig;
