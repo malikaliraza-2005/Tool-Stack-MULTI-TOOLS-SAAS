@@ -37,9 +37,11 @@ const GAP = 12;
 const LABEL = 28;
 /** Width thumbnails are rendered at (CSS pixels), independent of the layout, so they're cached once. */
 const RENDER_WIDTH = 160;
-/** Pointer travel before a mouse press becomes a drag; touch drags start after a long press. */
+/** Pointer travel before a mouse press becomes a drag; touch drags start after a short press. */
 const DRAG_THRESHOLD = 6;
-const LONG_PRESS_MS = 350;
+const LONG_PRESS_MS = 220;
+/** How long dropped pages stay highlighted. */
+const LANDED_MS = 700;
 /** Distance from the scroll area's edge that scrolls it while dragging. */
 const EDGE = 48;
 
@@ -63,16 +65,19 @@ type PageThumbnailGridProps = {
 type Drag = {
   ids: string[];
   pointerId: number;
-  /** Insertion index in the full list (before the page at this index). */
-  insert: number | null;
+  /** Drop slot: an index among the pages not being moved. */
+  to: number;
+  /** Where the card was grabbed, so it doesn't jump under the pointer. */
+  grabX: number;
+  grabY: number;
 };
 
 /**
  * Pages of a PDF as a virtualized grid (design-system §8, tool-specifications
  * §3.3): only visible thumbnails are rendered, lazily. Select with click,
  * Ctrl/⌘-click and Shift-click, or the keyboard; rotate, delete and move the
- * selection with the toolbar, keyboard shortcuts or by dragging (long press
- * on touch). Every change is announced.
+ * selection with the toolbar, keyboard shortcuts or by dragging (a short
+ * press on touch). Every change is announced.
  */
 export function PageThumbnailGrid({
   pages,
@@ -101,7 +106,13 @@ export function PageThumbnailGrid({
     id: string;
     timer?: number;
     pointerId: number;
+    grabX: number;
+    grabY: number;
   } | null>(null);
+  const pointer = useRef({ x: 0, y: 0 });
+  const ghost = useRef<HTMLDivElement>(null);
+  const [pressed, setPressed] = useState<string | null>(null);
+  const [landed, setLanded] = useState<ReadonlySet<string>>(new Set());
   const gridId = useId();
   const helpId = useId();
   const optionId = (id: string) => `${gridId}-${id}`;
@@ -240,7 +251,14 @@ export function PageThumbnailGrid({
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-    if (disabled || !focused || drag) return;
+    if (drag) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        endDrag(false);
+      }
+      return;
+    }
+    if (disabled || !focused) return;
     const position = index.get(focused) ?? 0;
     const mod = event.ctrlKey || event.metaKey;
     const key = event.key;
@@ -323,81 +341,155 @@ export function PageThumbnailGrid({
   }
 
   // ---------------------------------------------------------------------------
-  // Pointer: click to select, drag to reorder (long press on touch).
+  // Pointer: click to select; drag to reorder. The dragged pages lift off the
+  // grid as a tilted card (a stacked deck for several) that follows the
+  // pointer, the other pages slide aside to open a drop slot, and the pages
+  // settle into place on release. The same on mouse, pen and touch (touch
+  // lifts after a short press, so a swipe still scrolls).
 
   function onPointerDown(event: PointerEvent<HTMLDivElement>, id: string) {
     if (disabled || event.button !== 0) return;
-    press.current = { x: event.clientX, y: event.clientY, id, pointerId: event.pointerId };
+    const box = event.currentTarget.getBoundingClientRect();
+    press.current = {
+      x: event.clientX,
+      y: event.clientY,
+      id,
+      pointerId: event.pointerId,
+      grabX: Math.min(event.clientX - box.left, cell),
+      grabY: Math.min(event.clientY - box.top, cell),
+    };
+    setPressed(id);
     if (event.pointerType === "touch") {
-      press.current.timer = window.setTimeout(() => startDrag(id, event.pointerId), LONG_PRESS_MS);
+      press.current.timer = window.setTimeout(
+        () => startDrag(id, event.pointerId, event.clientX, event.clientY),
+        LONG_PRESS_MS,
+      );
     }
   }
 
-  function startDrag(id: string, pointerId: number) {
+  function startDrag(id: string, pointerId: number, x: number, y: number) {
+    const pressed = press.current;
     const ids = selected.has(id) ? targets() : [id];
-    setDrag({ ids, pointerId, insert: null });
+    // The slot opens where the first dragged page was, so nothing jumps.
+    const first = Math.min(...ids.map((page) => index.get(page) ?? 0));
+    const to = pages.slice(0, first).filter((page) => !ids.includes(page.id)).length;
+    pointer.current = { x, y };
+    setDrag({
+      ids,
+      pointerId,
+      to,
+      grabX: pressed?.grabX ?? cell / 2,
+      grabY: pressed?.grabY ?? cell / 2,
+    });
+    setPressed(null);
     scroller.current?.setPointerCapture?.(pointerId);
-    setAnnouncement(`Moving ${describe(ids).toLowerCase()}.`);
+    // A short tap of haptic feedback where supported (Android).
+    navigator.vibrate?.(8);
+    setAnnouncement(`Moving ${describe(ids).toLowerCase()}. Release to drop, Escape to cancel.`);
   }
 
-  function insertionAt(x: number, y: number): number | null {
-    const element = document.elementFromPoint(x, y)?.closest<HTMLElement>("[data-page-index]");
-    if (!element) return null;
-    const at = Number(element.dataset.pageIndex);
+  /** Position of the drop slot (an index among the pages not being moved) under the pointer. */
+  function slotAt(x: number, y: number): number | null {
+    const element = document
+      .elementFromPoint(x, y)
+      ?.closest<HTMLElement>("[data-rest-index],[data-drop-slot]");
+    if (!element || element.dataset.dropSlot !== undefined) return null;
+    const at = Number(element.dataset.restIndex);
     const box = element.getBoundingClientRect();
     return x > box.left + box.width / 2 ? at + 1 : at;
   }
 
+  // While dragging: the card follows the pointer (set directly on the element,
+  // without re-rendering the grid), and the list scrolls near its edges.
+  useEffect(() => {
+    if (!drag) return;
+    let frame = 0;
+    const tick = () => {
+      const element = scroller.current;
+      const card = ghost.current;
+      const { x, y } = pointer.current;
+      if (card) card.style.transform = `translate(${x - drag.grabX}px, ${y - drag.grabY}px)`;
+      if (element) {
+        const box = element.getBoundingClientRect();
+        const depth =
+          y < box.top + EDGE
+            ? -(box.top + EDGE - y)
+            : y > box.bottom - EDGE
+              ? y - (box.bottom - EDGE)
+              : 0;
+        if (depth !== 0) {
+          // Faster the closer to the edge, up to ~16 px per frame.
+          element.scrollTop += Math.max(-1, Math.min(1, depth / EDGE)) * 16;
+          const to = slotAt(x, y);
+          if (to !== null)
+            setDrag((current) => (current && current.to !== to ? { ...current, to } : current));
+        }
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [drag]);
+
+  // Newly dropped pages pop into place, then lose the highlight.
+  useEffect(() => {
+    if (landed.size === 0) return;
+    const timer = window.setTimeout(() => setLanded(new Set()), LANDED_MS);
+    return () => window.clearTimeout(timer);
+  }, [landed]);
+
   function onScrollerPointerMove(event: PointerEvent<HTMLDivElement>) {
-    const pressed = press.current;
-    if (pressed && !drag) {
-      const travel = Math.hypot(event.clientX - pressed.x, event.clientY - pressed.y);
+    const pressing = press.current;
+    if (pressing && !drag) {
+      const travel = Math.hypot(event.clientX - pressing.x, event.clientY - pressing.y);
       if (event.pointerType === "touch") {
-        // Movement before the long press is a scroll: cancel the drag.
-        if (travel > DRAG_THRESHOLD && pressed.timer) {
-          window.clearTimeout(pressed.timer);
+        // Movement before the press completes is a scroll: no drag.
+        if (travel > DRAG_THRESHOLD && pressing.timer) {
+          window.clearTimeout(pressing.timer);
           press.current = null;
+          setPressed(null);
         }
         return;
       }
-      if (travel > DRAG_THRESHOLD) startDrag(pressed.id, event.pointerId);
+      if (travel > DRAG_THRESHOLD)
+        startDrag(pressing.id, event.pointerId, event.clientX, event.clientY);
       return;
     }
     if (!drag) return;
     event.preventDefault();
-    const element = scroller.current;
-    if (element) {
-      const box = element.getBoundingClientRect();
-      if (event.clientY < box.top + EDGE) element.scrollBy({ top: -EDGE / 2 });
-      else if (event.clientY > box.bottom - EDGE) element.scrollBy({ top: EDGE / 2 });
+    pointer.current = { x: event.clientX, y: event.clientY };
+    const to = slotAt(event.clientX, event.clientY);
+    if (to !== null && to !== drag.to) setDrag({ ...drag, to });
+  }
+
+  function endDrag(drop: boolean) {
+    if (!drag) return;
+    scroller.current?.releasePointerCapture?.(drag.pointerId);
+    const { ids, to } = drag;
+    setDrag(null);
+    if (!drop) {
+      setAnnouncement("Move cancelled.");
+      return;
     }
-    const insert = insertionAt(event.clientX, event.clientY);
-    if (insert !== drag.insert) setDrag({ ...drag, insert });
+    edit(
+      { type: "move", ids, to },
+      `${describe(ids)} moved to position ${to + 1} of ${pages.length}.`,
+    );
+    setLanded(new Set(ids));
   }
 
   function onScrollerPointerUp(event: PointerEvent<HTMLDivElement>) {
-    const pressed = press.current;
+    const pressing = press.current;
     press.current = null;
-    if (pressed?.timer) window.clearTimeout(pressed.timer);
+    setPressed(null);
+    if (pressing?.timer) window.clearTimeout(pressing.timer);
     if (drag) {
-      scroller.current?.releasePointerCapture?.(drag.pointerId);
-      const { ids, insert } = drag;
-      setDrag(null);
-      if (insert === null) {
-        setAnnouncement("Move cancelled.");
-        return;
-      }
-      // The insertion index counts the moving pages; `to` counts only the others.
-      const to = pages.slice(0, insert).filter((page) => !ids.includes(page.id)).length;
-      edit(
-        { type: "move", ids, to },
-        `${describe(ids)} moved to position ${to + 1} of ${pages.length}.`,
-      );
+      endDrag(true);
       return;
     }
-    if (!pressed) return;
+    if (!pressing) return;
     // A click: select (Ctrl/⌘ toggles, Shift extends from the anchor).
-    const id = pressed.id;
+    const id = pressing.id;
     setFocusedId(id);
     if (event.shiftKey) {
       selectRange(anchorId ?? focused, id, event.ctrlKey || event.metaKey);
@@ -414,13 +506,18 @@ export function PageThumbnailGrid({
   function onScrollerPointerCancel() {
     if (press.current?.timer) window.clearTimeout(press.current.timer);
     press.current = null;
-    if (drag) {
-      setDrag(null);
-      setAnnouncement("Move cancelled.");
-    }
+    setPressed(null);
+    endDrag(false);
   }
 
+  // During a drag the dragged pages leave the grid and a slot takes one cell.
   const moving = new Set(drag?.ids ?? []);
+  const rest = drag ? pages.filter((page) => !moving.has(page.id)) : pages;
+  type Item = { kind: "page"; page: PageEntry; restIndex: number } | { kind: "slot" };
+  const display: Item[] = rest.map((page, restIndex) => ({ kind: "page", page, restIndex }));
+  if (drag) display.splice(Math.min(drag.to, rest.length), 0, { kind: "slot" });
+  const lead = drag ? pages.find((page) => page.id === drag.ids[0]) : undefined;
+
   const actionable = selected.size > 0 || focused !== null;
   const count = selected.size;
 
@@ -520,89 +617,141 @@ export function PageThumbnailGrid({
       >
         <div className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
           {virtualizer.getVirtualItems().flatMap((row) =>
-            pages.slice(row.index * columns, row.index * columns + columns).map((page, column) => {
-              const position = row.index * columns + column;
-              const isFocused = page.id === focused;
-              const isSelected = selected.has(page.id);
-              const insertBefore = drag?.insert === position;
-              const insertAfter = drag?.insert === position + 1 && column === columns - 1;
-              return (
-                <div
-                  key={page.id}
-                  id={optionId(page.id)}
-                  role="option"
-                  aria-selected={isSelected}
-                  aria-label={`Page ${position + 1}${page.source !== position ? `, originally page ${page.source + 1}` : ""}${page.rotation ? `, rotated ${page.rotation}°` : ""}`}
-                  data-page-index={position}
-                  onPointerDown={(event) => onPointerDown(event, page.id)}
-                  className={cn(
-                    "absolute top-0 left-0 flex cursor-pointer flex-col items-center gap-1 transition-move",
-                    moving.has(page.id) && "opacity-40",
-                  )}
-                  style={{
-                    width: cell,
-                    height: cell + LABEL,
-                    transform: `translate(${column * (cell + GAP)}px, ${row.start}px)`,
-                  }}
-                >
-                  {(insertBefore || insertAfter) && (
-                    <span
+            display
+              .slice(row.index * columns, row.index * columns + columns)
+              .map((item, column) => {
+                const position = row.index * columns + column;
+                const place = `translate(${column * (cell + GAP)}px, ${row.start}px)`;
+                if (item.kind === "slot") {
+                  return (
+                    <div
+                      key="drop-slot"
+                      data-drop-slot=""
                       aria-hidden
-                      className={cn(
-                        "absolute top-0 bottom-7 w-1 rounded-full bg-accent",
-                        insertBefore ? "-left-2" : "-right-2",
-                      )}
-                    />
-                  )}
-                  <div
-                    className={cn(
-                      "relative flex size-full items-center justify-center overflow-hidden rounded-md border bg-surface p-1.5 transition-control",
-                      isSelected ? "border-accent ring-2 ring-accent" : "border-border",
-                      isFocused && "outline-2 outline-offset-2 outline-focus-ring",
-                    )}
-                    style={{ height: cell, width: cell }}
-                  >
-                    <Thumbnail
-                      source={page.source}
-                      rotation={page.rotation}
-                      preview={preview}
-                      url={thumbs.get(page.source)}
-                      onRendered={(url) =>
-                        setThumbs((current) => {
-                          if (current.has(page.source)) {
-                            URL.revokeObjectURL(url);
-                            return current;
-                          }
-                          return new Map(current).set(page.source, url);
-                        })
-                      }
-                    />
-                    {isSelected && (
-                      <span
-                        aria-hidden
-                        className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-accent text-micro text-accent-fg"
+                      className="absolute top-0 left-0 flex flex-col items-center gap-1 transition-move"
+                      style={{ width: cell, height: cell + LABEL, transform: place }}
+                    >
+                      <div
+                        className="flex items-center justify-center rounded-md border-2 border-dashed border-accent bg-accent-soft text-small text-accent-text animate-pop-in"
+                        style={{ width: cell, height: cell }}
                       >
-                        ✓
+                        Drop here
+                      </div>
+                      <span className="text-small text-accent-text tabular-nums">
+                        {position + 1}
                       </span>
+                    </div>
+                  );
+                }
+                const { page, restIndex } = item;
+                const isFocused = page.id === focused && !drag;
+                const isSelected = selected.has(page.id);
+                return (
+                  <div
+                    key={page.id}
+                    id={optionId(page.id)}
+                    role="option"
+                    aria-selected={isSelected}
+                    aria-label={`Page ${position + 1}${page.source !== position ? `, originally page ${page.source + 1}` : ""}${page.rotation ? `, rotated ${page.rotation}°` : ""}`}
+                    data-rest-index={restIndex}
+                    onPointerDown={(event) => onPointerDown(event, page.id)}
+                    className={cn(
+                      "absolute top-0 left-0 flex flex-col items-center gap-1 transition-move",
+                      drag ? "cursor-grabbing" : "cursor-grab",
+                      landed.has(page.id) && "animate-pop-in",
                     )}
+                    style={{ width: cell, height: cell + LABEL, transform: place }}
+                  >
+                    <div
+                      className={cn(
+                        "relative flex size-full items-center justify-center overflow-hidden rounded-md border bg-surface p-1.5 transition-control",
+                        isSelected ? "border-accent ring-2 ring-accent" : "border-border",
+                        isFocused && "outline-2 outline-offset-2 outline-focus-ring",
+                        pressed === page.id && "scale-95",
+                        landed.has(page.id) && "ring-2 ring-accent",
+                      )}
+                      style={{ height: cell, width: cell }}
+                    >
+                      <Thumbnail
+                        source={page.source}
+                        rotation={page.rotation}
+                        preview={preview}
+                        url={thumbs.get(page.source)}
+                        onRendered={(url) =>
+                          setThumbs((current) => {
+                            if (current.has(page.source)) {
+                              URL.revokeObjectURL(url);
+                              return current;
+                            }
+                            return new Map(current).set(page.source, url);
+                          })
+                        }
+                      />
+                      {isSelected && (
+                        <span
+                          aria-hidden
+                          className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-accent text-micro text-accent-fg"
+                        >
+                          ✓
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-small text-fg tabular-nums">
+                      {position + 1}
+                      {page.rotation !== 0 && (
+                        <span className="text-fg-muted"> · {page.rotation}°</span>
+                      )}
+                    </span>
                   </div>
-                  <span className="text-small text-fg tabular-nums">
-                    {position + 1}
-                    {page.rotation !== 0 && (
-                      <span className="text-fg-muted"> · {page.rotation}°</span>
-                    )}
-                  </span>
-                </div>
-              );
-            }),
+                );
+              }),
           )}
         </div>
       </div>
 
+      {/* The lifted card (a deck for several pages) that follows the pointer. */}
+      {drag && lead && (
+        <div
+          ref={ghost}
+          aria-hidden
+          className="pointer-events-none fixed top-0 left-0 z-50"
+          style={{
+            width: cell,
+            height: cell,
+            transform: `translate(${pointer.current.x - drag.grabX}px, ${pointer.current.y - drag.grabY}px)`,
+          }}
+        >
+          {drag.ids.length > 1 && (
+            <>
+              <span className="absolute inset-0 translate-x-3 translate-y-3 rotate-6 rounded-md border border-border bg-surface shadow-2" />
+              <span className="absolute inset-0 translate-x-1.5 translate-y-1.5 rotate-3 rounded-md border border-border bg-surface shadow-2" />
+            </>
+          )}
+          <div className="relative flex size-full -rotate-3 scale-105 items-center justify-center overflow-hidden rounded-md border-2 border-accent bg-surface p-1.5 shadow-3">
+            {thumbs.get(lead.source) ? (
+              // eslint-disable-next-line @next/next/no-img-element -- object URL of a rendered page, not a static asset
+              <img
+                src={thumbs.get(lead.source)}
+                alt=""
+                draggable={false}
+                className="max-h-full max-w-full object-contain"
+                style={{ transform: `rotate(${lead.rotation}deg)` }}
+              />
+            ) : (
+              <Spinner aria-hidden className="text-fg-subtle" />
+            )}
+          </div>
+          <span className="absolute -top-2.5 -right-2.5 flex min-w-6 items-center justify-center rounded-full bg-accent px-1.5 py-0.5 text-micro text-accent-fg shadow-2 tabular-nums">
+            {drag.ids.length > 1 ? drag.ids.length : (index.get(lead.id) ?? 0) + 1}
+          </span>
+        </div>
+      )}
+
       <p id={helpId} className="text-small text-fg-muted">
-        Click to select, Ctrl/⌘-click or Shift-click for several; drag to move (on touch, press and
-        hold). Keyboard: arrows move, <Kbd>Space</Kbd> selects, <Kbd>Ctrl</Kbd>+arrows move pages,{" "}
-        <Kbd>R</Kbd> rotates, <Kbd>Delete</Kbd> deletes, <Kbd>Ctrl</Kbd>+<Kbd>Z</Kbd> undoes.
+        Drag pages to rearrange them (on touch, press briefly, then drag). Click to select;
+        Ctrl/⌘-click or Shift-click for several, then drag them together. Keyboard: arrows move,{" "}
+        <Kbd>Space</Kbd> selects, <Kbd>Ctrl</Kbd>+arrows move pages, <Kbd>R</Kbd> rotates,{" "}
+        <Kbd>Delete</Kbd> deletes, <Kbd>Ctrl</Kbd>+<Kbd>Z</Kbd> undoes.
       </p>
       {error && (
         <p className="text-small text-danger" role="alert">

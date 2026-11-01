@@ -120,8 +120,8 @@ test.describe("organize-pdf", () => {
     expect(await outputOf(await save(page))).toEqual(["3@270", "1", "2", "4"]);
   });
 
-  test("drags a page to a new place", async ({ page, isMobile }) => {
-    test.skip(isMobile, "Mouse drag; touch uses a long press");
+  test("drags a page to a new place, lifting it as a card", async ({ page, isMobile }) => {
+    test.skip(isMobile, "Mouse drag; touch is tested below");
     await open(page);
     await choosePdf(page, "doc.pdf", await numbered(4));
     await expect(grid(page).locator("img")).toHaveCount(4, THUMBNAILS);
@@ -131,8 +131,64 @@ test.describe("organize-pdf", () => {
     await page.mouse.move(from!.x + from!.width / 2, from!.y + from!.height / 3);
     await page.mouse.down();
     await page.mouse.move(to!.x + to!.width * 0.75, to!.y + to!.height / 3, { steps: 12 });
+    // Mid-drag: the page has left the grid and a drop slot is open.
+    await expect(page.getByText("Drop here")).toBeVisible();
+    await expect(grid(page).getByRole("option")).toHaveCount(3);
     await page.mouse.up();
+    await expect(page.getByText("Drop here")).toBeHidden();
     expect(await outputOf(await save(page))).toEqual(["2", "3", "1", "4"]);
+  });
+
+  test("Escape cancels a drag", async ({ page, isMobile }) => {
+    test.skip(isMobile, "Keyboard during a mouse drag");
+    await open(page);
+    await choosePdf(page, "doc.pdf", await numbered(3));
+    await expect(grid(page).locator("img")).toHaveCount(3, THUMBNAILS);
+    const from = await option(page, 1).boundingBox();
+    await page.mouse.move(from!.x + from!.width / 2, from!.y + from!.height / 3);
+    await page.mouse.down();
+    await page.mouse.move(from!.x + from!.width * 2, from!.y + from!.height / 3, { steps: 8 });
+    await expect(page.getByText("Drop here")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await page.mouse.up();
+    await expect(page.getByRole("button", { name: "Undo (Ctrl+Z)" })).toBeDisabled();
+  });
+
+  test("touch: a short press lifts the page, then it drags", async ({
+    page,
+    browserName,
+    isMobile,
+  }) => {
+    test.skip(
+      !isMobile || browserName !== "chromium",
+      "Real touch events need the Android (Chromium) project",
+    );
+    await open(page);
+    await choosePdf(page, "doc.pdf", await numbered(4));
+    await expect(grid(page).locator("img")).toHaveCount(4, THUMBNAILS);
+    await grid(page).scrollIntoViewIfNeeded();
+    const from = (await option(page, 1).boundingBox())!;
+    const to = (await option(page, 4).boundingBox())!;
+    const start = { x: from.x + from.width / 2, y: from.y + from.height / 3 };
+    const end = { x: to.x + to.width * 0.7, y: to.y + to.height / 3 };
+    const cdp = await page.context().newCDPSession(page);
+    const touch = (type: string, x?: number, y?: number) =>
+      cdp.send("Input.dispatchTouchEvent", {
+        type: type as "touchStart",
+        touchPoints: x === undefined ? [] : [{ x, y: y!, id: 1 }],
+      });
+    await touch("touchStart", start.x, start.y);
+    await page.waitForTimeout(320);
+    for (let i = 1; i <= 12; i++) {
+      await touch(
+        "touchMove",
+        start.x + ((end.x - start.x) * i) / 12,
+        start.y + ((end.y - start.y) * i) / 12,
+      );
+    }
+    await expect(page.getByText("Drop here")).toBeVisible();
+    await touch("touchEnd");
+    expect(await outputOf(await save(page))).toEqual(["2", "3", "4", "1"]);
   });
 
   test("never deletes the last page", async ({ page }) => {
