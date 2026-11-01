@@ -281,24 +281,31 @@ export function SignatureDialog({
               />
             </Field>
             <RadioGroup value={fontId} onValueChange={setFontId} aria-label="Signature style">
-              {SIGNATURE_FONTS.map(({ id, label, font }) => (
-                <Radio
-                  key={id}
-                  value={id}
-                  aria-label={label}
-                  label={
-                    <span
-                      className={cn(
-                        "light block truncate rounded-sm bg-surface px-3 text-h2",
-                        font.className,
-                      )}
-                      style={{ color: INK[color] }}
-                    >
-                      {name.trim() || "Your signature"}
-                    </span>
-                  }
-                />
-              ))}
+              <div className="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
+                {SIGNATURE_FONTS.map(({ id, label, font }) => (
+                  <Radio
+                    key={id}
+                    value={id}
+                    aria-label={label}
+                    label={
+                      <span className="flex min-w-0 flex-col gap-0.5">
+                        <span
+                          className={cn(
+                            "light block h-12 w-56 max-w-full truncate rounded-sm bg-surface px-3 text-h2 leading-12",
+                            font.className,
+                          )}
+                          style={{ color: INK[color] }}
+                        >
+                          {name.trim() || "Your signature"}
+                        </span>
+                        <span aria-hidden className="px-1 text-micro text-fg-muted">
+                          {label}
+                        </span>
+                      </span>
+                    }
+                  />
+                ))}
+              </div>
             </RadioGroup>
           </TabsContent>
           <TabsContent value="upload" className="flex flex-col gap-3">

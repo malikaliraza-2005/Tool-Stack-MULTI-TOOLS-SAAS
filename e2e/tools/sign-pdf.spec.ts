@@ -207,6 +207,29 @@ test.describe("sign-pdf", () => {
     expect(content).toMatch(/\/Image-\d+ Do/);
   });
 
+  test("offers 12 typed signature styles, chosen with the keyboard", async ({ page }) => {
+    await open(page);
+    await choosePdf(page, "contract.pdf", await makePdf("contract"));
+    await ready(page, 1);
+    await page.getByRole("button", { name: "Add signature" }).click();
+    const dialog = page.getByRole("dialog", { name: "Add your signature" });
+    await dialog.getByRole("tab", { name: "Type" }).click();
+    await dialog.getByRole("textbox", { name: "Your name" }).fill("Ada Lovelace");
+    const styles = dialog.getByRole("radiogroup", { name: "Signature style" }).getByRole("radio");
+    await expect(styles).toHaveCount(12);
+    await styles.first().focus();
+    await page.keyboard.press("ArrowDown");
+    // Radix moves focus after the key is released; Space then selects.
+    await expect(dialog.getByRole("radio", { name: "Great Vibes" })).toBeFocused();
+    await page.keyboard.press("Space");
+    await expect(dialog.getByRole("radio", { name: "Great Vibes" })).toBeChecked();
+    await dialog.getByRole("radio", { name: "Yellowtail" }).click();
+    await expect(dialog.getByRole("radio", { name: "Yellowtail" })).toBeChecked();
+    await dialog.getByRole("button", { name: "Add signature" }).click();
+    await expect(page.getByRole("button", { name: "Signature on page 1" })).toBeVisible();
+    await expectNoA11yViolations(page);
+  });
+
   test("XFA forms show the unsupported message", async ({ page }) => {
     await open(page);
     await choosePdf(page, "tax-form.pdf", await makeXfaPdf());

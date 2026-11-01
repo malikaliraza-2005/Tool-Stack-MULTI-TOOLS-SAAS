@@ -40,7 +40,7 @@ export default function SignPdfContent() {
         <Facts
           items={[
             { term: "Draw", description: "With a mouse, finger or stylus. Black or blue ink." },
-            { term: "Type", description: "Your name in one of three handwriting styles." },
+            { term: "Type", description: "Your name in one of 12 handwriting styles." },
             {
               term: "Upload",
               description: "A PNG, JPG or WebP image. A white background can be made transparent.",
