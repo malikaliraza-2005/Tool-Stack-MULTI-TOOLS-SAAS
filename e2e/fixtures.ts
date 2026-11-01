@@ -119,15 +119,17 @@ export async function expectNoA11yViolations(page: Page) {
   await page.waitForFunction(() => document.documentElement.hasAttribute("data-app-started"));
   // Let finite animations and transitions finish first: right after a theme
   // switch, colors are mid-transition and axe would measure mixed themes.
-  // Endless ones (spinners) are skipped.
-  await page.evaluate(() =>
-    Promise.all(
+  // Endless ones (spinners) are skipped. Two frames first, so transitions a
+  // just-emulated color scheme starts have begun before they are collected.
+  await page.evaluate(async () => {
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    await Promise.all(
       document
         .getAnimations()
         .filter((animation) => animation.effect?.getComputedTiming().endTime !== Infinity)
         .map((animation) => animation.finished.catch(() => undefined)),
-    ),
-  );
+    );
+  });
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();
