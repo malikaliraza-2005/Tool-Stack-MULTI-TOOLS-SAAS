@@ -3,7 +3,8 @@
 // the ComparisonSlider shows.
 
 import { toolErrors } from "@/lib/errors";
-import { OUTPUT_FORMATS } from "@/lib/image/formats";
+import { getDeviceClass } from "@/lib/files/limits";
+import { AVIF_SPEED, OUTPUT_FORMATS } from "@/lib/image/formats";
 import { needsPreviews } from "@/lib/image/jobs";
 import type { ProcessOptions, ProcessResult } from "@/lib/image/pipeline";
 import type { ImageEntry, ImageResult, ProcessContext } from "./useImageBatch";
@@ -19,7 +20,14 @@ export async function processImageEntry<Extra>(
   const info = entry.info!;
   const previews = needsPreviews(info);
   const output = await pool.run(
-    { op: "process", name: entry.file.name, bytes, info, options, previews },
+    {
+      op: "process",
+      name: entry.file.name,
+      bytes,
+      info,
+      options: { avifSpeed: AVIF_SPEED[getDeviceClass()], ...options },
+      previews,
+    },
     { transfer: [bytes], signal },
   );
   if (output.op !== "process") throw toolErrors.unknown(`processing ${entry.file.name}`);

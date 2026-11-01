@@ -5,6 +5,12 @@
 import { detectFileType, type FileKind } from "@/lib/files/sniff";
 import { readOrientation } from "./metadata";
 
+/**
+ * AVIF encoder effort, 0 (slowest, smallest) to 10. 6 is the libavif
+ * default; phones use 8: about 2.4× faster for about 10% larger files (P6-T10).
+ */
+export const AVIF_SPEED = { desktop: 6, mobile: 8 } as const;
+
 /** Formats the image tools can write. */
 export type OutputFormat = "jpeg" | "png" | "webp" | "avif";
 

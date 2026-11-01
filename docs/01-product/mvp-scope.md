@@ -85,13 +85,13 @@ All share the **Workbench** layout (see [design-system.md](../02-design/design-s
 
 ## 4. File and input limits **[Target]**
 
-Validated during device testing and then stored per tool in the registry. *PDF tools (Phase 5) use these targets as registry limits; real-device validation is P9-T01.*
+Validated during device testing and then stored per tool in the registry. *PDF tools (Phase 5) and image tools (Phase 6) use these targets as registry limits; the megapixel limit is checked from the image header before decoding. Real-device validation is P9-T01.*
 
 | Context | Soft warning | Hard limit |
 |---|---|---|
 | PDF tools, desktop | 100 MB total | 500 MB total |
 | PDF tools, mobile | 50 MB total | 150 MB total |
-| Image tools | 25 MB per image; 50 images per batch | 100 MB per image |
+| Image tools | 25 MB per image; 50 images per batch | 100 MB per image; 120 megapixels (50 on phones and tablets) |
 | Text/developer tools | 5 MB input | 50 MB input |
 
 Above the soft warning: tool works but warns it may be slow. Above the hard limit: tool refuses with a clear explanation.

@@ -22,7 +22,12 @@ export type Codecs = {
    * applied (browser decoders do it; WASM decoders don't).
    */
   decode(bytes: ArrayBuffer, kind: ImageKind): Promise<{ pixels: Pixels; oriented: boolean }>;
-  encode(pixels: Pixels, format: OutputFormat, quality: number): Promise<ArrayBuffer>;
+  encode(
+    pixels: Pixels,
+    format: OutputFormat,
+    quality: number,
+    options?: { avifSpeed?: number },
+  ): Promise<ArrayBuffer>;
   /** High-quality resampling (Lanczos) to exactly `width` × `height`. */
   resize(pixels: Pixels, width: number, height: number): Promise<Pixels>;
 };
@@ -43,6 +48,8 @@ export type ProcessOptions = {
   keepOriginalIfLarger?: boolean;
   /** Keep EXIF/XMP/IPTC (JPG → JPG only); otherwise the output has no metadata. */
   keepMetadata?: boolean;
+  /** AVIF encoder effort, 0 (slowest, smallest) to 10; phones use a faster setting (P6-T10). */
+  avifSpeed?: number;
 };
 
 export type ProcessResult = {
@@ -172,7 +179,9 @@ export async function processImage(
       flattened = true;
     }
     hooks.onStep?.(`Encoding ${name}`);
-    let bytes = await codecs.encode(pixels, format, options.quality);
+    let bytes = await codecs.encode(pixels, format, options.quality, {
+      avifSpeed: options.avifSpeed,
+    });
     if (options.keepMetadata && format === "jpeg" && info.kind === "jpeg") {
       bytes = toArrayBuffer(copyJpegMetadata(new Uint8Array(input.bytes), new Uint8Array(bytes)));
     }

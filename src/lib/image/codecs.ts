@@ -6,13 +6,10 @@
 // formats the browser lacks, HEIC via libheif). PNG goes the other way: the WASM decoder keeps
 // exact pixel values, which lossless output must preserve.
 
-import { KIND_MIME, type ImageKind, type OutputFormat } from "./formats";
+import { AVIF_SPEED, KIND_MIME, type ImageKind, type OutputFormat } from "./formats";
 import { decodeHeic } from "./heic";
 import type { Codecs } from "./pipeline";
 import type { Pixels } from "./pixels";
-
-/** AVIF encoder effort, 0 (slowest, smallest) to 10. 6 is the libavif default. */
-export const AVIF_SPEED = 6;
 
 function toImageData(pixels: Pixels): ImageData {
   if (typeof ImageData === "undefined" || pixels instanceof ImageData) return pixels as ImageData;
@@ -72,7 +69,7 @@ const decode: Codecs["decode"] = async (bytes, kind) => {
   return { pixels, oriented: false };
 };
 
-const encode: Codecs["encode"] = async (pixels, format: OutputFormat, quality) => {
+const encode: Codecs["encode"] = async (pixels, format: OutputFormat, quality, options = {}) => {
   const image = toImageData(pixels);
   switch (format) {
     case "jpeg":
@@ -80,7 +77,10 @@ const encode: Codecs["encode"] = async (pixels, format: OutputFormat, quality) =
     case "webp":
       return (await import("@jsquash/webp/encode")).default(image, { quality });
     case "avif":
-      return (await import("@jsquash/avif/encode")).default(image, { quality, speed: AVIF_SPEED });
+      return (await import("@jsquash/avif/encode")).default(image, {
+        quality,
+        speed: options.avifSpeed ?? AVIF_SPEED.desktop,
+      });
     case "png":
       // Lossless: oxipng picks the smallest PNG encoding of exactly these pixels.
       // optimiseAlpha off, so fully transparent pixels keep their colour values too.

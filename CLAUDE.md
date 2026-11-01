@@ -10,7 +10,9 @@ Full context: [docs/README.md](docs/README.md).
 
 ## Current phase
 
-**Phase 6: Image tools** → [docs/06-delivery/phases/phase-06-image-tools.md](docs/06-delivery/phases/phase-06-image-tools.md)
+**Phase 7: Homepage, discovery & PWA** → [docs/06-delivery/phases/phase-07-homepage-discovery-pwa.md](docs/06-delivery/phases/phase-07-homepage-discovery-pwa.md)
+
+Phase 6 (image tools) is done, completing M4 (all 19 tools): remove-exif-data, compress-image, resize-image and convert-image in `src/tools/`, on the shared image pipeline in `src/lib/image/` (one worker, jSquash codecs, metadata, exifr report) with `ComparisonSlider`, `ImageWorkspace` and `useImageBatch` in `src/components/tool/`. HEIC uses the unmodified libheif-js build served from `/vendor/` under D-6 (sources in `vendor-src/`, notices on the early `/licenses` page); jpg-to-pdf now decodes through the same codecs. Its deferrals (real-device AVIF timing and memory, Safari, screen reader, content review, performance budget) join the earlier ones in Phases 8–9.
 
 Phase 5 (PDF tools) is done: split, organize, jpg-to-pdf, pdf-to-jpg and sign-pdf in `src/tools/`, shared `PageThumbnailGrid` and the page-range parser; generated PDF fixtures in `src/lib/pdf/__fixtures__/`. Its deferrals (real-device memory and limits, Safari, screen reader, content review, performance budget) join the earlier ones in Phases 8–9.
 

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | 🟡 In progress |
+| **Status** | ✅ Done (2026-11-01, with deferrals below) |
 | **Effort** | 6–8 days [Estimate] |
 | **Milestone** | M4: All 19 tools (when this phase and P4/P5 are done) |
 
@@ -34,17 +34,17 @@ Build the 4 image tools on a shared codec pipeline, with the ComparisonSlider as
 - [x] **P6-T07** `resize-image` (spec §4.3): resize + crop modes, aspect presets, "don't enlarge".
 - [x] **P6-T08** `convert-image` (spec §4.2): format matrix, alpha → background, GIF first frame; HEIC per D-6.
 - [x] **P6-T09** If HEIC ships: separate, unmodified LGPL decoder file + license notice + source link (dependencies-licenses §4).
-- [ ] **P6-T10** Cross-browser/mobile pass; AVIF encode timing on low-end devices (show estimate/warning if slow); tune limits.
+- [x] **P6-T10** Cross-browser/mobile pass; AVIF encode timing on low-end devices (show estimate/warning if slow); tune limits. — *Automated part done 2026-11-01: the full E2E suite (1,150 tests) on Playwright Chromium, Firefox, WebKit, Pixel 7 and iPhone 14 with 4 workers; 24 failed under load (most in Phase 4–5 tools I did not change, with Firefox graphics-process crashes in the log) and all 24 passed on rerun with 2 workers. Every image tool passes on every project, HEIC included. AVIF: 12 MP took ~30 s vs ~5 s for WebP (desktop Chromium); phones now use libavif speed 8 (~2.4× faster, ~10% larger) and each tool shows a note when AVIF is chosen. Limits: 120 MP desktop / 50 MP phones, one image at a time on phones. **Deferred to P9-T01/P9-T11:** AVIF timing and memory on a real iPhone and Android phone, and tuning the limits from it.*
 - [x] **P6-T11** Connect `jpg-to-pdf` (P5) to the shared image pipeline if not already.
 
 ## Docs to write / update
 tool-specifications.md · dependencies-licenses.md (codec upstream licenses confirmed) · mvp-scope.md §4 limits · browser-device-support.md
 
 ## Exit criteria
-- [ ] All 4 tools meet the Definition of Done.
-- [ ] Remove-EXIF verified by re-reading outputs (no GPS) in tests.
-- [ ] Codec upstream licenses recorded.
-- [ ] **M4:** all 19 tools done (with P4 and P5).
+- [x] All 4 tools meet the Definition of Done. *Met with the same deferrals as Phases 3–5: real Android and Safari → P9-T01, screen reader → P9-T06, content review → P8-T04, performance budget → P9-T08 (R-14), offline → Phase 7.*
+- [x] Remove-EXIF verified by re-reading outputs (no GPS) in tests. *exifr re-reads outputs in unit and E2E tests (JPEG, PNG; WebP via the container walk, which exifr can't read).*
+- [x] Codec upstream licenses recorded. *dependencies-licenses.md (AVIF verified) and the `/licenses` page.*
+- [x] **M4:** all 19 tools done (with P4 and P5).
 
 ## Risks & fallbacks
 | Risk | Fallback |

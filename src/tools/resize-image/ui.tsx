@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import * as z from "zod/mini";
+import { AvifNote, avifMegapixels } from "@/components/tool/AvifNote";
 import { ImageWorkspace } from "@/components/tool/ImageWorkspace";
 import { processImageEntry } from "@/components/tool/processImageEntry";
 import { useImageBatch } from "@/components/tool/useImageBatch";
@@ -340,6 +341,19 @@ export default function ResizeImageUI() {
               onValueChange={(format) => setOption({ format: format as FormatChoice })}
             />
           </Field>
+          {batch.ready.some(
+            (e) => outputFormat(e.info!.kind, options.format as FormatChoice) === "avif",
+          ) && (
+            <AvifNote
+              megapixels={avifMegapixels(
+                batch.ready
+                  .filter(
+                    (e) => outputFormat(e.info!.kind, options.format as FormatChoice) === "avif",
+                  )
+                  .map((e) => e.info!),
+              )}
+            />
+          )}
           {lossy && (
             <Slider
               label="Quality"

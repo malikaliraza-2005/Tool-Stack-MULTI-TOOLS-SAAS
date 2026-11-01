@@ -1,6 +1,7 @@
 "use client";
 
 import * as z from "zod/mini";
+import { AvifNote, avifMegapixels } from "@/components/tool/AvifNote";
 import { batchTotals, ImageWorkspace } from "@/components/tool/ImageWorkspace";
 import { processImageEntry } from "@/components/tool/processImageEntry";
 import { useImageBatch } from "@/components/tool/useImageBatch";
@@ -69,6 +70,9 @@ export default function CompressImageUI() {
       ? "Metadata can only be kept when a JPG stays a JPG; other images are saved without it."
       : "Removes location, camera and date details from the compressed images.";
 
+  const avif = batch.ready.filter((_, i) => outputs[i] === "avif").map((e) => e.info!);
+  const showAvifNote = options.format === "avif" || avif.length > 0;
+
   const setOption = (patch: Partial<CompressOptions>) => {
     setOptions(patch);
     batch.invalidate();
@@ -116,6 +120,7 @@ export default function CompressImageUI() {
               onValueChange={(format) => setOption({ format: format as FormatChoice })}
             />
           </Field>
+          {showAvifNote && <AvifNote megapixels={avifMegapixels(avif)} />}
           {showQuality && (
             <Slider
               label="Quality"

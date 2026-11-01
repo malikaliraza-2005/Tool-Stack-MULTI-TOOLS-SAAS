@@ -1,6 +1,7 @@
 "use client";
 
 import * as z from "zod/mini";
+import { AvifNote, avifMegapixels } from "@/components/tool/AvifNote";
 import { ImageWorkspace } from "@/components/tool/ImageWorkspace";
 import { processImageEntry } from "@/components/tool/processImageEntry";
 import { useImageBatch } from "@/components/tool/useImageBatch";
@@ -102,6 +103,7 @@ export default function ConvertImageUI() {
               onValueChange={(value) => setOption({ format: value as FormatChoice })}
             />
           </Field>
+          {format === "avif" && <AvifNote megapixels={avifMegapixels(infos)} />}
           {showQuality && (
             <Slider
               label="Quality"
