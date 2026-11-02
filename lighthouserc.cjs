@@ -44,6 +44,10 @@ module.exports = {
         "http://127.0.0.1:4174/resize-image",
         "http://127.0.0.1:4174/compress-image",
         "http://127.0.0.1:4174/convert-image",
+        // One of each remaining page type: site page, guide index, guide.
+        "http://127.0.0.1:4174/about",
+        "http://127.0.0.1:4174/guides",
+        "http://127.0.0.1:4174/guides/heic-vs-jpg",
       ],
       numberOfRuns: 3,
     },
