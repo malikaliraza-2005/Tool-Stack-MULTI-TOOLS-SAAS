@@ -36,7 +36,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Can I validate JSON against a JSON Schema?",
-        a: "Not yet. This tool checks that the text is valid JSON syntax. Schema validation is planned as a separate tool.",
+        a: "No. This tool checks that the text is valid JSON syntax; it doesn’t validate against a JSON Schema.",
       },
       {
         q: "How large a file can it handle?",
@@ -44,7 +44,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Why does it warn about large numbers?",
-        a: "JavaScript stores numbers with limited precision, so integers larger than 9,007,199,254,740,991 can silently change in many tools. Sprigkit keeps the original digits in the formatted output and tells you where such numbers are, so you know to treat them carefully in your code.",
+        a: "JavaScript stores numbers with limited precision, so integers larger than 9,007,199,254,740,991 can silently change in many tools. Sprigkit keeps the original digits in the output and shows a note with how many such numbers there are and the path of the first one, so you know to treat them carefully in your code.",
       },
     ],
   },
@@ -60,5 +60,5 @@ export const meta: ToolDefinition = {
   },
   processing: { local: true, worker: true, offline: true },
   addedAt: "2026-10-14",
-  updatedAt: "2026-10-14",
+  updatedAt: "2026-11-02",
 };

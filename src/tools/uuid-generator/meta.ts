@@ -32,7 +32,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Is a GUID the same as a UUID?",
-        a: "Yes. GUID (globally unique identifier) is Microsoft’s name for a UUID. The format is the same 128-bit, 32-hex-digit value, often written in braces in Windows tools, for example {919108f7-52d1-4320-9bac-f847db4148a8}. Choose Uppercase if your system expects GUIDs in capitals.",
+        a: "Yes. GUID (globally unique identifier) is Microsoft’s name for a UUID. The format is the same 128-bit, 32-hex-digit value, often written in braces in Windows tools, for example {919108f7-52d1-4320-9bac-f847db4148a8}. Turn on Uppercase if your system expects GUIDs in capitals. The inspector accepts GUIDs with or without braces.",
       },
       {
         q: "Are the generated UUIDs random and unique?",
@@ -40,7 +40,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Can I generate UUIDs in bulk or without hyphens?",
-        a: "Yes. Set the quantity up to 1,000 and copy them all or download them as a .txt file, one per line. Options give uppercase letters or the 32-digit form without hyphens.",
+        a: "Yes. Set the quantity up to 1,000 and copy them all or download them as a .txt file, one per line. Turn on Uppercase for capital letters, or turn off Hyphens for the 32-digit form.",
       },
       {
         q: "What is a ULID?",
@@ -60,5 +60,5 @@ export const meta: ToolDefinition = {
   },
   processing: { local: true, worker: false, offline: true },
   addedAt: "2026-10-31",
-  updatedAt: "2026-10-31",
+  updatedAt: "2026-11-02",
 };

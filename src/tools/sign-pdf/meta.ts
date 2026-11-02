@@ -27,11 +27,11 @@ export const meta: ToolDefinition = {
     faqs: [
       {
         q: "How do I sign a PDF?",
-        a: "Choose the PDF, select Add signature, then draw, type or upload your signature. Drag it into place on the page and resize it with the corner handle (or move it with the arrow keys), then save and download the signed PDF.",
+        a: "Choose the PDF, select Add signature, then draw, type or upload your signature. Drag it into place on the page and resize it with the corner handle (or move it with the arrow keys), then select Save signed PDF and Download PDF.",
       },
       {
         q: "Is this a legally valid signature?",
-        a: "It adds a visual signature: an image of your signature on the page. It is not a certified digital signature with a certificate. Many people and businesses accept signatures like this, but check whether the recipient accepts electronic signatures.",
+        a: "It adds a visual signature: an image of your signature on the page. It is not a certified digital signature: there is no certificate, and nothing in the file proves who signed it. Many people and businesses accept signatures like this, but check whether the recipient accepts electronic signatures.",
       },
       {
         q: "Can I fill in a PDF form?",
@@ -43,7 +43,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "What does “Flatten” do?",
-        a: "With Flatten on (the default), the filled-in fields become part of the page, so they can’t be changed by accident and look the same in every PDF reader. Turn it off to keep the form fields editable.",
+        a: "With Flatten on (the default), all form fields become part of the page, so they can’t be changed by accident and look the same in every PDF reader. Turn it off to keep the form fields editable.",
       },
     ],
   },
@@ -59,5 +59,5 @@ export const meta: ToolDefinition = {
   processing: { local: true, worker: true, offline: true },
   handoff: ["merge-pdf"],
   addedAt: "2026-11-01",
-  updatedAt: "2026-11-01",
+  updatedAt: "2026-11-02",
 };

@@ -18,7 +18,9 @@ export type VerifyOutcome =
   { status: "verified" } | { status: "invalid" } | { status: "error"; message: string };
 
 const HMAC = /^HS(256|384|512)$/;
-const ASYMMETRIC = /^(RS|PS|ES)(256|384|512)$|^ES256K$|^EdDSA$|^Ed25519$/;
+// No ES256K: jose (Web Crypto) has no secp256k1, so those tokens get the
+// "isn’t supported for verification" message instead of a misleading key error.
+const ASYMMETRIC = /^(RS|PS|ES)(256|384|512)$|^EdDSA$|^Ed25519$/;
 
 export function needsSecret(alg: string | null): boolean {
   return alg !== null && HMAC.test(alg);

@@ -28,7 +28,8 @@ export default function RegexTesterContent() {
               <Code>{"$<year>-$2"}</Code>, then copy or download the result.
             </>,
             <>
-              Read the <Strong>Explanation</Strong> to check what each part of the pattern does.
+              Open <Strong>Explanation</Strong> to see what each part of the pattern does in plain
+              language. Syntax it doesn’t cover is marked “Not explained”.
             </>,
           ]}
         />
@@ -69,9 +70,15 @@ export default function RegexTesterContent() {
             </>,
             <>
               <Strong>
-                <Code>{String.raw`\p{…}`}</Code> is an error.
+                <Code>{String.raw`\p{L}`}</Code> doesn’t match letters.
               </Strong>{" "}
-              Unicode property classes need the <Code>u</Code> or <Code>v</Code> flag.
+              Without the <Code>u</Code> or <Code>v</Code> flag, JavaScript reads it as the literal
+              text <Code>{"p{L}"}</Code>. Turn on <Code>u</Code> to use Unicode property classes.
+            </>,
+            <>
+              <Strong>Not every match is listed.</Strong> The first 200 matches are listed and up to
+              5,000 are highlighted; the count includes all of them. In text longer than 200,000
+              characters, only the start is highlighted.
             </>,
           ]}
         />

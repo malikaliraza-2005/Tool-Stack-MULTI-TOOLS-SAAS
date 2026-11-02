@@ -16,20 +16,24 @@ export default function UuidGeneratorContent() {
         <Steps
           items={[
             <>
-              Choose a <Strong>Type</Strong>: UUID v4 (random), UUID v7 (time-ordered) or ULID. A
-              new value appears straight away.
+              Choose a <Strong>Type</Strong>: <Strong>UUID v4 (random)</Strong>, the default,{" "}
+              <Strong>UUID v7 (time-ordered)</Strong> or <Strong>ULID</Strong>. A new value appears
+              straight away.
             </>,
             <>
-              Set <Strong>How many</Strong>, up to 1,000. Turn on <Strong>Uppercase</Strong> or off{" "}
-              <Strong>Hyphens</Strong> if your system needs that form.
+              Set <Strong>How many</Strong>, from 1 to 1,000. For UUIDs, turn on{" "}
+              <Strong>Uppercase</Strong> or turn off <Strong>Hyphens</Strong> if your system needs
+              that form; ULIDs are always uppercase without hyphens.
             </>,
             <>
-              Copy one value, or <Strong>Copy all</Strong> and download them as a .txt file, one per
-              line. <Strong>Generate new</Strong> makes a fresh set.
+              Copy a single value with its copy button. For a batch, select{" "}
+              <Strong>Copy all</Strong> or download them as a .txt file, one per line.{" "}
+              <Strong>Generate new</Strong> makes a fresh set.
             </>,
             <>
               To check a UUID, paste it under <Strong>Inspect</Strong> to see its version, variant
-              and, for versions 1, 6 and 7, when it was created.
+              and, for versions 1, 6 and 7, when it was created. Hyphens, braces and the{" "}
+              <Code>urn:uuid:</Code> prefix are accepted.
             </>,
           ]}
         />
@@ -73,10 +77,9 @@ export default function UuidGeneratorContent() {
 
       <ContentSection id="explanation" title="How the values are made">
         <Paragraph>
-          Every value comes from your browser’s cryptographic random number generator (
-          <Code>crypto.getRandomValues</Code>) and its clock. Nothing is requested from a server,
-          and nothing you generate or inspect is stored. Only your choices of type, quantity and
-          format are remembered on this device.
+          The random bits come from your browser’s cryptographic random number generator (
+          <Code>crypto.getRandomValues</Code>). UUID v7 and ULID also take the time from your
+          device’s clock, so their timestamps are only as accurate as that clock.
         </Paragraph>
       </ContentSection>
 
@@ -84,13 +87,17 @@ export default function UuidGeneratorContent() {
         <List
           items={[
             <>
-              <Strong>“This has 31 hex digits.”</Strong> A UUID has exactly 32 hex digits; one was
-              lost when copying.
+              <Strong>“This has 31 hex digits.”</Strong> A UUID has exactly 32 hex digits, so part
+              of it was probably lost when copying. Copy it again in full.
             </>,
             <>
-              <Strong>“Not an RFC 9562 UUID.”</Strong> The variant bits (the first digit of the
-              fourth group) aren’t 8, 9, a or b. Some older Microsoft GUIDs use another variant; the
-              value can still be a valid identifier.
+              <Strong>Version shows “Not an RFC 9562 UUID.”</Strong> The variant bits (the first
+              digit of the fourth group) aren’t 8, 9, a or b. Some older Microsoft GUIDs use another
+              variant; the value can still be a valid identifier.
+            </>,
+            <>
+              <Strong>“This looks like a ULID.”</Strong> The inspector reads UUIDs only. A ULID’s
+              first 10 characters are its creation time in milliseconds.
             </>,
             <>
               <Strong>No creation time is shown.</Strong> Only versions 1, 6 and 7 contain a

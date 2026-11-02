@@ -1,4 +1,12 @@
-import { ContentSection, Facts, List, Paragraph, Steps, Strong } from "@/components/tool/content";
+import {
+  Code,
+  ContentSection,
+  Facts,
+  List,
+  Paragraph,
+  Steps,
+  Strong,
+} from "@/components/tool/content";
 
 /** Supporting content for Organize PDF (no heavy imports: rendered at build time). */
 export default function OrganizePdfContent() {
@@ -12,17 +20,20 @@ export default function OrganizePdfContent() {
               thumbnail.
             </>,
             <>
-              Drag pages to reorder them (on a phone or tablet, press and hold first). Select
-              several with Ctrl/⌘-click or Shift-click to move them together.
+              Drag pages to reorder them (on a phone or tablet, press briefly, then drag). Select
+              several with Ctrl/⌘-click or Shift-click to move them together. Without dragging, the{" "}
+              <Strong>Move earlier</Strong> and <Strong>Move later</Strong> buttons shift the
+              selected pages one place at a time.
             </>,
             <>
-              Use <Strong>Rotate left</Strong>, <Strong>Rotate right</Strong> and{" "}
-              <Strong>Delete</Strong> on the selected pages. <Strong>Undo</Strong> and{" "}
-              <Strong>Redo</Strong> step through every change.
+              Use the toolbar buttons <Strong>Rotate left</Strong>, <Strong>Rotate right</Strong>{" "}
+              and <Strong>Delete</Strong> on the selected pages (or on the focused page when none is
+              selected). <Strong>Undo</Strong> and <Strong>Redo</Strong> step through every change.
             </>,
             <>
-              Select <Strong>Save PDF</Strong> and download the result. Your original file isn’t
-              changed.
+              Select <Strong>Save PDF</Strong>, then <Strong>Download PDF</Strong>. The new file is
+              named after the original, for example <Code>report-organized.pdf</Code>; the original
+              file isn’t changed.
             </>,
           ]}
         />
@@ -32,14 +43,18 @@ export default function OrganizePdfContent() {
         <Facts
           items={[
             { term: "Arrow keys", description: "Move between pages." },
+            { term: "Home / End", description: "Jump to the first or last page." },
             {
               term: "Space",
               description: "Select or deselect the page; Shift+arrows select a range.",
             },
             { term: "Ctrl/⌘ + arrow keys", description: "Move the selected pages." },
             { term: "R / Shift+R", description: "Rotate right / left." },
-            { term: "Delete", description: "Delete the selected pages." },
-            { term: "Ctrl/⌘ + Z, Ctrl/⌘ + Shift + Z", description: "Undo, redo." },
+            { term: "Delete or Backspace", description: "Delete the selected pages." },
+            {
+              term: "Ctrl/⌘ + Z, Ctrl/⌘ + Shift + Z",
+              description: "Undo, redo (Ctrl/⌘ + Y also redoes).",
+            },
             { term: "Ctrl/⌘ + A, Escape", description: "Select all, clear the selection." },
           ]}
         />
@@ -47,10 +62,14 @@ export default function OrganizePdfContent() {
 
       <ContentSection id="explanation" title="What happens to your pages">
         <Paragraph>
-          Pages are copied into a new PDF in the order you set, with their text, images and links.
-          Rotation is stored as page rotation, so it’s exact and lossless. Thumbnails are drawn only
-          for the pages you can see, which keeps documents with hundreds of pages responsive.
-          Bookmarks that point to deleted pages are not kept.
+          Pages are copied into a new PDF in the order you set, with their text, images and
+          annotations. Rotation is stored as page rotation, so it’s exact and lossless: nothing is
+          redrawn or recompressed. Thumbnails are drawn only for the pages you can see, which keeps
+          documents with hundreds of pages responsive.
+        </Paragraph>
+        <Paragraph>
+          Because the result is a new document, bookmarks and the original’s title and author are
+          not kept, even for pages you didn’t touch.
         </Paragraph>
       </ContentSection>
 
@@ -58,15 +77,21 @@ export default function OrganizePdfContent() {
         <List
           items={[
             <>
-              <Strong>The last page can’t be deleted.</Strong> A PDF needs at least one page.
+              <Strong>“A PDF needs at least one page, so every page can’t be deleted.”</Strong>{" "}
+              Deselect at least one page before you select <Strong>Delete</Strong>.
             </>,
             <>
-              <Strong>A thumbnail stays blank.</Strong> The page may use features the preview can’t
-              draw; it is still copied into the new PDF exactly.
+              <Strong>A thumbnail keeps spinning.</Strong> The preview couldn’t draw that page. You
+              can still move, rotate and delete it, and it is copied into the new PDF unchanged.
             </>,
             <>
-              <Strong>“… is password-protected.”</Strong> Remove the password in a PDF reader first,
-              then try again.
+              <Strong>“… is password-protected.”</Strong> Organize PDF can’t open encrypted files.
+              Save an unprotected copy from a PDF reader that knows the password, then choose that
+              copy.
+            </>,
+            <>
+              <Strong>“… couldn’t be read.”</Strong> The file is damaged or didn’t finish
+              downloading. Get a fresh copy and try again.
             </>,
           ]}
         />

@@ -35,7 +35,7 @@ export default function RemoveExifDataContent() {
             {
               term: "JPG",
               description:
-                "EXIF (with GPS), XMP, IPTC, comments, embedded thumbnails and camera-specific blocks. The colour profile stays, so colours don’t change.",
+                "EXIF (with GPS), XMP, IPTC, comments, embedded thumbnails, camera-specific blocks and any data stored after the end of the image.",
             },
             {
               term: "PNG",
@@ -43,9 +43,14 @@ export default function RemoveExifDataContent() {
             },
             { term: "WebP", description: "The EXIF and XMP chunks." },
             {
+              term: "Kept",
+              description:
+                "The color profile and the image data, so colors and sharpness don’t change.",
+            },
+            {
               term: "Orientation",
               description:
-                "Kept by default, so photos taken sideways still appear the right way up. Remove everything also drops it and saves sideways photos upright at high quality (JPG quality 95).",
+                "Kept by default, so photos taken sideways still appear the right way up. “Everything, including orientation” drops it too: sideways photos are then saved again, upright, at quality 95 (JPG and WebP) or losslessly (PNG), with no metadata at all; other photos are cleaned without re-saving.",
             },
           ]}
         />
@@ -55,11 +60,15 @@ export default function RemoveExifDataContent() {
         <Facts
           items={[
             { term: "Input", description: "JPG, PNG and WebP photos. HEIC is not supported yet." },
-            { term: "Size", description: "Up to 100 MB per photo and 50 photos at a time." },
+            {
+              term: "Size",
+              description:
+                "Up to 100 MB per photo and 50 photos at a time. Photos over 120 megapixels (50 on phones and tablets) can’t be added.",
+            },
             {
               term: "Output",
               description:
-                "Same format and name with -no-metadata added, e.g. IMG_1234-no-metadata.jpg; several photos also as one ZIP.",
+                "Same format and name with -no-metadata added, e.g. IMG_1234-no-metadata.jpg; several photos also as one ZIP, photos-no-metadata.zip.",
             },
           ]}
         />
@@ -73,8 +82,9 @@ export default function RemoveExifDataContent() {
               set your iPhone to save photos as JPG (Settings › Camera › Formats › Most Compatible).
             </>,
             <>
-              <Strong>“… couldn’t be read.”</Strong> The file is damaged or incomplete. Open it in
-              an image viewer and save it again.
+              <Strong>“… couldn’t be read. It may be damaged or incomplete.”</Strong> The file’s
+              structure is broken, for example from an interrupted download. Open it in an image
+              viewer and save it again, then try that copy.
             </>,
             <>
               <Strong>The photo still shows a location in my gallery app.</Strong> Some apps keep

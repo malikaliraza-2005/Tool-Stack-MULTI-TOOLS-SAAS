@@ -21,12 +21,13 @@ export default function Base64Content() {
             </>,
             <>
               To encode, type or paste text, or select <Strong>Open file</Strong> for an image, PDF
-              or any other file. Turn on <Strong>Data URL</Strong> to get a{" "}
+              or any other file. With a file open, turn on <Strong>Data URL</Strong> to get a{" "}
               <Code>data:…;base64,…</Code> string.
             </>,
             <>
-              To decode, paste Base64 or a data URL. Text is shown as text; anything else, such as
-              an image, is offered as a download with its file type detected.
+              To decode, paste Base64 or a data URL, or open a .txt file that contains it. Text is
+              shown as text; anything else, such as an image, is offered as a download with its file
+              type detected.
             </>,
             <>
               Copy or download the result. <Strong>Swap</Strong> moves the output to the input and
@@ -52,12 +53,12 @@ export default function Base64Content() {
             {
               term: "Wrap at 76",
               description:
-                "Breaks the output into lines of 76 characters, as MIME email does. Line breaks and spaces are ignored when decoding.",
+                "Breaks the output into lines of 76 characters, as MIME email does. Spaces, tabs and line breaks are ignored when decoding.",
             },
             {
               term: "Data URL",
               description:
-                "For files: adds the data: prefix with the file’s type, ready for an HTML src or a CSS url(). Data URLs always use the standard alphabet on one line.",
+                "Shown when a file is open: adds the data: prefix with the file’s type, ready for an HTML src or a CSS url(). Data URLs always use the standard alphabet on one line, so URL-safe and Wrap at 76 are turned off.",
             },
           ]}
         />
@@ -88,12 +89,12 @@ export default function Base64Content() {
             {
               term: "Size",
               description:
-                "Up to 50 MB. Files and inputs over 1 MB are processed in a background thread, so the page stays responsive; above 5 MB it may be slow.",
+                "Files up to 50 MB. Files, and text over 1 MB, are processed in a background thread, so the page stays responsive; above 5 MB it may be slow.",
             },
             {
               term: "Detected file types",
               description:
-                "PDF, JPEG, PNG, WebP, GIF, AVIF, HEIC, BMP, ZIP and gzip, from their first bytes. Other data uses the data URL’s type, or downloads as .bin.",
+                "PDF, JPEG, PNG, WebP, GIF, AVIF, HEIC, BMP, ZIP and gzip, from their first bytes. Other data uses the data URL’s type, or downloads as .txt if it’s text and .bin if not.",
             },
           ]}
         />
@@ -112,9 +113,9 @@ export default function Base64Content() {
               Base64 was probably cut off when it was copied.
             </>,
             <>
-              <Strong>The output is a download, not text.</Strong> The decoded bytes aren’t valid
-              UTF-8 text, so showing them would only show garbled characters. Download the file
-              instead.
+              <Strong>The output is a download, not text.</Strong> The decoded bytes are a known
+              file type such as an image, or aren’t valid UTF-8 text, so showing them would only
+              show garbled characters. Download the file instead.
             </>,
           ]}
         />

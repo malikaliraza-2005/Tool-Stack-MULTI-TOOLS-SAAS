@@ -361,7 +361,7 @@ export function SignatureDialog({
               Ink
             </span>
             <SegmentedControl
-              label="Ink colour"
+              label="Ink color"
               options={COLORS}
               value={color}
               onValueChange={(value) => setColor(value as InkColor)}

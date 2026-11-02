@@ -79,7 +79,7 @@ describe("format pairs (tool-specifications §4.2)", () => {
 
   it("converts the first frame of an animated GIF and warns", async () => {
     const info = readImageInfo(gif(2))!;
-    expect(animationWarning(info)).toMatch(/first frame only/);
+    expect(animationWarning(info)).toMatch(/only the first frame/);
     const out = await processImage(
       { name: "a", bytes: gif(2).slice().buffer as ArrayBuffer },
       info,

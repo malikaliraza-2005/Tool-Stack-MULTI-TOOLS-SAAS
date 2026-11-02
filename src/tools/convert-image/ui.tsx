@@ -46,7 +46,7 @@ const FORMATS = [
 const BACKGROUNDS = [
   { value: "#ffffff", label: "White" },
   { value: "#000000", label: "Black" },
-  { value: "custom", label: "Custom colour" },
+  { value: "custom", label: "Custom color" },
 ];
 
 const LIMITS_HINT = "JPG, PNG, WebP, AVIF, GIF, BMP, HEIC · up to 100 MB per image, 50 images";
@@ -117,7 +117,7 @@ export default function ConvertImageUI() {
             <>
               <Field
                 label="Background for transparent areas"
-                description="JPG has no transparency, so transparent areas are filled with this colour."
+                description="JPG has no transparency, so transparent areas are filled with this color."
               >
                 <Select
                   options={BACKGROUNDS}
@@ -128,7 +128,7 @@ export default function ConvertImageUI() {
                 />
               </Field>
               {preset === "custom" && (
-                <Field label="Custom colour">
+                <Field label="Custom color">
                   <Input
                     type="color"
                     value={options.background}

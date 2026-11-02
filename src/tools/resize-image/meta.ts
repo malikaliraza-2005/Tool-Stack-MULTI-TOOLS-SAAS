@@ -28,23 +28,23 @@ export const meta: ToolDefinition = {
     faqs: [
       {
         q: "How do I resize without losing quality?",
-        a: "Making an image smaller keeps it sharp: the tool uses Lanczos resampling, which preserves fine detail. Enlarging can’t add detail that isn’t there, so Don’t enlarge is on by default. Keep PNG images as PNG, or use quality 85 or higher for JPG.",
+        a: "Making an image smaller keeps it sharp: the tool uses Lanczos resampling, which keeps edges crisp. Enlarging can’t add detail that isn’t there, so Don’t enlarge is on by default. Keep PNG images as PNG, or use quality 85 or higher for JPG.",
       },
       {
         q: "How do I resize for Instagram without cropping?",
-        a: "Choose a preset such as 1080 × 1350 portrait post and set Fit to Fit inside: the whole photo is kept and scaled to fit within that size. Fill and crop fills the exact size instead, trimming the edges evenly.",
+        a: "Choose a preset such as 1080 × 1350 portrait post, then switch Fit from Fill and crop to Fit inside: the whole photo is kept and scaled to fit within that size. Fill and crop, the preset’s starting choice, fills the exact size instead, trimming the edges evenly.",
       },
       {
         q: "Can I resize to exact pixels or a percentage?",
-        a: "Both. Enter a width, a height or both in pixels; with Keep proportions on, a single side is enough and the other follows. Or switch to Percentage, for example 50% for half the size.",
+        a: "Both. Enter a width, a height or both in pixels; with Keep proportions on, a single side is enough and the other follows. Or switch Resize by to Percentage, from 1% to 400%; for example 50% for half the width and height.",
       },
       {
         q: "How do I make a photo smaller in KB?",
-        a: "Reducing the pixel size is the most effective way: a photo resized from 4000 to 1920 pixels wide is typically a quarter of the file size. For even smaller files, use Compress Image as well.",
+        a: "Reducing the pixel size is the most effective way: a photo resized from 4000 to 1920 pixels wide keeps under a quarter of its pixels, so the file is usually far smaller. For even smaller files, use Compress Image as well.",
       },
       {
         q: "Can I resize many images at once?",
-        a: "Yes, up to 50 at a time. Each image keeps its own proportions; download them one by one or all as a ZIP file. In Crop mode you can adjust the crop of each image separately.",
+        a: "Yes, up to 50 at a time, with the same settings for all. With Keep proportions on, each image keeps its own shape unless you choose Fill and crop. Download them one by one or all as a ZIP file. In Crop mode you can adjust the crop of each image separately.",
       },
     ],
   },
@@ -64,5 +64,5 @@ export const meta: ToolDefinition = {
   processing: { local: true, worker: true, offline: true },
   handoff: ["compress-image", "jpg-to-pdf"],
   addedAt: "2026-11-01",
-  updatedAt: "2026-11-01",
+  updatedAt: "2026-11-02",
 };

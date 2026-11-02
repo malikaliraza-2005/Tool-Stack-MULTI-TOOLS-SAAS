@@ -48,9 +48,7 @@ export function convertNote(kind: ImageKind, format: OutputFormat, flattened: bo
 }
 
 export function animationWarning(info: ImageInfo): string | undefined {
-  return info.animated
-    ? "Animated image: only the first frame is converted (first frame only)."
-    : undefined;
+  return info.animated ? "Animated image: only the first frame is converted." : undefined;
 }
 
 /** Whether the background colour can matter: some output is JPG and some input may be transparent. */

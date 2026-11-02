@@ -28,15 +28,15 @@ export const meta: ToolDefinition = {
     faqs: [
       {
         q: "How do I compress an image to 100 KB (or another target size)?",
-        a: "Lower the Quality slider and compress again until the size shown next to the image is under your target; 60–75 usually works for photos. For a big drop, also set Longest side to 1920 or 1280 px, or choose WebP, which is often 25–35% smaller than JPG at the same quality.",
+        a: "There is no target-size setting: lower the Quality slider and compress again until the size shown next to the image is under your target. For a big drop, also set Longest side to 1920 or 1280 px, or choose WebP, which is often noticeably smaller than JPG for a similar look.",
       },
       {
         q: "Does compression reduce quality?",
-        a: "JPG, WebP and AVIF compression removes detail you mostly can’t see; at quality 75 the difference is hard to spot. Drag the divider over the image to compare. PNG compression is lossless: the pixels stay exactly the same, only the file is stored more efficiently.",
+        a: "JPG, WebP and AVIF compression removes fine detail; at the default quality of 75 the difference is usually hard to spot, and lower settings show more artifacts. Drag the divider over the image to compare. PNG compression is lossless: the pixels stay exactly the same, only the file is stored more efficiently.",
       },
       {
         q: "Can I compress without losing quality?",
-        a: "Yes: keep PNG images as PNG (lossless), or use quality 90 or higher for photos, which is visually identical in almost all cases. If a compressed file would be larger than the original, the original is kept.",
+        a: "Truly lossless only with PNG: keep PNG images as PNG and the pixels don’t change. For photos, quality 90 or higher keeps differences very hard to see, though it is still lossy. If a compressed file wouldn’t be smaller than the original and nothing was resized, the original is kept.",
       },
       {
         q: "Is it safe to compress images online?",

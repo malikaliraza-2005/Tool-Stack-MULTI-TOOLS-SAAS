@@ -30,8 +30,8 @@ Make every page genuinely useful and search-ready: final supporting content and 
 - [x] **P8-T02** Apply specs to every registry entry; build passes uniqueness validation.
 
 ### Tool content (per tool, in `content.tsx`)
-- [ ] **P8-T03** For all 19 tools: intro, how-to steps, supported formats & limits, explanation of options/results, privacy note, troubleshooting, FAQs. No arbitrary word counts; no repeated boilerplate across pages.
-- [ ] **P8-T04** Accuracy review of every page against the actual tool behaviour.
+- [x] **P8-T03** For all 19 tools: intro, how-to steps, supported formats & limits, explanation of options/results, privacy note, troubleshooting, FAQs. No arbitrary word counts; no repeated boilerplate across pages.
+- [x] **P8-T04** Accuracy review of every page against the actual tool behaviour.
 - [ ] **P8-T05** Hub page content (`/pdf-tools`, `/image-tools`, `/developer-tools`).
 
 ### Trust & legal

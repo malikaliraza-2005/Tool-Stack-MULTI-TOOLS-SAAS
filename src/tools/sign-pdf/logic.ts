@@ -166,7 +166,7 @@ function fill(form: PDFForm, values: FieldValues) {
       const bad = unencodable(text.replace(/\r?\n/g, ""));
       if (bad.length > 0) {
         throw toolErrors.invalidInput(
-          `The field ${label} contains characters the PDF’s form font can’t show (${bad.slice(0, 5).join(" ")}). Leave them out, or place the text with Add text instead.`,
+          `The field ${label} contains characters the PDF’s form font can’t show (${bad.slice(0, 5).join(" ")}). Leave them out, or place the text with Text instead.`,
         );
       }
       const max = field.getMaxLength();

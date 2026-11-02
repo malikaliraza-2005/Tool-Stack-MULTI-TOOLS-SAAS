@@ -40,11 +40,11 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Will the quality be reduced?",
-        a: "Not for JPG and PNG: they are placed in the PDF exactly as they are, without re-compressing. Photos taken sideways are turned upright without re-encoding. Other formats, including HEIC, are converted once, to PNG if they have transparency or to high-quality JPEG otherwise.",
+        a: "Not for JPG and PNG. JPG images are placed in the PDF without re-compressing, and PNG images are stored losslessly. Photos taken sideways are turned upright without re-encoding. Other formats, including HEIC, are converted once, to PNG if they have transparency or to JPEG at quality 92 otherwise.",
       },
       {
         q: "How do I convert JPG to PDF on iPhone?",
-        a: "Open this page in Safari, tap Choose files and pick the photos from Photos or Files. Tap Convert, then Download: the PDF opens in the viewer, where you can share it or save it to Files.",
+        a: "Open this page in Safari, tap Choose files and pick the photos from your library or Files. Tap the convert button, then Download PDF. Safari keeps downloads in the Files app, where you can share the PDF or move it.",
       },
     ],
   },
@@ -73,5 +73,5 @@ export const meta: ToolDefinition = {
   processing: { local: true, worker: true, offline: true },
   handoff: ["merge-pdf", "organize-pdf", "sign-pdf"],
   addedAt: "2026-11-01",
-  updatedAt: "2026-11-01",
+  updatedAt: "2026-11-02",
 };

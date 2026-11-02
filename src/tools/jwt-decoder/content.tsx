@@ -21,7 +21,7 @@ export default function JwtDecoderContent() {
             <>
               Read the header, the payload and the claims. Time claims (<Code>exp</Code>,{" "}
               <Code>iat</Code>, <Code>nbf</Code>) are shown as dates in your time zone, and the
-              badge says whether the token is valid, expired or not yet valid.
+              badge says whether the token is valid, expired, not yet valid or has no expiry.
             </>,
             <>
               To check that it’s genuine, enter the secret or the public key under{" "}
@@ -57,7 +57,18 @@ export default function JwtDecoderContent() {
               description: (
                 <>
                   Public key as PEM (<Code>-----BEGIN PUBLIC KEY-----</Code>), an X.509 certificate,
-                  a JWK, or a JWKS (the key is chosen by <Code>kid</Code>).
+                  a JWK, or a JWKS (the key is chosen by <Code>kid</Code>). EdDSA means Ed25519 and
+                  needs a browser with Ed25519 support in Web Crypto.
+                </>
+              ),
+            },
+            {
+              term: "Not supported",
+              description: (
+                <>
+                  PKCS#1 keys (<Code>-----BEGIN RSA PUBLIC KEY-----</Code>): convert them to a
+                  “BEGIN PUBLIC KEY” key or a JWK. Private keys are refused, because verification
+                  needs only the public key.
                 </>
               ),
             },
@@ -74,8 +85,8 @@ export default function JwtDecoderContent() {
         <List
           items={[
             <>
-              <Strong>“This has 2 parts.”</Strong> The token was cut off when copied, or it isn’t a
-              JWT. A JWT always has three parts.
+              <Strong>“This has 2 parts separated by dots.”</Strong> The token was cut off when
+              copied, or it isn’t a JWT. A JWT always has three parts.
             </>,
             <>
               <Strong>“Invalid signature.”</Strong> The secret or key doesn’t match, or the token
@@ -83,8 +94,9 @@ export default function JwtDecoderContent() {
               tool uses the secret as plain text.
             </>,
             <>
-              <Strong>“Key type doesn’t match algorithm.”</Strong> For example an EC key for an
-              RS256 token. Use the key the issuer publishes for this algorithm.
+              <Strong>“Key type doesn’t match algorithm RS256, or the key is malformed.”</Strong>{" "}
+              For example an EC key for an RS256 token, or a key that was cut off when copied. Use
+              the key the issuer publishes for this algorithm.
             </>,
           ]}
         />

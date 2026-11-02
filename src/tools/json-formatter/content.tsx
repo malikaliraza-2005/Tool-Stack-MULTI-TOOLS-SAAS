@@ -73,8 +73,10 @@ export default function JsonFormatterContent() {
           The formatter rebuilds your JSON from its structure but copies every number and string
           exactly as you wrote it. That matters for large IDs: JavaScript can only represent whole
           numbers up to 9,007,199,254,740,991 exactly, so many tools silently change a value like{" "}
-          <Code>123456789012345678901</Code>. Sprigkit keeps every digit and shows a note with the
-          path of each such number, so you know to handle it as a string or BigInt in your code.
+          <Code>123456789012345678901</Code>. Sprigkit keeps every digit and shows a note with how
+          many such numbers there are and the path of the first one, so you know to handle them as
+          strings or BigInt in your code. Decimal numbers with many digits are copied exactly too,
+          but aren’t flagged.
         </Paragraph>
       </ContentSection>
 
@@ -108,8 +110,8 @@ export default function JsonFormatterContent() {
               item. Remove it, or turn on Allow comments.
             </>,
             <>
-              <Strong>“Property names need double quotes.”</Strong> JSON keys and strings use{" "}
-              <Code>&quot;double quotes&quot;</Code>, not single quotes or no quotes.
+              <Strong>“Strings and property names need double quotes.”</Strong> JSON keys and
+              strings use <Code>&quot;double quotes&quot;</Code>, not single quotes or no quotes.
             </>,
             <>
               <Strong>“Unexpected text after the end of the JSON.”</Strong> The input contains more
