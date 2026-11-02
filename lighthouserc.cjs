@@ -1,19 +1,28 @@
-// Lighthouse CI budgets from architecture §14. Warn-only until Phase 9
-// (P9 switches "warn" to "error"). Reports stay local (no public upload).
-const level = "warn";
+// Lighthouse CI budgets (architecture §14, performance.md §1), enforced since
+// P9-T08. The owner set them on 2026-11-02 (R-14): Next.js and React alone are
+// about 132 KB gzipped, so the script and speed budgets are the measured
+// Phase 9 baseline plus a margin for run-to-run noise. Lighthouse's simulated
+// LCP on a slow phone is JavaScript evaluation time: the observed LCP is about
+// 0.3 s. Reports stay local (no public upload).
+const level = "error";
 
-const shared = {
-  "categories:performance": [level, { minScore: 0.9 }],
+/** Budgets every page shares; the speed ones differ by page type below. */
+const quality = {
   "categories:accessibility": [level, { minScore: 1 }],
   "categories:best-practices": [level, { minScore: 0.95 }],
   "categories:seo": [level, { minScore: 1 }],
-  "largest-contentful-paint": [level, { maxNumericValue: 2500 }],
   "cumulative-layout-shift": [level, { maxNumericValue: 0.1 }],
-  // Lab proxy for INP (≤ 200 ms in the field).
-  "total-blocking-time": [level, { maxNumericValue: 200 }],
   // ≤ 2 font files.
   "resource-summary:font:count": [level, { maxNumericValue: 2 }],
 };
+
+/** Performance, LCP, TBT (the lab proxy for INP) and initial JS (gzipped transfer size). */
+const speed = ({ score, lcp, tbt, scriptKb }) => ({
+  "categories:performance": [level, { minScore: score }],
+  "largest-contentful-paint": [level, { maxNumericValue: lcp }],
+  "total-blocking-time": [level, { maxNumericValue: tbt }],
+  "resource-summary:script:size": [level, { maxNumericValue: scriptKb * 1024 }],
+});
 
 module.exports = {
   ci: {
@@ -54,21 +63,17 @@ module.exports = {
     assert: {
       assertMatrix: [
         {
-          // Homepage initial JS ≤ 100 KB gzipped (transfer size).
+          // Homepage. Measured 2026-11-02: Performance 84, LCP 3.56 s, TBT ≤ 287 ms, 255 KB.
           matchingUrlPattern: "^http://[^/]+/$",
-          assertions: {
-            ...shared,
-            "resource-summary:script:size": [level, { maxNumericValue: 102400 }],
-          },
+          assertions: { ...quality, ...speed({ score: 0.8, lcp: 4000, tbt: 400, scriptKb: 300 }) },
         },
         {
-          // Tool pages: initial JS ≤ 120 KB gzipped, excluding on-intent libraries,
-          // which Lighthouse never loads because it doesn't use the tool (Phase 3).
-          matchingUrlPattern: "^http://[^/]+/[a-z0-9-]+$",
-          assertions: {
-            ...shared,
-            "resource-summary:script:size": [level, { maxNumericValue: 122880 }],
-          },
+          // Every other page: hubs, tools, site pages, guides. Measured 2026-11-02:
+          // Performance 79–93, LCP ≤ 3.94 s, TBT ≤ 419 ms, ≤ 320 KB (includes the
+          // tool UI chunk; on-intent libraries never load because Lighthouse
+          // doesn't use the tool).
+          matchingUrlPattern: "^http://[^/]+/.+$",
+          assertions: { ...quality, ...speed({ score: 0.75, lcp: 4500, tbt: 500, scriptKb: 340 }) },
         },
       ],
     },

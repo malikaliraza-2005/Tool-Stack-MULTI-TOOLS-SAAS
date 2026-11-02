@@ -342,6 +342,8 @@ All generated from the registry (see [tool-registry.md](tool-registry.md)):
 | Homepage initial JS (gzipped) | ≤ 100 KB |
 | Fonts | ≤ 2 files preloaded |
 
+*Set in Phase 9 (P9-T08, owner decision 2026-11-02, R-14):* the field targets above (LCP, INP, CLS at p75) stay the goal. The **enforced Lighthouse CI budgets** (simulated slow phone, `lighthouserc.cjs`) are the measured Phase 9 baseline plus a noise margin, because Next.js and React alone are about 132 KB gzipped: homepage Performance ≥ 80, LCP ≤ 4.0 s, TBT ≤ 400 ms, initial JS ≤ 300 KB; every other page Performance ≥ 75, LCP ≤ 4.5 s, TBT ≤ 500 ms, initial JS ≤ 340 KB; all pages Accessibility 100, Best Practices ≥ 95, SEO 100, CLS ≤ 0.1, ≤ 2 fonts. Measurements: [performance.md §2.3](../05-quality/performance.md#23-phase-9-enforced-budgets).
+
 ---
 
 ## 15. CI/CD
