@@ -1,5 +1,16 @@
 import type { NextConfig } from "next";
 
+// A production build without the site URL would point every canonical, the
+// sitemap and robots.txt at localhost (P9-T17). Cloudflare Pages sets
+// CF_PAGES and CF_PAGES_BRANCH; main is the production branch.
+if (
+  process.env.CF_PAGES === "1" &&
+  process.env.CF_PAGES_BRANCH === "main" &&
+  !process.env.NEXT_PUBLIC_SITE_URL?.startsWith("https://")
+) {
+  throw new Error("NEXT_PUBLIC_SITE_URL must be set to the https:// production origin.");
+}
+
 // Static export only: no server runtime (architecture §3).
 // Built with webpack (`--webpack`), not Turbopack: Turbopack's module workers
 // fail to start in WebKit (architecture §8.2, D-14).
