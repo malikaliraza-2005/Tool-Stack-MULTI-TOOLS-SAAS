@@ -30,11 +30,11 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Does merging keep bookmarks and form fields?",
-        a: "Every page keeps its size, orientation and content. Bookmarks (the document outline) and fillable form fields are not guaranteed to carry over into the merged file.",
+        a: "Every page keeps its size, orientation and content. Bookmarks (the document outline) are not carried over, and fillable form fields may stop working, so check the merged file if you rely on them.",
       },
       {
         q: "Do I need to sign up or install anything?",
-        a: "No. Merge PDF is free, has no account, and runs in a current version of Chrome, Edge, Firefox or Safari.",
+        a: "No. Merge PDF is free and needs no account or app. It runs in the browser you already use, on a computer or a phone.",
       },
     ],
   },
@@ -51,5 +51,5 @@ export const meta: ToolDefinition = {
   processing: { local: true, worker: true, offline: true },
   handoff: ["organize-pdf", "sign-pdf", "split-pdf"],
   addedAt: "2026-10-14",
-  updatedAt: "2026-10-14",
+  updatedAt: "2026-11-02",
 };

@@ -2,10 +2,11 @@
 // Everything here is built from registry data, never from user content.
 
 import type { Metadata } from "next";
-import { SITE_NAME, SITE_URL } from "@/config/site";
+import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from "@/config/site";
+import type { GuideMeta } from "@/guides/types";
 import { HUBS } from "@/tools/hubs";
 import { CATEGORIES } from "@/tools/registry";
-import type { ToolCategory, ToolDefinition } from "@/tools/types";
+import type { ToolCategory, ToolDefinition, ToolFaq } from "@/tools/types";
 
 /** `absoluteUrl("/merge-pdf")` → "https://sprigkit.com/merge-pdf". */
 export function absoluteUrl(path: string): string {
@@ -81,16 +82,20 @@ export function webApplicationJsonLd(tool: ToolDefinition): JsonLdNode {
 }
 
 /** Only for FAQs that are visible on the page (architecture §12). */
-export function faqJsonLd(tool: ToolDefinition): JsonLdNode | null {
-  if (tool.seo.faqs.length === 0) return null;
+function faqPageJsonLd(faqs: readonly ToolFaq[]): JsonLdNode | null {
+  if (faqs.length === 0) return null;
   return {
     "@type": "FAQPage",
-    mainEntity: tool.seo.faqs.map((faq) => ({
+    mainEntity: faqs.map((faq) => ({
       "@type": "Question",
       name: faq.q,
       acceptedAnswer: { "@type": "Answer", text: faq.a },
     })),
   };
+}
+
+export function faqJsonLd(tool: ToolDefinition): JsonLdNode | null {
+  return faqPageJsonLd(tool.seo.faqs);
 }
 
 /** All structured data of a tool page as one `@graph`. */
@@ -99,6 +104,182 @@ export function toolJsonLd(tool: ToolDefinition): JsonLdNode {
     (node): node is JsonLdNode => node !== null,
   );
   return { "@context": "https://schema.org", "@graph": graph };
+}
+
+/** Metadata for the homepage (page-seo-specs §4.1). */
+export function homeMetadata(seo: { title: string; description: string }): Metadata {
+  const url = absoluteUrl("/");
+  const { title, description } = seo;
+  return {
+    title: { absolute: title },
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "website", url, title, description, siteName: SITE_NAME, locale: "en_US" },
+    twitter: { card: "summary", title, description },
+  };
+}
+
+/** WebSite, Organization and the visible homepage FAQs. No SearchAction: there is no search URL. */
+export function homeJsonLd(faqs: readonly ToolFaq[]): JsonLdNode {
+  const url = absoluteUrl("/");
+  const graph = [
+    { "@type": "WebSite", name: SITE_NAME, url },
+    {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url,
+      logo: absoluteUrl("/icons/icon-512.png"),
+      email: CONTACT_EMAIL,
+    },
+    faqPageJsonLd(faqs),
+  ].filter((node): node is JsonLdNode => node !== null);
+  return { "@context": "https://schema.org", "@graph": graph };
+}
+
+/** A site page such as About or Privacy (page-seo-specs §4.3). */
+export type SitePageSeo = {
+  path: string;
+  /** Full title; site pages other than About end with "· Sprigkit". */
+  title: string;
+  description: string;
+  /** Breadcrumb and JSON-LD name. */
+  name: string;
+  type: "AboutPage" | "WebPage";
+  /** ISO date shown as "Last updated" and used as dateModified. */
+  updated?: string;
+};
+
+export function sitePageMetadata(page: SitePageSeo): Metadata {
+  const url = absoluteUrl(page.path);
+  const { title, description } = page;
+  return {
+    title: { absolute: title },
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "website", url, title, description, siteName: SITE_NAME, locale: "en_US" },
+    twitter: { card: "summary", title, description },
+  };
+}
+
+/** BreadcrumbList (Sprigkit › page) and the page itself. */
+export function sitePageJsonLd(page: SitePageSeo): JsonLdNode {
+  const url = absoluteUrl(page.path);
+  const breadcrumb = {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SITE_NAME, item: absoluteUrl("/") },
+      { "@type": "ListItem", position: 2, name: page.name, item: url },
+    ],
+  };
+  const node = {
+    "@type": page.type,
+    name: page.name,
+    url,
+    description: page.description,
+    ...(page.updated ? { dateModified: page.updated } : {}),
+    isPartOf: { "@type": "WebSite", name: SITE_NAME, url: absoluteUrl("/") },
+  };
+  return { "@context": "https://schema.org", "@graph": [breadcrumb, node] };
+}
+
+export const GUIDES_INDEX = {
+  path: "/guides",
+  title: "Guides: PDFs, Images and Code, Done Privately | Sprigkit",
+  description:
+    "Practical guides to the jobs Sprigkit’s tools do: removing location data from photos, reading JWTs, converting HEIC and more, with sources.",
+  name: "Guides",
+};
+
+export function guidePath(guide: Pick<GuideMeta, "slug">): string {
+  return `/guides/${guide.slug}`;
+}
+
+/** Metadata for a guide (page-seo-specs §4.4): an article with its dates. */
+export function guideMetadata(guide: GuideMeta): Metadata {
+  const url = absoluteUrl(guidePath(guide));
+  const { title, description } = guide;
+  return {
+    title: { absolute: title },
+    description,
+    authors: [{ name: guide.author }],
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      url,
+      title,
+      description,
+      siteName: SITE_NAME,
+      locale: "en_US",
+      publishedTime: guide.published,
+      modifiedTime: guide.updated,
+      authors: [guide.author],
+    },
+    twitter: { card: "summary", title, description },
+  };
+}
+
+/** BreadcrumbList (Sprigkit › Guides › guide) and an Article matching the visible byline. */
+export function guideJsonLd(guide: GuideMeta): JsonLdNode {
+  const url = absoluteUrl(guidePath(guide));
+  const breadcrumb = {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SITE_NAME, item: absoluteUrl("/") },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: GUIDES_INDEX.name,
+        item: absoluteUrl(GUIDES_INDEX.path),
+      },
+      { "@type": "ListItem", position: 3, name: guide.h1, item: url },
+    ],
+  };
+  const article = {
+    "@type": "Article",
+    headline: guide.h1,
+    description: guide.description,
+    url,
+    mainEntityOfPage: url,
+    datePublished: guide.published,
+    dateModified: guide.updated,
+    author: { "@type": "Person", name: guide.author, url: absoluteUrl("/about") },
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: absoluteUrl("/"),
+      logo: absoluteUrl("/icons/icon-512.png"),
+    },
+    citation: guide.sources.map((source) => source.url),
+  };
+  return { "@context": "https://schema.org", "@graph": [breadcrumb, article] };
+}
+
+/** BreadcrumbList and a CollectionPage listing every guide. */
+export function guidesIndexJsonLd(guides: readonly GuideMeta[]): JsonLdNode {
+  const url = absoluteUrl(GUIDES_INDEX.path);
+  const breadcrumb = {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SITE_NAME, item: absoluteUrl("/") },
+      { "@type": "ListItem", position: 2, name: GUIDES_INDEX.name, item: url },
+    ],
+  };
+  const collection = {
+    "@type": "CollectionPage",
+    name: GUIDES_INDEX.name,
+    url,
+    description: GUIDES_INDEX.description,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: guides.map((guide, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: guide.h1,
+        url: absoluteUrl(guidePath(guide)),
+      })),
+    },
+  };
+  return { "@context": "https://schema.org", "@graph": [breadcrumb, collection] };
 }
 
 /** Metadata for a category hub (G-8). */

@@ -6,8 +6,7 @@
 // Usage: node scripts/check-licenses.mjs [--report licenses.json]
 
 import { writeFileSync } from "node:fs";
-import { promisify } from "node:util";
-import { init } from "license-checker-rseidelsohn";
+import { licenseOf, nameOf, packages } from "./licenses-lib.mjs";
 
 const ALLOWED = new Set([
   "MIT",
@@ -39,23 +38,9 @@ const EXCEPTIONS = [
   { name: "caniuse-lite", license: /^CC-BY-4\.0$/ },
 ];
 
-// Packages whose license field is missing or misdetected; verified by hand.
-const OVERRIDES = {
-  geist: "OFL-1.1", // package.json: "SIL OPEN FONT LICENSE"; LICENSE.TXT is OFL-1.1
-};
+const production = await packages({ production: true });
+const all = await packages({ production: false });
 
-const check = promisify(init);
-const common = { start: process.cwd(), excludePrivatePackages: true };
-const production = await check({ ...common, production: true });
-const all = await check(common);
-
-const nameOf = (id) => id.slice(0, id.lastIndexOf("@"));
-// An array of licenses means the package declares several; treat it as a choice.
-const licenseOf = (id, info) =>
-  OVERRIDES[nameOf(id)] ??
-  (Array.isArray(info.licenses)
-    ? `(${info.licenses.join(" OR ")})`
-    : String(info.licenses ?? "UNKNOWN"));
 const isException = (id, license) =>
   EXCEPTIONS.some(({ name, license: re }) => {
     const pkg = nameOf(id);

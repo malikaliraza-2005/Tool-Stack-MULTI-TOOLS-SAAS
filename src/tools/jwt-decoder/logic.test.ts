@@ -158,6 +158,13 @@ describe("verify", () => {
     });
   });
 
+  it("ES256K is reported as unsupported, not as a key mismatch", async () => {
+    expect(await verifySignature(es256, "ES256K", "{}")).toEqual({
+      status: "error",
+      message: "The algorithm “ES256K” isn’t supported for verification.",
+    });
+  });
+
   it("RS256 with a PEM public key; ES256 with a JWK and a JWKS", async () => {
     expect(await verifySignature(rs256, "RS256", await exportSPKI(rsa.publicKey))).toEqual({
       status: "verified",

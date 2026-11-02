@@ -15,8 +15,8 @@ export default function CompressImageContent() {
               <Strong>Longest side</Strong>.
             </>,
             <>
-              Select <Strong>Compress</Strong>, then drag the divider over the image to compare
-              before and after.
+              Select <Strong>Compress image</Strong>, then drag the divider over the image to
+              compare before and after (or focus it and use the arrow keys).
             </>,
             <>Download each image, or all of them as one ZIP file.</>,
           ]}
@@ -29,7 +29,7 @@ export default function CompressImageContent() {
             {
               term: "Format",
               description:
-                "Same as input keeps each image’s format. WebP and AVIF are usually much smaller than JPG at the same quality; AVIF is the smallest but slowest to create. PNG is lossless.",
+                "“Same as input” keeps each image’s format. WebP and AVIF usually give smaller files than JPG for a similar look; AVIF is the smallest but slowest to create. PNG is lossless.",
             },
             {
               term: "Quality",
@@ -39,12 +39,12 @@ export default function CompressImageContent() {
             {
               term: "Longest side",
               description:
-                "Scales large images down so their longest side fits, keeping the proportions. Images that are already smaller are not enlarged.",
+                "“Keep the size” by default, or 3840, 2560, 1920, 1280 or 1024 px. Scales larger images down so their longest side fits, keeping the proportions; images that are already smaller are not enlarged.",
             },
             {
               term: "Remove metadata",
               description:
-                "On by default: the compressed images carry no location, camera or date details. Turn it off to keep them (JPG to JPG only).",
+                "On by default: the compressed images carry no location, camera or date details. Turn it off to keep them; this works only when a JPG stays a JPG, and other images are saved without them.",
             },
           ]}
         />
@@ -54,8 +54,8 @@ export default function CompressImageContent() {
         <Paragraph>
           Lossy formats store what the eye notices and drop fine detail it doesn’t; the Quality
           setting decides how much. Photos taken sideways are turned upright, so they look right in
-          every app. If an image is already well optimized and compressing it again would make the
-          file bigger, the original is kept and the list says so.
+          every app. If compressing would not make an image smaller, and its size wasn’t reduced
+          with Longest side, the original is kept in its own format and the list says so.
         </Paragraph>
       </ContentSection>
 
@@ -63,11 +63,15 @@ export default function CompressImageContent() {
         <Facts
           items={[
             { term: "Input", description: "JPG, PNG, WebP and AVIF." },
-            { term: "Size", description: "Up to 100 MB per image and 50 images at a time." },
+            {
+              term: "Size",
+              description:
+                "Up to 100 MB per image and 50 images at a time, and up to 120 megapixels per image (50 on phones and tablets).",
+            },
             {
               term: "Output",
               description:
-                "Named after the original with -compressed added, e.g. photo-compressed.jpg; several images also as one ZIP.",
+                "Named after the original with -compressed added, e.g. photo-compressed.jpg; several images also as one ZIP, images-compressed.zip.",
             },
           ]}
         />
@@ -77,16 +81,19 @@ export default function CompressImageContent() {
         <List
           items={[
             <>
-              <Strong>“Already well optimized, original kept.”</Strong> The image was compressed
-              well already. Lower the quality, choose WebP or AVIF, or reduce the longest side.
+              <Strong>“Already well optimized, original kept.”</Strong> The result wasn’t smaller,
+              so you get the original, even if you chose another format. With Remove metadata on,
+              its metadata is still removed (AVIF originals are returned unchanged). For a smaller
+              file, lower the quality, choose WebP or AVIF, or reduce the longest side.
             </>,
             <>
-              <Strong>AVIF takes a long time.</Strong> AVIF encoding is slow, especially on phones
-              and for large photos. Use WebP for nearly the same saving in a fraction of the time.
+              <Strong>AVIF takes a long time.</Strong> AVIF encoding is slow: about 30 seconds per
+              12-megapixel photo on a fast computer, and longer on a phone. WebP is about six times
+              faster and usually still much smaller than JPG.
             </>,
             <>
-              <Strong>“… is … megapixels. The limit on this device is …”</Strong> Very large images
-              need more memory than the browser allows here. Use a desktop browser or a smaller
+              <Strong>“The limit on this device is … megapixels.”</Strong> Very large images need
+              more memory than the browser can safely use here. Use a desktop browser or a smaller
               image.
             </>,
           ]}

@@ -44,7 +44,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Why does decoding fail with “isn’t a Base64 character”?",
-        a: "Base64 contains only letters, digits, “+” and “/” (or “-” and “_”), with up to two “=” at the end. The message shows the line and column of the first character that doesn’t belong, often a quote, a stray space inside a word, or a “%” from URL encoding. Line breaks and spaces between lines are ignored.",
+        a: "Base64 contains only letters, digits, “+” and “/” (or “-” and “_”), with up to two “=” at the end. The message shows the line and column of the first character that doesn’t belong, often a quote copied with the value, a non-breaking space, or a “%” from URL encoding. Ordinary spaces, tabs and line breaks are ignored.",
       },
       {
         q: "Is Base64 encryption?",
@@ -65,5 +65,5 @@ export const meta: ToolDefinition = {
   },
   processing: { local: true, worker: true, offline: true },
   addedAt: "2026-10-31",
-  updatedAt: "2026-10-31",
+  updatedAt: "2026-11-02",
 };

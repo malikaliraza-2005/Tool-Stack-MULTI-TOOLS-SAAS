@@ -27,15 +27,15 @@ export const meta: ToolDefinition = {
     faqs: [
       {
         q: "How do I convert a PDF page to an image?",
-        a: "Choose the PDF, pick JPG or PNG and a resolution, then select all pages or type a range such as 1-3, 5. Convert, then download one image, or all of them as a ZIP file.",
+        a: "Choose the PDF, pick JPG or PNG and a resolution, then keep All pages or choose Some pages and type a range such as 1-3, 5. Select the convert button, then download one image, or all of them as a ZIP file.",
       },
       {
         q: "Which resolution should I choose?",
-        a: "150 DPI suits screens, documents and sharing. 300 DPI gives print-quality images, with files about four times larger. 72 DPI makes small previews. On phones, very large pages may be reduced to fit the device’s memory; the result tells you when that happened.",
+        a: "150 DPI suits screens, documents and sharing. 300 DPI gives print-quality images, with four times the pixels of 150 DPI and much larger files. 72 DPI makes small previews. Very large pages may be reduced to fit the browser’s limit, which is lower on phones and tablets; the result tells you when that happened.",
       },
       {
         q: "JPG or PNG?",
-        a: "JPG gives smaller files and suits photos and scans. PNG is lossless, so text and line drawings stay perfectly sharp, but files are larger.",
+        a: "JPG gives smaller files and suits photos and scans. PNG is lossless, so text and line drawings come out exactly as rendered, but files are larger.",
       },
       {
         q: "Is my PDF uploaded?",
@@ -59,5 +59,5 @@ export const meta: ToolDefinition = {
   processing: { local: true, worker: true, offline: true },
   handoff: ["compress-image", "resize-image"],
   addedAt: "2026-11-01",
-  updatedAt: "2026-11-01",
+  updatedAt: "2026-11-02",
 };

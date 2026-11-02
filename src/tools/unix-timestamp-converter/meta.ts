@@ -28,7 +28,7 @@ export const meta: ToolDefinition = {
     faqs: [
       {
         q: "What is the current Unix timestamp?",
-        a: "It’s shown live at the top of the tool and updates every second. Select “Copy current” to copy it, or “Pause” to stop it on a value. A Unix timestamp counts the seconds since 1 January 1970 at 00:00:00 UTC, so it is the same everywhere in the world at a given moment.",
+        a: "It’s shown live at the top of the tool and updates every second. Select “Copy current” to copy it, or “Pause” to stop it on a value. A Unix timestamp counts the seconds since January 1, 1970 at 00:00:00 UTC, so it is the same everywhere in the world at a given moment.",
       },
       {
         q: "Seconds or milliseconds: how can I tell?",
@@ -44,7 +44,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "What is the year 2038 problem?",
-        a: "Systems that store Unix time as a signed 32-bit number can count only up to 2,147,483,647, which is 19 January 2038 at 03:14:07 UTC. One second later the value overflows and wraps to a date in 1901. Modern systems use 64-bit numbers, which last far beyond that. This converter isn’t affected: it handles any date JavaScript can represent.",
+        a: "Systems that store Unix time as a signed 32-bit number can count only up to 2,147,483,647, which is January 19, 2038 at 03:14:07 UTC. One second later the value overflows and wraps to a date in 1901. Modern systems use 64-bit numbers, which last far beyond that. This converter isn’t affected: it handles any date JavaScript can represent.",
       },
       {
         q: "Is anything I enter sent anywhere?",
@@ -60,5 +60,5 @@ export const meta: ToolDefinition = {
   },
   processing: { local: true, worker: false, offline: true },
   addedAt: "2026-10-31",
-  updatedAt: "2026-10-31",
+  updatedAt: "2026-11-02",
 };

@@ -25,7 +25,7 @@ function FooterColumn({ title, links }: { title: string; links: readonly NavLink
   );
 }
 
-/** Site footer: categories, About, Privacy, Terms, Licenses (P2-T08). */
+/** Site footer: categories, Guides, About, Privacy, Terms, Licenses (P2-T08, P8-T11). */
 export function Footer() {
   const categories = CATEGORY_LINKS.map((link) => ({ ...link, label: `${link.label} tools` }));
   return (

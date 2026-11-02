@@ -1,11 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { SITE_URL } from "@/config/site";
-import { getTool } from "@/tools/registry";
+import { HOME_FAQS, HOME_SEO } from "@/components/home/home-content";
+import { CONTACT_EMAIL, SITE_URL } from "@/config/site";
+import { GUIDES } from "@/guides/registry";
+import { HUBS } from "@/tools/hubs";
+import { getTool, TOOLS } from "@/tools/registry";
 import {
   absoluteUrl,
   breadcrumbJsonLd,
   faqJsonLd,
+  guideJsonLd,
+  guideMetadata,
+  guidesIndexJsonLd,
+  homeJsonLd,
+  homeMetadata,
   serializeJsonLd,
+  sitePageJsonLd,
+  sitePageMetadata,
   toolJsonLd,
   toolMetadata,
   webApplicationJsonLd,
@@ -87,5 +97,95 @@ describe("JSON-LD", () => {
     expect(json).not.toContain(String.fromCharCode(0x2028));
     expect(json).toContain("\\u003c/script\\u003e");
     expect(JSON.parse(json)).toEqual({ text });
+  });
+});
+
+describe("homepage", () => {
+  it("has its own title, description and canonical, unused by any tool or hub", () => {
+    const meta = homeMetadata(HOME_SEO);
+    expect(meta.title).toEqual({ absolute: HOME_SEO.title });
+    expect(meta.alternates?.canonical).toBe(ORIGIN);
+    expect(HOME_SEO.title.length).toBeLessThanOrEqual(65);
+    expect(HOME_SEO.description.length).toBeGreaterThanOrEqual(70);
+    expect(HOME_SEO.description.length).toBeLessThanOrEqual(160);
+    const taken = new Set(
+      [...TOOLS.map((tool) => tool.seo), ...Object.values(HUBS).map((hub) => hub.seo)].flatMap(
+        (seo) => [seo.title, seo.description],
+      ),
+    );
+    expect(taken.has(HOME_SEO.title)).toBe(false);
+    expect(taken.has(HOME_SEO.description)).toBe(false);
+  });
+
+  it("JSON-LD: WebSite, Organization and the visible FAQs", () => {
+    const graph = homeJsonLd(HOME_FAQS)["@graph"] as Record<string, unknown>[];
+    expect(graph.map((node) => node["@type"])).toEqual(["WebSite", "Organization", "FAQPage"]);
+    expect(graph[1]).toMatchObject({ url: ORIGIN, email: CONTACT_EMAIL });
+    expect(graph[2]?.mainEntity).toHaveLength(HOME_FAQS.length);
+  });
+});
+
+describe("site pages", () => {
+  const privacy = {
+    path: "/privacy",
+    title: "Privacy policy · Sprigkit",
+    description: "How Sprigkit handles your data.",
+    name: "Privacy policy",
+    type: "WebPage" as const,
+    updated: "2026-11-02",
+  };
+
+  it("metadata uses the full title and an absolute canonical", () => {
+    const meta = sitePageMetadata(privacy);
+    expect(meta.title).toEqual({ absolute: "Privacy policy · Sprigkit" });
+    expect(meta.alternates?.canonical).toBe(absoluteUrl("/privacy"));
+  });
+
+  it("JSON-LD: Sprigkit › page, with dateModified only when dated", () => {
+    const graph = sitePageJsonLd(privacy)["@graph"] as Record<string, unknown>[];
+    const crumbs = (graph[0]!.itemListElement as { name: string }[]).map((item) => item.name);
+    expect(crumbs).toEqual(["Sprigkit", "Privacy policy"]);
+    expect(graph[1]).toMatchObject({ "@type": "WebPage", dateModified: "2026-11-02" });
+    const undated = { ...privacy, type: "AboutPage" as const, updated: undefined };
+    expect(sitePageJsonLd(undated)["@graph"]).not.toContainEqual(
+      expect.objectContaining({ dateModified: expect.anything() }),
+    );
+  });
+});
+
+describe("guides", () => {
+  const guide = GUIDES[0]!.meta;
+
+  it("metadata is an article with its dates and canonical", () => {
+    const meta = guideMetadata(guide);
+    expect(meta.alternates?.canonical).toBe(absoluteUrl(`/guides/${guide.slug}`));
+    expect(meta.openGraph).toMatchObject({
+      type: "article",
+      publishedTime: guide.published,
+      modifiedTime: guide.updated,
+    });
+  });
+
+  it("JSON-LD: Sprigkit › Guides › guide, and an Article matching the byline", () => {
+    const graph = guideJsonLd(guide)["@graph"] as Record<string, unknown>[];
+    const crumbs = (graph[0]!.itemListElement as { name: string }[]).map((item) => item.name);
+    expect(crumbs).toEqual(["Sprigkit", "Guides", guide.h1]);
+    expect(graph[1]).toMatchObject({
+      "@type": "Article",
+      headline: guide.h1,
+      datePublished: guide.published,
+      dateModified: guide.updated,
+      author: { "@type": "Person", name: guide.author },
+      citation: guide.sources.map((source) => source.url),
+    });
+  });
+
+  it("the index lists every guide", () => {
+    const graph = guidesIndexJsonLd(GUIDES.map((g) => g.meta))["@graph"] as Record<
+      string,
+      unknown
+    >[];
+    const list = (graph[1]!.mainEntity as { itemListElement: unknown[] }).itemListElement;
+    expect(list).toHaveLength(GUIDES.length);
   });
 });

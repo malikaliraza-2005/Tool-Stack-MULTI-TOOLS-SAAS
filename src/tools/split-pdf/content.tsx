@@ -20,16 +20,20 @@ export default function SplitPdfContent() {
               once it has been checked.
             </>,
             <>
-              Choose how to split it: <Strong>Extract pages</Strong> into one new PDF,{" "}
-              <Strong>Every N pages</Strong>, or <Strong>Single pages</Strong>.
+              Under <Strong>How to split</Strong>, pick <Strong>Extract pages into one PDF</Strong>,{" "}
+              <Strong>Every N pages (several PDFs)</Strong> or{" "}
+              <Strong>Single pages (one PDF per page)</Strong>.
             </>,
             <>
-              For Extract pages, type the pages, for example <Code>1-3, 5, 8-</Code>. The summary
-              shows how many files and pages you’ll get.
+              To extract, type the <Strong>Pages</Strong> you want, for example{" "}
+              <Code>1-3, 5, 8-</Code>. To split every N pages, set <Strong>Pages per file</Strong>.
+              The summary shows how many files and pages you’ll get before anything is created.
             </>,
             <>
-              Select <Strong>Split</Strong>, then download the PDF, or all parts at once as a ZIP
-              file.
+              Select the split button (<Strong>Split PDF</Strong>, or{" "}
+              <Strong>Split into 4 PDFs</Strong> when there are several parts). Download one file
+              with <Strong>Download PDF</Strong>, or several with{" "}
+              <Strong>Download all (ZIP)</Strong>; each part also has its own download button.
             </>,
           ]}
         />
@@ -54,9 +58,13 @@ export default function SplitPdfContent() {
       <ContentSection id="explanation" title="What is kept">
         <Paragraph>
           Pages are copied exactly as they are, with their size, rotation, text and images. Each
-          output file is named after the original: <Code>report-pages-1-3.pdf</Code>,{" "}
-          <Code>report-part-2.pdf</Code> or <Code>report-page-7.pdf</Code>. Bookmarks and form
-          fields that span the whole document may not carry over to the parts.
+          output file is named after the original: <Code>report-pages-1-3.pdf</Code> for extracted
+          pages, <Code>report-part-2.pdf</Code> for every N pages, or <Code>report-page-7.pdf</Code>{" "}
+          for single pages. Several parts come together in <Code>report-split.zip</Code>.
+        </Paragraph>
+        <Paragraph>
+          Each part is a new document: bookmarks and the original’s title and author are not copied,
+          and form fields may not keep working.
         </Paragraph>
       </ContentSection>
 
@@ -64,16 +72,25 @@ export default function SplitPdfContent() {
         <List
           items={[
             <>
-              <Strong>“… is beyond the last page.”</Strong> The range asks for a page the PDF
-              doesn’t have. Check the page count shown next to the file.
+              <Strong>“… is beyond the last page (…).”</Strong> The range asks for a page the PDF
+              doesn’t have. The number in brackets is the last page; the count is also shown next to
+              the file.
             </>,
             <>
               <Strong>“… goes backwards.”</Strong> Write ranges with the lower page first:{" "}
               <Code>3-5</Code>, not <Code>5-3</Code>.
             </>,
             <>
+              <Strong>“… isn’t a page or a range.”</Strong> Only numbers, dashes and commas work.
+              Separate parts with commas, not semicolons or the word “and”.
+            </>,
+            <>
               <Strong>“… is password-protected.”</Strong> Remove the password in a PDF reader first,
               then try again.
+            </>,
+            <>
+              <Strong>“… couldn’t be read.”</Strong> The PDF is damaged or incomplete. Download it
+              again, or re-save it from a PDF reader.
             </>,
           ]}
         />

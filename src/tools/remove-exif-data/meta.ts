@@ -37,11 +37,11 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Does removing EXIF reduce quality?",
-        a: "No. Only the metadata is removed; the image data is copied byte for byte, so the photo is exactly as sharp as before. The one exception is the optional Remove everything mode on a photo that was taken sideways: it is re-saved once at high quality so it stays upright without its orientation tag.",
+        a: "No. Only the metadata is removed; the image data is copied byte for byte, so the photo is exactly as sharp as before. The one exception is the optional “Everything, including orientation” mode on a photo taken sideways: it is saved again once, at high quality, so it stays upright without its orientation tag.",
       },
       {
         q: "How do I remove the location from a photo on iPhone or Android?",
-        a: "Open this page in your phone’s browser, tap Choose files and pick the photos. Tap Remove metadata, then download the cleaned copies. iPhone: if Photos offers HEIC, choose Most Compatible in Settings › Camera › Formats, since this tool reads JPG, PNG and WebP.",
+        a: "Open this page in your phone’s browser, tap Choose files and pick the photos. Tap Remove metadata, then download the cleaned copies. This tool reads JPG, PNG and WebP; iPhones often save HEIC, so convert those to JPG first with Convert Image, or choose Most Compatible in Settings › Camera › Formats for new photos.",
       },
       {
         q: "Are my photos uploaded?",
@@ -65,5 +65,5 @@ export const meta: ToolDefinition = {
   processing: { local: true, worker: true, offline: true },
   handoff: ["compress-image", "resize-image"],
   addedAt: "2026-11-01",
-  updatedAt: "2026-11-01",
+  updatedAt: "2026-11-02",
 };

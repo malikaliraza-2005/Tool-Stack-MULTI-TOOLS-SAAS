@@ -17,11 +17,11 @@ export default function DiffCheckerContent() {
           items={[
             <>
               Paste or open the first version under <Strong>Original</Strong> and the second under{" "}
-              <Strong>Changed</Strong>.
+              <Strong>Changed</Strong>, or select <Strong>Sample</Strong> to try an example.
             </>,
             <>
               The differences appear below: removed lines marked <Code>−</Code> and added lines
-              marked <Code>+</Code>, with the changed words highlighted.
+              marked <Code>+</Code>, with the changed words highlighted inside each line.
             </>,
             <>
               Jump between changes with the arrow buttons, or press <Strong>N</Strong> and{" "}
@@ -39,23 +39,32 @@ export default function DiffCheckerContent() {
         <Facts
           items={[
             {
-              term: "Side by side / Inline",
+              term: "View",
               description:
-                "Side by side shows the two versions in columns (on wide screens); inline shows removals and additions one after the other.",
+                "Side by side (the default) shows the two versions in columns; Inline shows each change’s removed lines followed by its added lines. Narrow screens always use the inline view.",
             },
             {
-              term: "Line / Word / Character",
+              term: "Highlight changes by",
               description:
-                "How finely changes are highlighted inside a changed line. Lines are always matched first.",
+                "Word (the default), Character or Line: how finely changes are highlighted inside a changed line. Line marks the whole line. Lines are always matched first.",
             },
             {
               term: "Ignore whitespace",
               description:
-                "Lines that differ only in the amount of spaces, tabs or indentation count as equal.",
+                "Lines that differ only in the amount of spaces, tabs or indentation, including spaces at the end of a line, count as equal. Each side still shows its own text.",
             },
             {
               term: "Ignore case",
               description: "Upper and lower case letters count as equal.",
+            },
+            {
+              term: "Swap",
+              description: "Exchanges the original and the changed text.",
+            },
+            {
+              term: "Files",
+              description:
+                "Up to 50 MB per file (20 MB on phones and tablets). Above 5 MB (2 MB on phones and tablets) comparing may be slow.",
             },
           ]}
         />
@@ -66,8 +75,9 @@ export default function DiffCheckerContent() {
           The texts are split into lines and compared with the Myers algorithm, the same approach as{" "}
           <Code>diff</Code> and <Code>git diff</Code>, using the open-source <Code>jsdiff</Code>{" "}
           library in a background thread. Pairs of changed lines are then compared again word by
-          word or character by character. Large files of tens of thousands of lines stay responsive
-          because only the visible rows are drawn.
+          word or character by character; lines longer than 10,000 characters are marked as a whole.
+          Only the visible rows of the result are drawn, so results of tens of thousands of lines
+          scroll smoothly. Windows (CRLF) and Unix (LF) line endings count as the same line break.
         </Paragraph>
       </ContentSection>
 
@@ -75,13 +85,13 @@ export default function DiffCheckerContent() {
         <List
           items={[
             <>
-              <Strong>Every line is marked as changed.</Strong> Often the line endings or
-              indentation differ (tabs vs spaces). Turn on Ignore whitespace.
+              <Strong>Every line is marked as changed.</Strong> Often the indentation differs (tabs
+              vs spaces) or lines end with extra spaces. Turn on <Strong>Ignore whitespace</Strong>.
             </>,
             <>
               <Strong>“Too different to compare quickly.”</Strong> The texts share almost nothing,
-              which makes the comparison very slow. Check that the right files are loaded, or
-              compare smaller parts.
+              so the comparison stopped after 10 seconds. Check that the right files are loaded, or
+              compare smaller sections.
             </>,
             <>
               <Strong>The last line is marked although it looks the same.</Strong> One version ends

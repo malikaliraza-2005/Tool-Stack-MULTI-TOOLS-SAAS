@@ -27,7 +27,7 @@ export const meta: ToolDefinition = {
     faqs: [
       {
         q: "How do I rearrange pages in a PDF?",
-        a: "Choose the PDF, then drag a page thumbnail to its new place (on a phone or tablet, press and hold first). To move several pages at once, select them with Ctrl/⌘-click or Shift-click and drag one of them. With the keyboard, select a page and press Ctrl with an arrow key.",
+        a: "Choose the PDF, then drag a page thumbnail to its new place (on a phone or tablet, press briefly, then drag). To move several pages at once, select them with Ctrl/⌘-click or Shift-click and drag one of them. With the keyboard, select a page and press Ctrl (⌘ on a Mac) with an arrow key, or use the Move earlier and Move later buttons.",
       },
       {
         q: "How do I rotate a single page?",
@@ -35,7 +35,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "How do I delete pages from a PDF?",
-        a: "Select the pages and choose Delete, or press the Delete key. A PDF needs at least one page, so the last page can’t be deleted. Undo (Ctrl+Z) brings deleted pages back until you save.",
+        a: "Select the pages and choose Delete, or press the Delete key. A PDF needs at least one page, so the last page can’t be deleted. Undo (Ctrl+Z) brings deleted pages back, and your original file is never changed.",
       },
       {
         q: "Is my PDF uploaded?",
@@ -43,7 +43,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Does it work with large PDFs?",
-        a: "Yes. Only the thumbnails you can see are drawn, so documents with hundreds of pages stay responsive. Files up to 500 MB work on computers and up to 150 MB on phones and tablets.",
+        a: "Yes. Only the thumbnails you can see are drawn, so documents with hundreds of pages stay responsive. Files up to 500 MB work on computers and up to 150 MB on phones and tablets; above 100 MB (50 MB on phones and tablets) saving may be slow.",
       },
     ],
   },
@@ -59,5 +59,5 @@ export const meta: ToolDefinition = {
   processing: { local: true, worker: true, offline: true },
   handoff: ["sign-pdf", "split-pdf", "pdf-to-jpg"],
   addedAt: "2026-11-01",
-  updatedAt: "2026-11-01",
+  updatedAt: "2026-11-02",
 };

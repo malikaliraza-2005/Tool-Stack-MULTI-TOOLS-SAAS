@@ -85,6 +85,16 @@ export function Code(props: ComponentProps<"code">) {
   );
 }
 
+/** A multi-line example (tokens, JSON). Long lines wrap so the page never scrolls sideways. */
+export function CodeBlock(props: ComponentProps<"pre">) {
+  return (
+    <pre
+      className="max-w-prose rounded-md border border-border bg-surface-2 p-3 font-mono text-code break-all whitespace-pre-wrap text-fg"
+      {...props}
+    />
+  );
+}
+
 /** A link inside body text: underlined, so it doesn't rely on colour alone (WCAG 1.4.1). */
 export function TextLink({ className, ...props }: ComponentProps<typeof Link>) {
   return (

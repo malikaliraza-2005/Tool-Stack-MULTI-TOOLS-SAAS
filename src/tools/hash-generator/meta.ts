@@ -29,7 +29,7 @@ export const meta: ToolDefinition = {
     faqs: [
       {
         q: "How do I verify a file checksum?",
-        a: "Select Open file and choose the file, then paste the checksum from the download page into “Compare with expected hash”. The tool tells you which algorithm matches, or that none does. Case, spaces and a prefix such as “sha256:” don’t matter. Large files are read in chunks in a background thread, so even multi-gigabyte files work without filling memory.",
+        a: "Select Open file and choose the file, then paste the checksum from the download page into “Compare with expected hash”. The tool tells you which of the ticked algorithms matches, or that none does. Spaces, a prefix such as “sha256:” and, for hex checksums, letter case don’t matter. Large files are read in chunks in a background thread, so even multi-gigabyte files work without filling memory.",
       },
       {
         q: "Can a SHA-256 or MD5 hash be decrypted?",
@@ -41,7 +41,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "What is HMAC?",
-        a: "HMAC combines a hash with a secret key, so only someone with the key can produce or check the value. APIs use it to sign requests and webhooks (for example HMAC-SHA256). Turn on HMAC, enter the key, and the output is the HMAC of your text or file. The key stays in the page’s memory and is never stored.",
+        a: "HMAC combines a hash with a secret key, so only someone with the key can produce or check the value. APIs use it to sign requests and webhooks (for example HMAC-SHA256). Turn on HMAC and enter the key, and each ticked SHA algorithm shows the HMAC of your text or file; MD5 isn’t available with HMAC. The key stays in the page’s memory and is never stored.",
       },
       {
         q: "Are my files uploaded?",
@@ -61,5 +61,5 @@ export const meta: ToolDefinition = {
   },
   processing: { local: true, worker: true, offline: true },
   addedAt: "2026-10-31",
-  updatedAt: "2026-10-31",
+  updatedAt: "2026-11-02",
 };

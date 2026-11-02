@@ -28,7 +28,7 @@ export const meta: ToolDefinition = {
     faqs: [
       {
         q: "How do I compare two files?",
-        a: "Select Open file above Original and choose the first file, then Open file above Changed for the second. The differences appear below as soon as both are loaded: removed lines in red with a minus sign, added lines in green with a plus sign, and the changed words highlighted within each line.",
+        a: "Select Open file in the Original pane and choose the first file, then Open file in the Changed pane for the second. The differences appear below as soon as both are loaded: removed lines in red with a minus sign, added lines in green with a plus sign, and the changed words highlighted within each line.",
       },
       {
         q: "Can I ignore whitespace or letter case?",
@@ -59,5 +59,5 @@ export const meta: ToolDefinition = {
   },
   processing: { local: true, worker: true, offline: true },
   addedAt: "2026-10-31",
-  updatedAt: "2026-10-31",
+  updatedAt: "2026-11-02",
 };

@@ -28,7 +28,7 @@ export const meta: ToolDefinition = {
     faqs: [
       {
         q: "How do I convert HEIC to JPG?",
-        a: "Drop the HEIC photos on this page; Auto converts them to JPG. Select Convert, then download them one by one or as a ZIP file. It works in every current browser, not only Safari, and photos keep their upright orientation.",
+        a: "Drop the HEIC photos on this page; Auto converts them to JPG. Select Convert image, then download them one by one or as a ZIP file. You don’t need Safari: other browsers decode HEIC with an open-source decoder served by this site, loaded only when a HEIC photo is converted. Photos keep their upright orientation.",
       },
       {
         q: "Is it safe to convert iPhone photos online?",
@@ -36,11 +36,11 @@ export const meta: ToolDefinition = {
       },
       {
         q: "What happens to transparency when converting PNG to JPG?",
-        a: "JPG can’t store transparency, so transparent areas are filled with a background colour: white by default, or black or any colour you choose. Auto keeps transparent images as PNG instead.",
+        a: "JPG can’t store transparency, so transparent areas are filled with a background color: white by default, or black or any color you choose. Auto keeps images with transparent areas as PNG instead.",
       },
       {
         q: "Which format is smallest: WebP, AVIF or JPG?",
-        a: "Usually AVIF, then WebP, then JPG at similar quality: WebP is often 25–35% smaller than JPG and AVIF smaller still, but AVIF takes longer to create. JPG opens everywhere, so it is the safest choice for sharing.",
+        a: "Usually AVIF, then WebP, then JPG for a similar look: WebP is often noticeably smaller than JPG and AVIF smaller still, but AVIF takes much longer to create. JPG opens everywhere, so it is the safest choice for sharing.",
       },
       {
         q: "Can I convert many images at once?",
@@ -73,5 +73,5 @@ export const meta: ToolDefinition = {
   processing: { local: true, worker: true, offline: true },
   handoff: ["compress-image", "jpg-to-pdf"],
   addedAt: "2026-11-01",
-  updatedAt: "2026-11-01",
+  updatedAt: "2026-11-02",
 };

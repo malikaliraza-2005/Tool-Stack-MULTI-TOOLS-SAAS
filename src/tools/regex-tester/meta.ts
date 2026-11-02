@@ -32,7 +32,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Why does my regex work here but not in Python?",
-        a: "Regex flavors differ. Python, PCRE (PHP), Java and .NET support features JavaScript doesn’t, such as possessive quantifiers or inline flags like (?i) in older engines, and some syntax differs, such as named groups written (?P<name>…) in Python. Patterns made of common building blocks behave the same everywhere; test anything advanced in the target language too.",
+        a: "Regex flavors differ. Python, PCRE (PHP), Java and .NET support features JavaScript doesn’t, such as possessive quantifiers (a++), atomic groups or a (?i) flag at the start of the pattern, and some syntax differs, such as named groups written (?P<name>…) in Python. Patterns made of common building blocks behave the same everywhere; test anything advanced in the target language too.",
       },
       {
         q: "What do the flags mean?",
@@ -56,5 +56,5 @@ export const meta: ToolDefinition = {
   },
   processing: { local: true, worker: true, offline: true },
   addedAt: "2026-10-31",
-  updatedAt: "2026-10-31",
+  updatedAt: "2026-11-02",
 };

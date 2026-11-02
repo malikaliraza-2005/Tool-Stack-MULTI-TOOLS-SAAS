@@ -21,11 +21,13 @@ export default function JpgToPdfContent() {
             </>,
             <>Put them in order: drag an image by its handle, or use its arrow buttons.</>,
             <>
-              Choose the <Strong>Page size</Strong> (Fit to image, A4 or Letter), the orientation
-              and a margin.
+              Choose the <Strong>Page size</Strong> (<Strong>Fit to image</Strong>,{" "}
+              <Strong>A4</Strong> or <Strong>Letter</Strong>) and a <Strong>Margin</Strong>. For A4
+              and Letter you can also set the <Strong>Orientation</Strong>.
             </>,
             <>
-              Select <Strong>Convert to PDF</Strong> and download the result.
+              Select <Strong>Convert to PDF</Strong> (with several images it reads, for example,{" "}
+              <Strong>Convert 5 images to PDF</Strong>), then <Strong>Download PDF</Strong>.
             </>,
           ]}
         />
@@ -37,16 +39,17 @@ export default function JpgToPdfContent() {
             {
               term: "Fit to image",
               description:
-                "Each page is exactly the size of its image (at 96 pixels per inch), plus the margin.",
+                "The default. Each page is the size of its image at 96 pixels per inch, plus the margin. Very large images are scaled down to 200 inches on the longest side, the largest page PDF readers accept.",
             },
             {
               term: "A4 and Letter",
               description:
-                "Each image is scaled to fit the page within the margin and centred. Auto orientation turns the page to match the image.",
+                "Each image is scaled up or down to fit inside the margin and centered on the page. Orientation Auto (the default) turns each page to match its image; Portrait or Landscape applies to every page.",
             },
             {
               term: "Margin",
-              description: "None, small (12 pt, about 4 mm) or large (36 pt, about 13 mm).",
+              description:
+                "No margin (the default), Small (12 pt, about 4 mm) or Large (36 pt, about 13 mm), on every side.",
             },
           ]}
         />
@@ -54,11 +57,12 @@ export default function JpgToPdfContent() {
 
       <ContentSection id="explanation" title="Image quality">
         <Paragraph>
-          JPG and PNG images are placed in the PDF exactly as they are, without re-compressing, so
-          there is no quality loss and transparent PNGs stay transparent. Phone photos that were
-          taken sideways are turned upright using their orientation tag, again without re-encoding.
-          WebP, GIF (first frame), BMP, AVIF and HEIC are converted once: to PNG when they have
-          transparency, otherwise to high-quality JPEG.
+          JPG images go into the PDF byte for byte, without re-compressing, so there is no quality
+          loss. PNG images are stored losslessly, and transparent PNGs stay transparent. Phone
+          photos that were taken sideways are turned upright using their orientation tag, again
+          without re-encoding the JPG. WebP, GIF (first frame only), BMP, AVIF and HEIC are
+          converted once: to PNG when they have transparency, otherwise to JPEG at quality 92 (on a
+          scale to 100).
         </Paragraph>
       </ContentSection>
 
@@ -77,10 +81,18 @@ export default function JpgToPdfContent() {
                 </>
               ),
             },
-            { term: "Size", description: "Up to 100 MB per image and 100 images (50 on phones)." },
+            {
+              term: "Size",
+              description: "Up to 100 MB per image. Images above 25 MB may be slow to convert.",
+            },
+            {
+              term: "Number of images",
+              description: "Up to 100 at a time on a computer, 50 on phones and tablets.",
+            },
             {
               term: "Output",
-              description: "One PDF, named after the image, or images.pdf for several.",
+              description:
+                "One PDF, one page per image. It is named after the image (photo.jpg becomes photo.pdf), or images.pdf for several; you can change the File name before converting.",
             },
           ]}
         />
@@ -97,6 +109,15 @@ export default function JpgToPdfContent() {
             <>
               <Strong>“… couldn’t be read.”</Strong> The image is damaged or incomplete. Open it in
               an image viewer and save it again.
+            </>,
+            <>
+              <Strong>“… isn’t a supported file” or “… is a PDF document.”</Strong> Only images can
+              be added here. To combine PDF files, use{" "}
+              <TextLink href="/merge-pdf">Merge PDF</TextLink> instead.
+            </>,
+            <>
+              <Strong>“Your browser ran out of memory.”</Strong> Large photos take a lot of memory
+              while the PDF is built. Convert fewer images at a time, or use a computer.
             </>,
           ]}
         />

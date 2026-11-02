@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-10-14 (Phase 3: technical SEO implemented for tool pages) |
-| **Status** | Technical SEO as built. On-page copy per tool (titles, FAQs) is finalized in `page-seo-specs.md` (Phase 8) |
-| **Related** | [keyword-research.md](keyword-research.md) · [tool-registry.md](../04-architecture/tool-registry.md) · [architecture.md §12](../04-architecture/architecture.md#12-seo-generation) · [information-architecture.md](../02-design/information-architecture.md) |
+| **Status** | Technical SEO as built. Per-page targets, titles, outlines and FAQs: [page-seo-specs.md](page-seo-specs.md) (Phase 8) |
+| **Related** | [page-seo-specs.md](page-seo-specs.md) · [keyword-research.md](keyword-research.md) · [tool-registry.md](../04-architecture/tool-registry.md) · [architecture.md §12](../04-architecture/architecture.md#12-seo-generation) · [information-architecture.md](../02-design/information-architecture.md) |
 
 Sprigkit wins search by being the best page for one task: a fast tool above the fold, honest privacy, and clear supporting content. Everything technical is generated from the tool registry, so every tool page gets the same correct treatment.
 
@@ -36,21 +36,26 @@ Sprigkit wins search by being the best page for one task: a fast tool above the 
 
 **Category hubs (Phase 7):** title and description from `src/tools/hubs.ts` (same length limits, unique against every tool; `hubs.test.ts`), canonical, Open Graph, and JSON-LD `BreadcrumbList` + `CollectionPage` with an `ItemList` of the hub's tools (`hubMetadata`, `hubJsonLd` in `src/lib/seo.ts`).
 
+**Site pages and guides (Phase 8):** About, Privacy, Terms and Licenses use `sitePageMetadata` + `sitePageJsonLd` (BreadcrumbList + AboutPage/WebPage); guides use `guideMetadata` (Open Graph `article`) + `guideJsonLd` (BreadcrumbList + Article). Specs: [page-seo-specs.md](page-seo-specs.md) §4.3–4.4.
+
+**Homepage (Phase 8):** title and description from `src/components/home/home-content.ts` (same length limits, unique against every tool and hub; `seo.test.ts`), canonical, Open Graph, and JSON-LD `WebSite` + `Organization` (logo, contact email) + `FAQPage` mirroring the visible homepage FAQs (`homeMetadata`, `homeJsonLd`). No `SearchAction`: there is no search results URL.
+
 Validation rules for these fields (uniqueness, lengths, FAQ count) fail the build: [tool-registry.md §3](../04-architecture/tool-registry.md#3-validation-rules).
 
 ## 3. Site-level files
 
 | File | As built |
 |---|---|
-| `/sitemap.xml` | `app/sitemap.ts` (force-static): the homepage, the three category hubs, and every published tool with `lastmod` = registry `updatedAt`. Pages that don't exist yet (About, Privacy) are added in their phases. `/_gallery` is never listed |
+| `/sitemap.xml` | `app/sitemap.ts` (force-static): the homepage, the three category hubs, and every published tool with `lastmod` = registry `updatedAt`. Since Phase 8 also the site pages (About, Privacy, Terms, Licenses), the guide index and every guide with `lastmod` = its `updated` date. `/_gallery` is never listed |
 | `/robots.txt` | `app/robots.ts`: allow all (D-7) + sitemap URL. `/_gallery` is kept out of the index by its `noindex` meta tag (a Disallow would hide that tag) |
+| `/llms.txt` | `app/llms.txt/route.ts` (force-static, P8-T15): tools, guides and product facts in llmstxt.org format, generated from the registries. No ranking effect expected ([geo-strategy.md](geo-strategy.md) §3) |
 | Previews | `X-Robots-Tag: noindex` on every `*.pages.dev` host (`public/_headers`, P1-T16) |
 
 ## 4. Known gaps and owner actions
 
 | Item | Status |
 |---|---|
-| Rich Results Test on a preview deployment (P3-T07) | **Not done.** Needs a pushed preview URL. Structure is checked by unit tests (`src/lib/seo.test.ts`) and E2E (`e2e/seo.spec.ts`: JSON-LD parses, FAQPage matches the visible FAQs) |
+| Rich Results Test on a preview deployment (P3-T07, P8-T14) | **Owner action**: needs a preview URL in a browser. Every page in the sitemap is checked automatically by `e2e/structured-data.spec.ts` (P8-T14): one JSON-LD graph, known types, Google's required properties per type, absolute same-origin URLs; plus `seo.test.ts` and the per-page E2E specs. Expected: no errors; FAQ and software-app rich results not shown (geo-strategy §3) |
 | OG image `Content-Type` on Cloudflare | Rule in `public/_headers`; verify on the first preview (fallback: render to `public/og/*.png`, architecture §3) |
-| Final titles, descriptions, FAQs | Pilot copy follows keyword-research §3; finalized in `page-seo-specs.md` (Phase 8) |
+| Final titles, descriptions, FAQs | Reviewed for every page in [page-seo-specs.md](page-seo-specs.md) (P8-T01); changes applied in P8-T02 |
 | Performance as a ranking signal | Lighthouse SEO 100 on both pilots; Performance below target (see [performance.md](../05-quality/performance.md) §2.2, R-14) |

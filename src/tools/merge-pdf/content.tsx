@@ -16,7 +16,8 @@ export default function MergePdfContent() {
               buttons next to it.
             </>,
             <>
-              Optionally change the file name, then select <Strong>Merge PDFs</Strong>.
+              Optionally change the <Strong>File name</Strong>, then select the merge button. It
+              shows how many files will be combined, for example <Strong>Merge 3 PDFs</Strong>.
             </>,
             <>
               Select <Strong>Download merged PDF</Strong>. The pages of each file follow each other
@@ -55,9 +56,10 @@ export default function MergePdfContent() {
           where it was before.
         </Paragraph>
         <Paragraph>
-          Some document-level features are not guaranteed to carry over: bookmarks (the outline
-          shown in a PDF reader’s sidebar), fillable form fields, and the document’s title and
-          author. If you need these, check the merged file before you share it.
+          The merged file is a new document, so the title and author stored in the originals are not
+          copied, and bookmarks (the outline shown in a PDF reader’s sidebar) are not carried over.
+          Fillable form fields may appear but are not guaranteed to keep working. If you need any of
+          these, check the merged file before you share it.
         </Paragraph>
       </ContentSection>
 
@@ -78,7 +80,12 @@ export default function MergePdfContent() {
               downloaded. Download it again, or open and re-save it in a PDF reader.
             </>,
             <>
-              <Strong>Your browser ran out of memory.</Strong> Merge fewer or smaller files at a
+              <Strong>“Adding … would bring the total to …”</Strong> The files together are over the
+              size limit for your device. The file is marked in the list and left out; remove some
+              files or merge in two rounds.
+            </>,
+            <>
+              <Strong>“Your browser ran out of memory.”</Strong> Merge fewer or smaller files at a
               time, close other tabs, or use a computer instead of a phone.
             </>,
           ]}

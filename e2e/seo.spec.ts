@@ -4,7 +4,8 @@ import { expect, test } from "./fixtures";
 // The origin comes from NEXT_PUBLIC_SITE_URL at build time, so tests compare
 // against the canonical URL instead of hard-coding it.
 
-const TOOLS = [
+// `short`: the shortName the visible breadcrumb uses, when the tool has one.
+const TOOLS: { slug: string; name: string; short?: string; hub: string }[] = [
   { slug: "merge-pdf", name: "Merge PDF", hub: "PDF tools" },
   { slug: "json-formatter", name: "JSON Formatter", hub: "Developer tools" },
   {
@@ -24,7 +25,30 @@ const TOOLS = [
   { slug: "jpg-to-pdf", name: "JPG to PDF", hub: "PDF tools" },
   { slug: "pdf-to-jpg", name: "PDF to JPG", hub: "PDF tools" },
   { slug: "sign-pdf", name: "Fill & Sign PDF", hub: "PDF tools" },
+  { slug: "remove-exif-data", name: "Remove EXIF Data", short: "Remove EXIF", hub: "Image tools" },
+  { slug: "compress-image", name: "Compress Image", hub: "Image tools" },
+  { slug: "resize-image", name: "Resize Image", hub: "Image tools" },
+  { slug: "convert-image", name: "Convert Image", hub: "Image tools" },
 ];
+
+test("homepage: own metadata, canonical and JSON-LD", async ({ page }) => {
+  await page.goto("/");
+  const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
+  expect(canonical).toMatch(/^https?:\/\/[^/]+$/);
+  expect(await page.title()).toMatch(/^Sprigkit: /);
+  const description = await page.locator('meta[name="description"]').getAttribute("content");
+  expect(description?.length).toBeGreaterThanOrEqual(70);
+
+  const graph = JSON.parse(
+    (await page.locator('script[type="application/ld+json"]').textContent()) ?? "{}",
+  )["@graph"] as Record<string, unknown>[];
+  expect(graph.map((node) => node["@type"])).toEqual(["WebSite", "Organization", "FAQPage"]);
+  const questions = (graph[2]!.mainEntity as { name: string }[]).map((q) => q.name);
+  const faq = page.getByRole("region", { name: "Frequently asked questions" });
+  for (const question of questions) {
+    await expect(faq.getByRole("heading", { name: question, level: 3 })).toBeVisible();
+  }
+});
 
 for (const tool of TOOLS) {
   test(`${tool.slug}: metadata, canonical, Open Graph and JSON-LD`, async ({ page }) => {
@@ -64,7 +88,9 @@ for (const tool of TOOLS) {
     }
 
     // Breadcrumbs, H1 and the workspace are in the static HTML.
-    await expect(page.getByRole("navigation", { name: "Breadcrumb" })).toContainText(tool.name);
+    await expect(page.getByRole("navigation", { name: "Breadcrumb" })).toContainText(
+      tool.short ?? tool.name,
+    );
     await expect(page.getByRole("region", { name: `${tool.name} workspace` })).toBeVisible();
   });
 
@@ -88,7 +114,9 @@ test("the workspace is in the static HTML (no JavaScript)", async ({ browser }) 
   await context.close();
 });
 
-test("sitemap lists the home page, hubs and published tools", async ({ request }) => {
+test("sitemap lists the home page, hubs, published tools, site pages and guides", async ({
+  request,
+}) => {
   const res = await request.get("/sitemap.xml");
   expect(res.status()).toBe(200);
   const xml = await res.text();
@@ -117,6 +145,14 @@ test("sitemap lists the home page, hubs and published tools", async ({ request }
     "/compress-image",
     "/resize-image",
     "/convert-image",
+    "/about",
+    "/privacy",
+    "/terms",
+    "/licenses",
+    "/guides",
+    "/guides/remove-location-from-photos",
+    "/guides/what-is-inside-a-jwt",
+    "/guides/heic-vs-jpg",
   ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");

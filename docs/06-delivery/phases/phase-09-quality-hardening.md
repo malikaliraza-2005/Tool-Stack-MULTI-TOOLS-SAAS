@@ -25,7 +25,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 
 ### Functional & device testing
 - [ ] **P9-T01** Full device matrix run: Chrome, Edge, Firefox, Safari (macOS), Safari (iOS, real device), Chrome (mid-range Android, real device). Every tool's main flow + one error flow. The Phase 3 pilots have never run on real Safari: give them the full Definition of Done there (deferred from P3-T24). The same for the 8 Phase 4 developer tools on real Android and Safari (deferred from P4-T10), including whether the theme switch's View Transition crashes Safari on long pages, as it does Playwright's WebKit.
-- [ ] **P9-T02** Large-file and memory testing on mobile; confirm limits and error messages.
+- [ ] **P9-T02** Large-file and memory testing on mobile; confirm limits and error messages. From the P8-T04 content review: registry `limits` are not enforced on pasted text in jwt-decoder (64 KB / 1 MB) and regex-tester (1 MB / 10 MB), and json-formatter and base64-encode-decode enforce 50 MB only on opened files. Enforce them or change the registry. Going over a file-count limit (e.g. 101 files in merge-pdf) shows a byte-size message (`src/lib/files/limits.ts`); give it its own message.
 - [ ] **P9-T03** Fix all P0/P1 bugs; log the rest.
 
 ### Accessibility
@@ -41,7 +41,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 
 ### Motion & visual QA
 - [ ] **P9-T11** Walk through every page and interaction against design-system §7.4 on the running site (both themes, reduced motion, mid-range phone traces).
-- [ ] **P9-T12** Visual consistency pass: token usage, spacing rhythm, empty/error states, copy tone.
+- [ ] **P9-T12** Visual consistency pass: token usage, spacing rhythm, empty/error states, copy tone. Includes the owner's second read of the Phase 8 guides and the About, Privacy and Terms pages (content-strategy §4).
 
 ### Security & privacy
 - [ ] **P9-T13** Security review: CSP verified on production headers; no `dangerouslySetInnerHTML` with user content; malicious file fixtures (malformed PDF, decompression bombs, huge dimensions) handled safely.
@@ -49,7 +49,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 - [ ] **P9-T15** `npm audit` clean (or documented exceptions); license gate green; Licenses page current. Owner decides on `pako` (Zlib): add Zlib to the allow-list or keep the named exception ([dependencies-licenses.md §3.1](../../04-architecture/dependencies-licenses.md)).
 
 ### SEO
-- [ ] **P9-T16** Crawl the preview (free crawler or custom script): no broken links, correct canonicals, no orphan pages, sitemap complete.
+- [ ] **P9-T16** Crawl the preview (free crawler or custom script): no broken links, correct canonicals, no orphan pages, sitemap complete. Run Google's Rich Results Test and the Schema.org validator on one page of each type (home, hub, tool, site page, guide index, guide), deferred from P3-T07 and P8-T14; `e2e/structured-data.spec.ts` already checks every page locally.
 - [ ] **P9-T17** Verify production build will be indexable (no stray `noindex`) and previews are not.
 
 ### Launch preparation

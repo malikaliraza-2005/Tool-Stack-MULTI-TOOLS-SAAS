@@ -53,7 +53,8 @@ export default function UrlEncodeDecodeContent() {
               description: (
                 <>
                   Like <Code>encodeURI</Code>: also keeps the characters that structure a URL, such
-                  as <Code>: / ? # &amp; =</Code>.
+                  as <Code>: / ? # &amp; =</Code>. A <Code>%</Code> is still encoded, so text that
+                  is already encoded gets encoded twice.
                 </>
               ),
             },
@@ -109,6 +110,13 @@ export default function UrlEncodeDecodeContent() {
             <>
               <Strong>“This URL has no scheme.”</Strong> Parsing needs the full address, including{" "}
               <Code>https://</Code>.
+            </>,
+            <>
+              <Strong>
+                <Code>%20</Code> became <Code>%2520</Code>.
+              </Strong>{" "}
+              The text was already encoded, and encoding it again turned each <Code>%</Code> into{" "}
+              <Code>%25</Code>. Decode it instead, or encode the original text.
             </>,
           ]}
         />

@@ -41,7 +41,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "How do I check if a token is expired?",
-        a: "The status badge shows Valid, Expired or Not yet valid, based on the exp and nbf claims and your device’s clock. Each time claim is shown as a date in your time zone with a relative time such as “expired 3 hours ago”. This is a time check only; it doesn’t say the token is genuine.",
+        a: "The status badge shows Valid, Expired, Not yet valid or No expiry, based on the exp and nbf claims and your device’s clock. Each time claim is shown as a date in your time zone with a relative time such as “expired 3 hours ago”. This is a time check only; it doesn’t say the token is genuine.",
       },
       {
         q: "What is the difference between decoding and verifying?",
@@ -57,5 +57,5 @@ export const meta: ToolDefinition = {
   },
   processing: { local: true, worker: false, offline: true },
   addedAt: "2026-10-31",
-  updatedAt: "2026-10-31",
+  updatedAt: "2026-11-02",
 };

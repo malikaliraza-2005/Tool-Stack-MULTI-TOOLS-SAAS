@@ -4,9 +4,11 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Container } from "@/components/layout/Container";
 import { JsonLd } from "@/components/tool/JsonLd";
 import { PrivacyMeter } from "@/components/tool/PrivacyMeter";
+import { TextLink } from "@/components/tool/content";
 import { ToolIcon } from "@/components/tool/ToolIcon";
 import { SITE_NAME } from "@/config/site";
-import { hubJsonLd } from "@/lib/seo";
+import { guidesForTools } from "@/guides/registry";
+import { guidePath, hubJsonLd } from "@/lib/seo";
 import { HUBS } from "@/tools/hubs";
 import { CATEGORIES, CATEGORY_ORDER, publishedTools } from "@/tools/registry";
 import type { ToolCategory } from "@/tools/types";
@@ -14,13 +16,15 @@ import { firstSentence } from "./summary";
 
 /**
  * Category hub (G-8, architecture §5): intro, every tool of the category
- * from the registry, short guide links and the other hubs.
+ * from the registry, when to pick each one, short guide links and the other
+ * hubs.
  */
 export function CategoryHub({ category }: { category: ToolCategory }) {
   const hub = HUBS[category];
   const { name } = CATEGORIES[category];
   const tools = publishedTools().filter((tool) => tool.category === category);
   const others = CATEGORY_ORDER.filter((other) => other !== category);
+  const guides = guidesForTools(tools.map((tool) => tool.slug));
 
   return (
     <>
@@ -68,23 +72,56 @@ export function CategoryHub({ category }: { category: ToolCategory }) {
           </ul>
         </section>
 
+        <section aria-labelledby="hub-choosing" className="flex flex-col gap-4">
+          <h2 id="hub-choosing" className="text-h2 text-fg">
+            Which tool do I need?
+          </h2>
+          <dl className="grid max-w-prose grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-3">
+            {hub.choosing.map((entry) => {
+              const tool = tools.find((t) => t.slug === entry.slug);
+              if (!tool) return null;
+              return (
+                <div key={entry.slug} className="contents">
+                  <dt className="text-ui">
+                    <TextLink href={`/${tool.slug}`}>{tool.name}</TextLink>
+                  </dt>
+                  <dd className="text-body text-fg-muted sm:col-span-2">{entry.when}</dd>
+                </div>
+              );
+            })}
+          </dl>
+        </section>
+
         <div className="grid gap-12 lg:grid-cols-2">
           <section aria-labelledby="hub-guides" className="flex flex-col gap-4">
             <h2 id="hub-guides" className="text-h2 text-fg">
               Guides
             </h2>
             <ul className="flex flex-col border-t border-border">
-              {hub.guides.map((guide) => (
-                <li key={guide.slug} className="border-b border-border">
+              {guides.map(({ meta }) => (
+                <li key={meta.slug} className="border-b border-border">
                   <Link
-                    href={`/${guide.slug}#how-to`}
+                    href={guidePath(meta)}
                     className="flex items-center gap-3 rounded-sm py-3 text-ui text-fg transition-control hover:bg-surface-2 hover:text-accent-text"
                   >
                     <BookOpen aria-hidden className="size-4 shrink-0 text-fg-muted" />
-                    {guide.label}
+                    {meta.h1}
                   </Link>
                 </li>
               ))}
+              {hub.guides
+                .filter((link) => !guides.some(({ meta }) => meta.tools[0] === link.slug))
+                .map((guide) => (
+                  <li key={guide.slug} className="border-b border-border">
+                    <Link
+                      href={`/${guide.slug}#how-to`}
+                      className="flex items-center gap-3 rounded-sm py-3 text-ui text-fg transition-control hover:bg-surface-2 hover:text-accent-text"
+                    >
+                      <BookOpen aria-hidden className="size-4 shrink-0 text-fg-muted" />
+                      {guide.label}
+                    </Link>
+                  </li>
+                ))}
             </ul>
           </section>
           <section aria-labelledby="hub-others" className="flex flex-col gap-4">

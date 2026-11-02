@@ -16,8 +16,8 @@ export default function HashGeneratorContent() {
         <Steps
           items={[
             <>
-              Tick the algorithms you need. SHA-256 is selected by default; all ticked hashes are
-              shown together.
+              Tick the algorithms you need. <Strong>SHA-256</Strong> is selected by default; all
+              ticked hashes are shown together.
             </>,
             <>
               Type or paste text, or select <Strong>Open file</Strong>. Text hashes update as you
@@ -25,12 +25,17 @@ export default function HashGeneratorContent() {
             </>,
             <>
               To check a download, paste its published checksum into{" "}
-              <Strong>Compare with expected hash</Strong>. A match is marked on the matching row.
+              <Strong>Compare with expected hash</Strong>. The status shows which ticked algorithm
+              matches, or “No match”.
             </>,
             <>
-              For an HMAC, turn on <Strong>HMAC</Strong> and enter the key. Choose{" "}
-              <Strong>hex</Strong>, <Strong>HEX</Strong> or <Strong>Base64</Strong> output to match
-              what your system expects.
+              Choose the output format to match what your system expects:{" "}
+              <Strong>hex (lowercase)</Strong>, the default, <Strong>HEX (uppercase)</Strong> or{" "}
+              <Strong>Base64</Strong>.
+            </>,
+            <>
+              For an HMAC, turn on <Strong>HMAC</Strong> and enter the <Strong>HMAC key</Strong>.
+              The key is used as UTF-8 text and is never stored.
             </>,
           ]}
         />
@@ -47,12 +52,22 @@ export default function HashGeneratorContent() {
             {
               term: "SHA-384 and SHA-512",
               description:
-                "96 and 128 hex characters. Longer SHA-2 hashes, often faster than SHA-256 on 64-bit computers.",
+                "96 and 128 hex characters. Longer SHA-2 hashes; on 64-bit computers they can be faster than SHA-256.",
             },
             {
               term: "MD5 and SHA-1",
               description:
-                "32 and 40 hex characters. Broken for security: collisions can be created on purpose. Still common as checksums for detecting corruption.",
+                "32 and 40 hex characters. Broken for security: collisions can be created on purpose. Still common as checksums for detecting corruption, so they are labeled “checksums only”.",
+            },
+            {
+              term: "HMAC",
+              description:
+                "A keyed hash (RFC 2104) for signing API requests and webhooks. Available with SHA-1, SHA-256, SHA-384 and SHA-512; MD5 isn’t offered with HMAC.",
+            },
+            {
+              term: "File size",
+              description:
+                "Up to 8 GB per file (2 GB on phones and tablets). Above 1 GB (500 MB on phones and tablets) hashing may be slow.",
             },
           ]}
         />
@@ -61,10 +76,10 @@ export default function HashGeneratorContent() {
       <ContentSection id="explanation" title="How hashing works">
         <Paragraph>
           A hash function turns any input into a fixed-length fingerprint. Changing a single bit of
-          the input changes the whole hash, and the input can’t be worked out from the hash. Text is
-          hashed as UTF-8 bytes, so <Code>abc</Code> gives the same SHA-256 here as{" "}
-          <Code>sha256sum</Code> or <Code>shasum -a 256</Code> on the command line, as long as the
-          text has no trailing newline.
+          the input gives a completely different hash, and the input can’t be worked out from the
+          hash. Text is hashed as UTF-8 bytes, so <Code>abc</Code> gives the same SHA-256 here as{" "}
+          <Code>printf abc | sha256sum</Code> or <Code>shasum -a 256</Code> on the command line, as
+          long as no trailing newline is added.
         </Paragraph>
         <Paragraph>
           Files are read in 4 MB chunks in a background thread and fed to every selected hash at
@@ -81,8 +96,9 @@ export default function HashGeneratorContent() {
               the newline here.
             </>,
             <>
-              <Strong>“No match.”</Strong> Check that you hashed the right file and compared with
-              the right algorithm. Ticked algorithms are compared; tick the one the site published.
+              <Strong>“No match.”</Strong> Check that you hashed the right file and that the
+              algorithm the site published is ticked: only ticked algorithms are compared. Paste
+              only the hash, without the file name that checksum files list after it.
             </>,
             <>
               <Strong>MD5 is greyed out.</Strong> HMAC is offered for the SHA family only.

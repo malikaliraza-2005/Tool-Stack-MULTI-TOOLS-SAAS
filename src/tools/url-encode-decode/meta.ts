@@ -32,7 +32,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "What characters need URL encoding?",
-        a: "Everything except letters, digits and - _ . ~ when you encode a single value, such as a query parameter. Characters like & = ? / # have a meaning in URLs, so a value containing them must be encoded, or the URL will be read differently. Non-ASCII characters, such as ü or emoji, are encoded as their UTF-8 bytes, for example ü becomes %C3%BC.",
+        a: "When you encode a single value, such as a query parameter, everything except letters, digits and - _ . ~ (the “unreserved” characters of RFC 3986). The Component option, like encodeURIComponent, also leaves ! ' ( ) * as they are. Characters like & = ? / # have a meaning in URLs, so a value containing them must be encoded, or the URL will be read differently. Non-ASCII characters, such as ü or emoji, are encoded as their UTF-8 bytes, for example ü becomes %C3%BC.",
       },
       {
         q: "What is the difference between encodeURI and encodeURIComponent?",
@@ -44,7 +44,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Can it decode Safe Links or Proofpoint URLs?",
-        a: "Decoding shows the readable text of an encoded link, including the target address inside a wrapped link. Unwrapping vendor-specific formats automatically isn’t supported; use Parse to see the target in the query parameters.",
+        a: "Partly. A Microsoft Safe Links address carries the target, percent-encoded, in its url parameter, so Parse shows it decoded. Proofpoint URL Defense uses its own encoding, which this tool doesn’t reverse, and no vendor format is unwrapped automatically.",
       },
       {
         q: "Is my URL sent anywhere?",
@@ -60,5 +60,5 @@ export const meta: ToolDefinition = {
   },
   processing: { local: true, worker: false, offline: true },
   addedAt: "2026-10-31",
-  updatedAt: "2026-10-31",
+  updatedAt: "2026-11-02",
 };

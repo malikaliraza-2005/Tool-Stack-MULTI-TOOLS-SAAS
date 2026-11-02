@@ -198,4 +198,6 @@ No utility class-merging library (`clsx`, `tailwind-merge`, `class-variance-auth
 
 ## 7. Attribution
 
-A `/licenses` page (or section of `/about`) lists third-party open-source software with licenses, generated at build time from the license report. Required by MIT/BSD/Apache notice terms and by LGPL if HEIC ships.
+A `/licenses` page lists third-party open-source software with licenses, generated at build time from the license report. Required by MIT/BSD/Apache notice terms and by LGPL if HEIC ships.
+
+**As built (P8-T09):** `scripts/license-report.mjs` runs before `dev` and `build` and writes two gitignored files: `.generated/licenses.json` (every production package and its license, for the table) and `public/third-party-notices.txt` (each distinct license text with the packages it covers, served at `/third-party-notices.txt` and kept out of the precache). It shares `scripts/licenses-lib.mjs` with the license gate, so both read the tree the same way. Native platform-specific build binaries (`@img/*`, `sharp`, packages named `-win32-`, `-darwin-`, `-linux-` and so on) are left out: they never reach the site and would make the page differ per build machine. The page lists every package and links the notices file (inlining ~270 KB of text made the page 844 KB, since Next also embeds it in the page payload), after the hand-written libheif (D-6), codec and pdf.js sections.

@@ -27,11 +27,11 @@ export const meta: ToolDefinition = {
     faqs: [
       {
         q: "How do I split a PDF into separate pages?",
-        a: "Choose your PDF, select “Single pages” and then Split. You get one PDF per page, named like report-page-7.pdf, in a ZIP file. To keep pages together in groups, choose “Every N pages” instead, for example every 2 pages for double-sided scans.",
+        a: "Choose your PDF, select “Single pages (one PDF per page)” and then the split button. You get one PDF per page, named like report-page-7.pdf, which you can download one by one or together as a ZIP file. To keep pages together in groups, choose “Every N pages (several PDFs)” instead, for example 2 pages per file.",
       },
       {
         q: "How do I extract pages into a new PDF?",
-        a: "Choose “Extract pages” (the default) and type the pages you want, for example 1-3, 5, 8-. Ranges use a dash, pages are separated by commas, and “8-” means page 8 to the end. The pages are copied into one new PDF in the order you typed them.",
+        a: "Choose “Extract pages into one PDF” and type the pages you want, for example 1-3, 5, 8-. Ranges use a dash, pages are separated by commas, and “8-” means page 8 to the end. The pages are copied into one new PDF in the order you typed them.",
       },
       {
         q: "Can I split a PDF without uploading it?",
@@ -43,7 +43,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "How do I split a PDF on iPhone?",
-        a: "Open this page in Safari, tap Choose file and pick the PDF from Files. After splitting, tap Download: a single PDF opens in the viewer, where you can save it to Files; several parts download as a ZIP file that Files can open.",
+        a: "Open this page in Safari, tap Choose file and pick the PDF from Files or another app. After splitting, tap Download PDF, or Download all (ZIP) for several parts. Safari keeps downloads in the Files app, which can also open the ZIP file.",
       },
     ],
   },
@@ -59,5 +59,5 @@ export const meta: ToolDefinition = {
   processing: { local: true, worker: true, offline: true },
   handoff: ["merge-pdf", "organize-pdf"],
   addedAt: "2026-11-01",
-  updatedAt: "2026-11-01",
+  updatedAt: "2026-11-02",
 };
