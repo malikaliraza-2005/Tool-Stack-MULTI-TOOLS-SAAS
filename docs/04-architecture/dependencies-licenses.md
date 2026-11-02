@@ -42,10 +42,11 @@ Additional rules:
 | `sonner` | 2.0.8 📌 | MIT | ✅ | Toasts (unstyled mode, restyled with tokens). Injects its base CSS via a `<style>` tag (allowed by `style-src 'unsafe-inline'`) | Initial (small) |
 | `motion` | 14.2.0 📌 | MIT | ✅ | Layout animations (`layoutId` indicators), later drag/reorder, via `LazyMotion` + `m`. Pulls in `framer-motion`, `motion-dom`, `motion-utils` (MIT) | Initial: `m` only; `domMax` features loaded async after hydration |
 | `lucide-react` | 1.56.0 📌 | ISC | ✅ | Icons (tree-shaken) | Initial |
-| `fuse.js` | 7.5.0 | Apache-2.0 | ✅ | Fuzzy tool search | On palette open |
+| `fuse.js` | 7.5.0 📌 | Apache-2.0 | ✅ | Fuzzy tool search (command palette, homepage search). Installed Phase 7 | On palette open / homepage search focus |
 | `zod` | 4.6.7 📌 | MIT | ✅ | Registry validation (full `zod`, build time only); tool option schemas in the browser use `zod/mini` (tree-shakable) | Build / small runtime |
 | `@tanstack/react-virtual` | 3.14.18 📌 | MIT | ✅ | Virtualized lists (JSON tree view; later page grid, diff). 3.14.19 was skipped: published the day before install | With tool |
-| `serwist`, `@serwist/turbopack` | 9.5.13 | MIT | ✅ | Service worker / PWA. Spike (P1-T22) used `@serwist/turbopack` (route-handler integration; works with webpack builds), not `@serwist/next`. Needs `esbuild` (MIT) as a dev dependency to bundle the SW. Install in Phase 7 | Build + SW |
+| `serwist` | 9.5.13 📌 | MIT | ✅ | Service worker runtime (precache, routing, strategies), bundled into `out/serwist/sw.js`. Installed Phase 7 | Service worker only |
+| `@serwist/window` | 9.5.13 📌 | MIT | ✅ | Registers the service worker and reports a waiting update (`components/layout/ServiceWorker.tsx`). Used instead of `@serwist/turbopack/react`'s provider, which reloads the page when the connection returns | Lazy, after page load |
 | `geist` | 1.7.2 📌 | OFL-1.1 (npm field: "SIL OPEN FONT LICENSE"; `LICENSE.TXT` read 2026-10-13) | ✅ | Geist Sans & Mono variable fonts via `next/font/local`, self-hosted (P1-T25). Chosen over `@fontsource-variable/geist` because it plugs into `next/font` (preload, fallback metrics) | Initial (2 preloaded `.woff2`) |
 
 ### 2.2 PDF
@@ -129,6 +130,8 @@ All permissive. The `/licenses` page reproduces these notices (BSD/IJG attributi
 | `eslint-config-next` | 16.4.3 📌 | MIT | ✅ | Next.js lint rules (core-web-vitals + TypeScript) |
 | `eslint-config-prettier` | 10.1.8 📌 | MIT | ✅ | Turns off rules that conflict with Prettier |
 | `prettier` | 3.9.10 📌 | MIT | ✅ | Formatting |
+| `@serwist/turbopack` | 9.5.13 📌 | MIT | ✅ | Builds the service worker from the route handler `app/serwist/[path]/route.ts` at build time (works with webpack builds, P1-T22). Build-only, so a dev dependency: its `glob` family (`glob`, `minimatch`, `minipass`, `lru-cache`, `path-scurry`) is BlueOak-1.0.0, a permissive license that is not on the production allow-list and never ships |
+| `esbuild` | 0.28.2 📌 | MIT | ✅ | Bundles `src/sw.ts` for `@serwist/turbopack` (native build; `format: "iife"` for a classic worker) |
 
 ### 3.1 Build-time and dev-only transitive licenses (license gate findings, 2026-10-13)
 

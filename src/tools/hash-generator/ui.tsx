@@ -6,6 +6,7 @@ import * as z from "zod/mini";
 import { CodeEditor, type CodeEditorHandle } from "@/components/tool/CodeEditor";
 import { ProcessingState } from "@/components/tool/ProcessingState";
 import { ResultList } from "@/components/tool/ResultList";
+import { useHandoff } from "@/components/tool/useHandoff";
 import { useToolOptions } from "@/components/tool/useToolOptions";
 import { ToolbarGroup, Workbench, WorkbenchPane } from "@/components/tool/Workbench";
 import { Button, buttonClasses } from "@/components/ui/Button";
@@ -63,6 +64,11 @@ const loadLogic = () => import("./logic");
 export default function HashGeneratorUI() {
   const [options, setOptions] = useToolOptions(meta.slug, optionsSchema, DEFAULTS);
   const [input, setInput] = useState("");
+  // A file dropped on the homepage, or one handed over by another tool.
+  useHandoff(({ files, text }) => {
+    if (files?.[0]) openFile(files[0]);
+    else if (text) setInput(text);
+  });
   const [file, setFile] = useState<File | null>(null);
   // The key is content: kept in memory only, never stored (§2.6).
   const [hmacKey, setHmacKey] = useState("");

@@ -88,13 +88,16 @@ test("the workspace is in the static HTML (no JavaScript)", async ({ browser }) 
   await context.close();
 });
 
-test("sitemap lists the home page and published tools", async ({ request }) => {
+test("sitemap lists the home page, hubs and published tools", async ({ request }) => {
   const res = await request.get("/sitemap.xml");
   expect(res.status()).toBe(200);
   const xml = await res.text();
   const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]!).pathname);
   expect(urls).toEqual([
     "/",
+    "/pdf-tools",
+    "/image-tools",
+    "/developer-tools",
     "/merge-pdf",
     "/json-formatter",
     "/unix-timestamp-converter",

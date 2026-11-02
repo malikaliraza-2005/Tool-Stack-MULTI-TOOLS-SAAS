@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | 🟨 In progress |
 | **Effort** | 5–7 days [Estimate] |
 | **Milestone** | M5: Feature-complete (with Phase 8) |
 
@@ -24,26 +24,26 @@ Homepage, category hubs, full command palette, smart paste, drop-zone suggestion
 ## Tasks
 
 ### Homepage
-- [ ] **P7-T01** Instrument hero: headline, subline, combined command field + drop zone (one surface), subtle static background detail.
-- [ ] **P7-T02** **Drop-zone suggestions (G-2):** match dropped files to tools via `input.accepts`; animated suggestion list; chosen tool opens with the files (in-memory hand-off).
-- [ ] **P7-T03** **Smart paste (G-3):** run detectors on paste; open the winning tool pre-filled; tie → small choice list.
-- [ ] **P7-T04** Privacy proof strip with PrivacyMeter and "How to verify" link.
-- [ ] **P7-T05** The index: typeset category columns from the registry; keyboard navigable.
-- [ ] **P7-T06** Popular tools row with mini previews where meaningful.
-- [ ] **P7-T07** Homepage FAQ (short) and footer links.
-- [ ] **P7-T08** Choreographed entrance (staggered ≤ 40ms, ≤ 6 items, never blocking input; reduced-motion variant).
+- [x] **P7-T01** Instrument hero: headline, subline, combined command field + drop zone (one surface), subtle static background detail.
+- [x] **P7-T02** **Drop-zone suggestions (G-2):** match dropped files to tools via `input.accepts`; animated suggestion list; chosen tool opens with the files (in-memory hand-off).
+- [x] **P7-T03** **Smart paste (G-3):** run detectors on paste; open the winning tool pre-filled; tie → small choice list.
+- [x] **P7-T04** Privacy proof strip with PrivacyMeter and "How to verify" link.
+- [x] **P7-T05** The index: typeset category columns from the registry; keyboard navigable.
+- [x] **P7-T06** Popular tools row with mini previews where meaningful.
+- [x] **P7-T07** Homepage FAQ (short) and footer links.
+- [x] **P7-T08** Choreographed entrance (staggered ≤ 40ms, ≤ 6 items, never blocking input; reduced-motion variant).
 
 ### Discovery
-- [ ] **P7-T09** Category hubs `/pdf-tools`, `/image-tools`, `/developer-tools` (G-8): intro, tool list, short guide links; metadata + JSON-LD.
-- [ ] **P7-T10** Build script generating `search-index.json` from the registry; CommandPalette with Fuse.js search, Recent, Favorites, actions (theme toggle) (G-1).
-- [ ] **P7-T11** Favorites and recent tools (G-6) in localStorage.
-- [ ] **P7-T12** **Use in another tool (G-11):** ResultPanel hand-off to `handoff` targets, passing output files in memory.
+- [x] **P7-T09** Category hubs `/pdf-tools`, `/image-tools`, `/developer-tools` (G-8): intro, tool list, short guide links; metadata + JSON-LD.
+- [x] **P7-T10** Build script generating `search-index.json` from the registry; CommandPalette with Fuse.js search, Recent, Favorites, actions (theme toggle) (G-1).
+- [x] **P7-T11** Favorites and recent tools (G-6) in localStorage.
+- [x] **P7-T12** **Use in another tool (G-11):** ResultPanel hand-off to `handoff` targets, passing output files in memory.
 
 ### PWA (G-5)
-- [ ] **P7-T13** Serwist (per P1-T22 outcome): precache shell, pages, fonts; runtime-cache on-intent libraries and WASM.
-- [ ] **P7-T14** Web app manifest, icons, install prompt behaviour (no nagging).
-- [ ] **P7-T15** Offline E2E: visit, go offline, reload a tool, run it successfully.
-- [ ] **P7-T16** Update flow: new version available → unobtrusive "Refresh to update" toast.
+- [x] **P7-T13** Serwist (per P1-T22 outcome): precache shell, pages, fonts; runtime-cache on-intent libraries and WASM.
+- [x] **P7-T14** Web app manifest, icons, install prompt behaviour (no nagging).
+- [x] **P7-T15** Offline E2E: visit, go offline, reload a tool, run it successfully.
+- [x] **P7-T16** Update flow: new version available → unobtrusive "Refresh to update" toast.
 
 ## Docs to write / update
 ui-ux-specification.md (homepage as built) · information-architecture.md · architecture.md (PWA as built)

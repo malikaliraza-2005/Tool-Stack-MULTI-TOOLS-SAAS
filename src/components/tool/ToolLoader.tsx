@@ -1,7 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { ComponentType } from "react";
+import { useEffect, type ComponentType } from "react";
+import { recordRecent } from "@/components/layout/useToolPrefs";
+import { ToolContext, type HandoffTarget } from "./useHandoff";
 
 /**
  * Lazy-loads each tool's `ui.tsx` as its own chunk (architecture §7), so a
@@ -31,9 +33,16 @@ const TOOL_UIS: Record<string, ComponentType> = {
   "convert-image": dynamic(() => import("@/tools/convert-image/ui")),
 };
 
-export function ToolLoader({ slug }: { slug: string }) {
+export function ToolLoader({ slug, handoff }: { slug: string; handoff: HandoffTarget[] }) {
+  // Recent tools for the command palette (G-6).
+  useEffect(() => recordRecent(slug), [slug]);
+
   const UI = TOOL_UIS[slug];
   // Thrown at build time, so a registered tool without a UI fails the build.
   if (!UI) throw new Error(`No UI for tool "${slug}". Add it to ToolLoader (tool-registry §7).`);
-  return <UI />;
+  return (
+    <ToolContext value={{ slug, handoff }}>
+      <UI />
+    </ToolContext>
+  );
 }

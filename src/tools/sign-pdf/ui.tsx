@@ -35,6 +35,7 @@ import { ITEM_NAMES, PageView, type Item, type ItemKind } from "./PageView";
 import { SignatureDialog } from "./SignatureDialog";
 import { measureText, textImage, type SignatureImage } from "./signature";
 import { DEFAULT_FONT_SIZE, TEXT_LINE_HEIGHT, unencodable } from "./text";
+import { UseInAnotherTool } from "@/components/tool/UseInAnotherTool";
 
 const optionsSchema = z.object({ flatten: z.boolean() });
 const DEFAULTS = { flatten: true };
@@ -575,9 +576,12 @@ export default function SignPdfUI() {
               </Button>
             }
             secondary={
-              <Button variant="secondary" onClick={startOver}>
-                Start over
-              </Button>
+              <>
+                <UseInAnotherTool outputs={[result]} />
+                <Button variant="secondary" onClick={startOver}>
+                  Start over
+                </Button>
+              </>
             }
           />
         )}

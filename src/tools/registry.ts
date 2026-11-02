@@ -22,7 +22,7 @@ import { meta as removeExifData } from "./remove-exif-data/meta";
 import { meta as compressImage } from "./compress-image/meta";
 import { meta as resizeImage } from "./resize-image/meta";
 import { meta as convertImage } from "./convert-image/meta";
-import type { ToolCategory, ToolDefinition } from "./types";
+import type { ToolDefinition } from "./types";
 import { assertValidRegistry, type RegistryContext } from "./validate";
 
 export const TOOLS: readonly ToolDefinition[] = [
@@ -60,22 +60,7 @@ export const REGISTRY_CONTEXT: RegistryContext = {
 
 assertValidRegistry(TOOLS, REGISTRY_CONTEXT);
 
-export const CATEGORIES: Record<
-  ToolCategory,
-  { name: string; href: string; applicationCategory: string }
-> = {
-  pdf: { name: "PDF tools", href: "/pdf-tools", applicationCategory: "UtilitiesApplication" },
-  image: {
-    name: "Image tools",
-    href: "/image-tools",
-    applicationCategory: "MultimediaApplication",
-  },
-  developer: {
-    name: "Developer tools",
-    href: "/developer-tools",
-    applicationCategory: "DeveloperApplication",
-  },
-};
+export { CATEGORIES, CATEGORY_ORDER } from "./categories";
 
 /** Built and listed tools (tool-registry §2: only "live" and "beta"). */
 export function publishedTools(tools: readonly ToolDefinition[] = TOOLS): ToolDefinition[] {

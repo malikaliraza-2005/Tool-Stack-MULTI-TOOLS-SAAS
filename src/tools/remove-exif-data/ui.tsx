@@ -21,6 +21,7 @@ import { createZipBlob } from "@/lib/image/zip";
 import type { MetadataReport } from "@/lib/image/report";
 import { ACCEPTED, cleanedName, foundSummary, removedSummary, type Mode } from "./logic";
 import { meta } from "./meta";
+import { UseInAnotherTool } from "@/components/tool/UseInAnotherTool";
 
 const optionsSchema = z.object({ mode: z.enum(["keep-orientation", "everything"]) });
 type Options = z.infer<typeof optionsSchema>;
@@ -211,9 +212,12 @@ export default function RemoveExifDataUI() {
               )
             }
             secondary={
-              <Button variant="secondary" onClick={batch.reset}>
-                Start over
-              </Button>
+              <>
+                <UseInAnotherTool outputs={batch.done.map((item) => item.result!)} />
+                <Button variant="secondary" onClick={batch.reset}>
+                  Start over
+                </Button>
+              </>
             }
           />
         )}

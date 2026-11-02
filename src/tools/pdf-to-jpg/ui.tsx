@@ -26,6 +26,7 @@ import { parsePageRange } from "@/lib/pdf/page-range";
 import type { PdfRenderer } from "@/lib/pdf/render";
 import { meta } from "./meta";
 import { imageName, MAX_PIXELS, renderSize, zipName, type Dpi, type ImageFormat } from "./plan";
+import { UseInAnotherTool } from "@/components/tool/UseInAnotherTool";
 
 const optionsSchema = z.object({
   format: z.enum(["jpg", "png"]),
@@ -503,9 +504,12 @@ function ConversionResult({ result, onStartOver }: { result: Result; onStartOver
             </Button>
           }
           secondary={
-            <Button variant="secondary" onClick={onStartOver}>
-              Start over
-            </Button>
+            <>
+              <UseInAnotherTool outputs={[only]} />
+              <Button variant="secondary" onClick={onStartOver}>
+                Start over
+              </Button>
+            </>
           }
         />
         {note}
@@ -529,9 +533,12 @@ function ConversionResult({ result, onStartOver }: { result: Result; onStartOver
           )
         }
         secondary={
-          <Button variant="secondary" onClick={onStartOver}>
-            Start over
-          </Button>
+          <>
+            <UseInAnotherTool outputs={result.images} />
+            <Button variant="secondary" onClick={onStartOver}>
+              Start over
+            </Button>
+          </>
         }
       />
       {note}

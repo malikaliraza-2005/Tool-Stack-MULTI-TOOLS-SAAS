@@ -33,6 +33,7 @@ import { createWorkerRunner, type WorkerRunner } from "@/lib/worker/runner";
 // Types only: pdf-lib stays in the worker chunk.
 import type { OrganizeJob, OrganizeJobResult } from "./logic";
 import { meta } from "./meta";
+import { UseInAnotherTool } from "@/components/tool/UseInAnotherTool";
 
 const LIMITS_HINT = "One PDF · up to 500 MB (150 MB on phones and tablets)";
 
@@ -319,9 +320,12 @@ export default function OrganizePdfUI() {
               </Button>
             }
             secondary={
-              <Button variant="secondary" onClick={startOver}>
-                Start over
-              </Button>
+              <>
+                <UseInAnotherTool outputs={[result]} />
+                <Button variant="secondary" onClick={startOver}>
+                  Start over
+                </Button>
+              </>
             }
           />
         )}

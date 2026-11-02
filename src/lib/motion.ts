@@ -9,6 +9,8 @@ export const duration = {
   standard: 0.26,
   page: 0.38,
   exit: 0.12,
+  /** Delay between staggered items (§7.3). */
+  stagger: 0.04,
 } as const;
 
 /** Cubic-bezier control points. */

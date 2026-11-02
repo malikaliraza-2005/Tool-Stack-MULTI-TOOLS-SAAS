@@ -14,6 +14,7 @@ import {
 import * as z from "zod/mini";
 import { CodeEditor } from "@/components/tool/CodeEditor";
 import { ResultList, type ResultRow } from "@/components/tool/ResultList";
+import { useHandoff } from "@/components/tool/useHandoff";
 import { useToolOptions } from "@/components/tool/useToolOptions";
 import { Button } from "@/components/ui/Button";
 import { CopyButton } from "@/components/ui/CopyButton";
@@ -67,6 +68,10 @@ export default function UuidGeneratorUI() {
   // the field shows the stored quantity.
   const [quantityDraft, setQuantityDraft] = useState<string | null>(null);
   const [inspectText, setInspectText] = useState("");
+  // A UUID pasted on the homepage goes to the inspector.
+  useHandoff(({ text }) => {
+    if (text) setInspectText(text.trim());
+  });
   // Bumped by "Generate new" to make a fresh set.
   const [round, setRound] = useState(0);
   // Random values can't be in the static HTML: they are generated once the

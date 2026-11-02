@@ -27,6 +27,7 @@ import type { SplitJob, SplitJobResult } from "./logic";
 import { meta } from "./meta";
 // Light: validates ranges and previews the output as the user types.
 import { planSplit, type Part, type SplitMode, type SplitOptions } from "./plan";
+import { UseInAnotherTool } from "@/components/tool/UseInAnotherTool";
 
 const optionsSchema = z.object({
   mode: z.enum(["extract", "every", "single"]),
@@ -474,9 +475,12 @@ function SplitResult({ result, onStartOver }: { result: Result; onStartOver: () 
           </Button>
         }
         secondary={
-          <Button variant="secondary" onClick={onStartOver}>
-            Start over
-          </Button>
+          <>
+            <UseInAnotherTool outputs={[only]} />
+            <Button variant="secondary" onClick={onStartOver}>
+              Start over
+            </Button>
+          </>
         }
       />
     );
@@ -498,9 +502,12 @@ function SplitResult({ result, onStartOver }: { result: Result; onStartOver: () 
           )
         }
         secondary={
-          <Button variant="secondary" onClick={onStartOver}>
-            Start over
-          </Button>
+          <>
+            <UseInAnotherTool outputs={result.files} />
+            <Button variant="secondary" onClick={onStartOver}>
+              Start over
+            </Button>
+          </>
         }
       />
       <ul

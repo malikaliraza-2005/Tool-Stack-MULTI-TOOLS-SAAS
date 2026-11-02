@@ -14,6 +14,7 @@ import {
 } from "react";
 import * as z from "zod/mini";
 import { ResultList, type ResultRow } from "@/components/tool/ResultList";
+import { useHandoff } from "@/components/tool/useHandoff";
 import { useToolOptions } from "@/components/tool/useToolOptions";
 import { Button } from "@/components/ui/Button";
 import { Combobox, type ComboboxOption } from "@/components/ui/Combobox";
@@ -82,6 +83,10 @@ export default function UnixTimestampConverterUI() {
   const [options, setOptions] = useToolOptions(meta.slug, optionsSchema, DEFAULTS);
   const [timestamp, setTimestamp] = useState("");
   const [dateTime, setDateTime] = useState("");
+  // A timestamp pasted on the homepage (smart paste).
+  useHandoff(({ text }) => {
+    if (text) setTimestamp(text.trim());
+  });
   const timestampInput = useRef<HTMLInputElement>(null);
   const dateTimeInput = useRef<HTMLInputElement>(null);
 

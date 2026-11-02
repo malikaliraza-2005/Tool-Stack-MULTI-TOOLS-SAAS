@@ -11,13 +11,14 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NEXT_PUBLIC_SITE_URL: https://sprigkit.com
+  NEXT_TELEMETRY_DISABLED: 1
+
 jobs:
-  ci:
+  checks:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      NEXT_PUBLIC_SITE_URL: https://sprigkit.com
-      NEXT_TELEMETRY_DISABLED: 1
     steps:
       - uses: actions/checkout@v7
 
@@ -44,12 +45,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium firefox webkit
-
-      - name: E2E (no-network, CSP, axe)
-        run: npm run e2e
-
       - name: Lighthouse CI (warn-only until P9)
         run: npm run lhci
 
@@ -62,8 +57,55 @@ jobs:
         with:
           name: reports
           path: |
-            playwright-report/
             .lighthouseci/reports/
             licenses.json
+          retention-days: 14
+          if-no-files-found: ignore
+
+  # The browser matrix runs in parallel: one job ran past 30 minutes once
+  # Phase 7 added the homepage, hub and PWA tests.
+  e2e:
+    name: e2e (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: chromium
+            browser: chromium
+            projects: --project=chromium --project=mobile
+          - name: firefox
+            browser: firefox
+            projects: --project=firefox
+          - name: webkit
+            browser: webkit
+            projects: --project=webkit --project=iphone
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: E2E (no-network, CSP, axe)
+        run: npx playwright test ${{ matrix.projects }}
+
+      - name: Upload report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-${{ matrix.name }}
+          path: playwright-report/
           retention-days: 14
           if-no-files-found: ignore

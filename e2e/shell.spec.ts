@@ -176,6 +176,43 @@ test.describe("command palette", () => {
     await expect(page.locator("html")).toHaveClass(/dark/);
   });
 
+  test("finds tools by name, synonym and file type", async ({ page }) => {
+    await page.goto("/");
+    await page.keyboard.press("ControlOrMeta+k");
+    const dialog = page.getByRole("dialog", { name: "Search tools and actions" });
+    const input = dialog.getByRole("combobox");
+    await input.fill("jwt");
+    await expect(dialog.getByRole("option").first()).toHaveText(/JWT Decoder/);
+    await input.fill("combine pdf");
+    await expect(dialog.getByRole("option").first()).toHaveText(/Merge PDF/);
+    await input.fill("heic");
+    await expect(dialog.getByRole("option", { name: /Convert Image/ })).toBeVisible();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/convert-image$/);
+  });
+
+  test("lists favorites and recent tools first", async ({ page }) => {
+    await page.goto("/json-formatter");
+    await page.getByRole("button", { name: "Favorite" }).click();
+    await expect(page.getByRole("button", { name: "Favorite" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await page.goto("/merge-pdf");
+    // The shortcut listener exists only after hydration.
+    await page.waitForFunction(() => document.documentElement.hasAttribute("data-app-started"));
+    await page.keyboard.press("ControlOrMeta+k");
+    const dialog = page.getByRole("dialog", { name: "Search tools and actions" });
+    await expect(dialog.getByRole("group", { name: "Favorites" })).toContainText("JSON Formatter");
+    await expect(dialog.getByRole("group", { name: "Recent" })).toContainText("Merge PDF");
+    // Only slugs are stored, never content (CLAUDE.md rule 4).
+    const stored = await page.evaluate(() => [
+      localStorage.getItem("ts:v1:favorites"),
+      localStorage.getItem("ts:v1:recent"),
+    ]);
+    expect(stored).toEqual(['["json-formatter"]', '["merge-pdf","json-formatter"]']);
+  });
+
   test("closes on Escape and returns focus to the trigger", async ({ page, isMobile }) => {
     await page.goto("/");
     const trigger = isMobile

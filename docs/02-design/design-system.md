@@ -171,7 +171,7 @@ Tailwind defaults: `sm 640` · `md 768` · `lg 1024` · `xl 1280` · `2xl 1536`.
 | `--shadow-2` | `0 4px 16px -4px oklch(0.2 0.01 70 / 0.12)` | `0 4px 16px -4px oklch(0 0 0 / 0.5)` | Popovers, dropdowns, dragged items |
 | `--shadow-3` | `0 16px 48px -12px oklch(0.2 0.01 70 / 0.2)` | `0 16px 48px -12px oklch(0 0 0 / 0.6)` | Dialogs, command palette |
 
-**Backgrounds:** solid `--bg`. A single, very subtle background detail is allowed on the homepage hero only (e.g. a fine dot grid at ≤4% contrast, static). No animated gradients, no blobs, no glassmorphism.
+**Backgrounds:** solid `--bg`. A single, very subtle background detail is allowed on the homepage hero only (e.g. a fine dot grid at ≤4% contrast, static). No animated gradients, no blobs, no glassmorphism. *As built:* the `bg-dot-grid` utility (`--border` dots on a 24px grid, masked to fade out from the top).
 
 ---
 
@@ -198,6 +198,7 @@ Motion explains change: where something came from, what happened, what to do nex
 | `--dur-page` | 380ms | Page and theme transitions (maximum) |
 | `--dur-exit` | 120ms | Exits of overlays and pages (rule 3: faster than entrances) |
 | `--dur-loop` | 900ms | Loop period of loading indicators only (spinner; indeterminate bar ×2). Not a transition duration; stops when work ends |
+| `--dur-stagger` | 40ms | Delay between staggered entrances (§7.3). The `stagger` utility multiplies it by `--stagger-index` (0–5); reduced motion drops the delay. Used with `animate-rise-in` (8px rise, `--dur-standard`) |
 
 Use them as `duration-(--dur-quick)` in Tailwind; the `transition-control` utility applies `--dur-quick` to color changes and `--dur-instant` to transforms (press). The same values are mirrored for Motion in `src/lib/motion.ts` (kept equal by `tokens.test.ts`).
 

@@ -15,7 +15,7 @@ Status: ⬜ Not started · 🟨 In progress · ✅ Done · ⏸ Blocked
 | 4 | [Developer tools](phase-04-developer-tools.md) | ✅ | | 6–8 days |
 | 5 | [PDF tools](phase-05-pdf-tools.md) | ✅ | | 8–10 days |
 | 6 | [Image tools](phase-06-image-tools.md) | ✅ | M4 | 6–8 days |
-| 7 | [Homepage, discovery & PWA](phase-07-homepage-discovery-pwa.md) | ⬜ | M5 (with P8) | 5–7 days |
+| 7 | [Homepage, discovery & PWA](phase-07-homepage-discovery-pwa.md) | 🟨 | M5 (with P8) | 5–7 days |
 | 8 | [Content, SEO & legal](phase-08-content-seo-legal.md) | ⬜ | M5 (with P7) | 6–8 days |
 | 9 | [Quality hardening](phase-09-quality-hardening.md) | ⬜ | M6 | 5–7 days |
 | 10 | [Launch](phase-10-launch.md) | ⬜ | M7 | 2–3 days |

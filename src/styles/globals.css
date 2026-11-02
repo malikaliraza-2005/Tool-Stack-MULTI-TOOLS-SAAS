@@ -94,6 +94,8 @@
   --dur-exit: 120ms;
   /* Loop period of loading indicators (spinner, indeterminate bar). Not a transition. */
   --dur-loop: 900ms;
+  /* Delay between staggered entrances, at most ~6 items (§7.3). */
+  --dur-stagger: 40ms;
 
   /* Focus ring (§9). */
   --focus-ring-width: 2px;
@@ -235,7 +237,15 @@
   --animate-spin: spin var(--dur-loop) linear infinite;
   --animate-indeterminate: indeterminate calc(var(--dur-loop) * 2) var(--ease-in-out) infinite;
   --animate-pulse: pulse calc(var(--dur-loop) * 2) var(--ease-in-out) infinite;
+  --animate-rise-in: rise-in var(--dur-standard) var(--ease-out) both;
 
+  /* Section entrances (homepage, P7-T08): 8px rise (§7.3). */
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
   @keyframes fade-in {
     from {
       opacity: 0;
@@ -341,6 +351,27 @@
   transition-property: transform, opacity;
   transition-duration: var(--dur-standard), var(--dur-quick);
   transition-timing-function: var(--ease-out);
+}
+
+/*
+ * Staggered entrance: set `--stagger-index` (0–5) per item; later items wait
+ * --dur-stagger each (§7.3). Reduced motion drops the delay with the movement.
+ */
+@utility stagger {
+  animation-delay: calc(var(--dur-stagger) * var(--stagger-index, 0));
+  @media (prefers-reduced-motion: reduce) {
+    animation-delay: 0s;
+  }
+}
+
+/*
+ * The one background detail allowed, on the homepage hero only (§5): a fine,
+ * static dot grid that fades out from the top. Barely above the page color.
+ */
+@utility bg-dot-grid {
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1.5px);
+  background-size: calc(var(--spacing) * 6) calc(var(--spacing) * 6);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 20%, transparent 75%);
 }
 
 /* Transparent areas of images (ComparisonSlider, thumbnails): a quiet checkerboard. */

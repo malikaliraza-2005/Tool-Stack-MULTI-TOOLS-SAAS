@@ -21,6 +21,7 @@ import { createWorkerRunner, type WorkerRunner } from "@/lib/worker/runner";
 // Types only: pdf-lib stays in the worker chunk.
 import type { MergeJob, MergeJobResult } from "./logic";
 import { meta } from "./meta";
+import { UseInAnotherTool } from "@/components/tool/UseInAnotherTool";
 
 const DEFAULT_OUTPUT_NAME = "merged.pdf";
 const THUMBNAIL_WIDTH = 40;
@@ -398,9 +399,12 @@ export default function MergePdfUI() {
               </Button>
             }
             secondary={
-              <Button variant="secondary" onClick={startOver}>
-                Start over
-              </Button>
+              <>
+                <UseInAnotherTool outputs={[{ blob: result.blob, name: fileName }]} />
+                <Button variant="secondary" onClick={startOver}>
+                  Start over
+                </Button>
+              </>
             }
           />
         )}

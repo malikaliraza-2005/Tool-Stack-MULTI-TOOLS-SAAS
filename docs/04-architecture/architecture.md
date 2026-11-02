@@ -91,7 +91,8 @@ Used by canonicals, sitemap, robots, Open Graph, JSON-LD. Changing domain = chan
 |---|---|---|
 | `/` | `app/page.tsx` | Static |
 | `/[tool]` | `app/[tool]/page.tsx` + `generateStaticParams()` from registry, `dynamicParams = false` | Static, one HTML file per tool |
-| `/pdf-tools`, `/image-tools`, `/developer-tools` | `app/(hubs)/<category>/page.tsx` (thin wrappers around one `CategoryHub` component) | Static |
+| `/pdf-tools`, `/image-tools`, `/developer-tools` | `app/(hubs)/<category>/page.tsx` (thin wrappers around one `CategoryHub` component) | Static (Phase 7) |
+| `/search-index.json` | `app/search-index.json/route.ts` (force-static route handler): command palette index | Static file |
 | `/guides`, `/guides/[slug]` | `app/guides/…` | Static (after MVP content starts) |
 | `/about`, `/privacy`, `/terms`, `/licenses` | Static pages (Phase 8) | Static |
 | `/_gallery` | `app/%5Fgallery/page.tsx`: component gallery for design review. `noindex, nofollow`, not linked, excluded from the sitemap | Static |
@@ -228,6 +229,7 @@ Spikes ran as throwaway pages on the local `spikes` branch (commit `P1-T19..T25`
 | P1-T25 | Fonts | **Works** | `geist` package (`next/font/local`): two variable `.woff2` files emitted to `/_next/static/media/` and preloaded; no external font requests (asserted in `e2e/smoke.spec.ts`). `next/font/google` is not used because it downloads from Google at build time |
 
 Build-tool notes:
+- **Segment prefetch files (Phase 7):** Next.js 16's static export writes per-segment prefetch payloads as folders (`merge-pdf/__next.$d$tool/__PAGE__.txt`) while the client requests dotted names (`merge-pdf/__next.$d$tool.__PAGE__.txt`), so every `<Link>` prefetch of a tool or hub was a 404 (navigation still worked). `scripts/flatten-segment-prefetch.mjs` (`postbuild`) writes the dotted copies.
 - Tailwind 4 runs through `@tailwindcss/postcss` (`postcss.config.mjs`), which both bundlers support. The `@tailwindcss/turbopack` loader from the `create-next-app` template was removed with D-14.
 - Bundle baseline (webpack, near-empty homepage): **141 KB gzipped JS** from Next.js + React alone, above the 100 KB homepage budget (§14) before any Sprigkit code. See R-14.
 
@@ -239,6 +241,8 @@ Build-tool notes:
 
 - **Tool state:** local React state per tool; no global store library. Cross-component state via context only where needed (e.g. files handed from the homepage drop zone to a tool).
 - **Homepage → tool file hand-off:** files are kept in an in-memory module store during client-side navigation. If the page reloads, the user re-selects the file (nothing is persisted).
+  - *As built (Phase 7):* `src/lib/handoff.ts` holds one pending `{ slug, payload: { files?, text?, source? } }`; `handOff()` is called right before `router.push`, and `takeHandoff(slug)` returns it once. `ToolPage` passes the slug and its `handoff` targets (live tools only, with whether they take several files) to `ToolLoader`, which provides them through `ToolContext`; `useHandoff()` (`components/tool/useHandoff.ts`) receives it after mount. `DropZone` uses it, so every file tool accepts handed-over files without its own code; the text tools with smart-paste detectors and the developer tools that take files call it themselves. **Use in another tool (G-11):** `UseInAnotherTool` (`components/tool/UseInAnotherTool.tsx`) sits in the ResultPanel of every tool with `handoff` targets; it turns the result blobs into `File`s and hands them over. Tools that take one file are offered only for a single result.
+- **Favorites and recent tools (G-6, Phase 7):** `src/lib/tool-prefs.ts` stores slug lists only (`ts:v1:favorites`, max 30; `ts:v1:recent`, newest 5), validated as kebab-case slugs so no content can be stored there. `useFavorites`/`useRecent` (`components/layout/useToolPrefs.ts`) are external stores shared by the palette and the tool page's Favorite button, synced across tabs. `ToolLoader` records a visit.
 - **Preferences:** `src/lib/storage.ts` wraps `localStorage` with try/catch and Zod validation. Keys are versioned (`ts:v1:theme`, `ts:v1:favorites`, `ts:v1:recent`, `ts:v1:opts:<slug>`). **User content (files, text, tokens) is never stored.** The one exception is sign-pdf's opt-in "Remember my signature on this device" (tool-specifications §3.6): only after the user ticks it, the signature PNG is kept under `ts:v1:sign-pdf:signature`, with a Delete control; it bypasses the options-only helper on purpose.
 
 ---
@@ -247,6 +251,14 @@ Build-tool notes:
 
 - **Serwist** generates the service worker: precache app shell, fonts, and tool pages; runtime-cache lazily loaded libraries/WASM after first use.
 - Navigation fallback to cached pages offline.
+- *As built (Phase 7):*
+  - **Worker** `src/sw.ts`, bundled by `app/serwist/[path]/route.ts` (force-static) into `out/serwist/sw.js` as a classic script. It only caches the site's own files; user files never pass through it.
+  - **Precache (~3.2 MB uncompressed, 166 entries):** every page (home, hubs, tools, `/licenses`) and `/search-index.json`, listed from the registry with the commit SHA as revision; JS and CSS chunks; the two preloaded Geist fonts (`*.p.woff2`); `public/` icons. Left out and cached on first use instead: codec WASM, `public/vendor/` (pdf.js assets, libheif), the signature fonts, and on-intent chunks over 300 KB (today pdf.js and pdf-lib). Shell chunks (framework, main, webpack, polyfills, route chunks) are always precached, whatever their size; a plain size limit had dropped React itself. Precache URLs are `encodeURI`-encoded, because chunk folders keep route names (`[tool]`) and pages request them encoded (`%5Btool%5D`). The component gallery is left out.
+  - **Runtime caching:** navigations `NetworkFirst` (4 s timeout, then the cache); `/_next/static/` and `/vendor/` `CacheFirst` (hashed or versioned names); other same-origin GETs `StaleWhileRevalidate`.
+  - **What works offline:** after the first visit, every page opens and the developer tools run (their code is precached). PDF and image tools run offline once they have been used online, because pdf.js, pdf-lib and the codecs are cached on first use (G-5; registry `processing.offline: true` for every tool).
+  - **Registration** (`components/layout/ServiceWorker.tsx`): production only, after the `load` event, with `@serwist/window` loaded on demand. `clientsClaim` makes the first visit controlled at once.
+  - **Updates (P7-T16):** `skipWaiting: false`. When a new worker is waiting, a persistent toast says "A new version of Sprigkit is available" with **Refresh**; the page posts `SKIP_WAITING` and reloads when the new worker takes control. Nothing reloads on its own, and the page doesn't reload when the connection comes back.
+  - **Manifest and install (P7-T14):** `app/manifest.ts` → `/manifest.webmanifest` (standalone, sRGB colors, 192/512 icons). `beforeinstallprompt` is kept (`components/layout/useInstallPrompt.ts`), so the browser shows no banner; the command palette offers "Install Sprigkit as an app" while it is available. No pop-ups, no reminders.
 - Web app manifest with icons and `display: standalone`.
 - **Verified in Phase 1 (P1-T22)** with `@serwist/turbopack`. Despite the name, its route-handler integration builds the SW with esbuild and works with webpack builds. Required settings found by the spike:
   - `globIgnores: ["public/_headers", "public/_redirects"]`. Serwist's default glob precaches all of `public/`, but Cloudflare does not serve these config files, so SW install would fail.
@@ -333,7 +345,7 @@ All generated from the registry (see [tool-registry.md](tool-registry.md)):
 
 ## 15. CI/CD
 
-**GitHub Actions on every push/PR:** install → typecheck → lint → unit tests → build → E2E (incl. privacy + axe) → Lighthouse CI → license check.
+**GitHub Actions on every push/PR:** install → typecheck → lint → unit tests → build → E2E (incl. privacy + axe) → Lighthouse CI → license check. *Since Phase 7* E2E runs in three parallel jobs (Chromium + mobile, Firefox, WebKit + iPhone), each building the site itself, next to a `checks` job with everything else: as one job the suite passed its 30-minute timeout, which GitHub reports as "cancelled".
 
 **Cloudflare Pages (Git integration):**
 - `main` → production.

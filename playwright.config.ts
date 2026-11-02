@@ -14,6 +14,9 @@ export default defineConfig({
   use: {
     baseURL: `http://127.0.0.1:${PORT}`,
     trace: "retain-on-failure",
+    // The service worker is tested in e2e/pwa.spec.ts, which allows it. Elsewhere
+    // it would add precache traffic and cached pages to tests about other things.
+    serviceWorkers: "block",
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
