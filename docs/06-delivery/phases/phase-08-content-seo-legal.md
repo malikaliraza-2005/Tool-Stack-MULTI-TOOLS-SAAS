@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | 🟨 In progress |
 | **Effort** | 6–8 days [Estimate]; starts after P3 and runs alongside P4–P7 |
 | **Milestone** | M5: Feature-complete (with Phase 7) |
 

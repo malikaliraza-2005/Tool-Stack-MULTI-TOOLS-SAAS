@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | 🟨 In progress |
+| **Status** | ✅ Done (2026-11-02, with deferrals below) |
 | **Effort** | 5–7 days [Estimate] |
 | **Milestone** | M5: Feature-complete (with Phase 8) |
 
@@ -49,11 +49,11 @@ Homepage, category hubs, full command palette, smart paste, drop-zone suggestion
 ui-ux-specification.md (homepage as built) · information-architecture.md · architecture.md (PWA as built)
 
 ## Exit criteria
-- [ ] Dropping a PDF, an image, and an unsupported file on the homepage each produce the correct result.
-- [ ] Pasting a JWT, JSON, timestamp, URL, and Base64 opens the right tool pre-filled.
-- [ ] Command palette finds every tool by name and by at least one synonym; fully keyboard operable.
-- [ ] Offline E2E passes for at least one tool per category.
-- [ ] Homepage meets budgets (≤ 100 KB initial JS gzipped; LCP target).
+- [x] Dropping a PDF, an image, and an unsupported file on the homepage each produce the correct result. *`e2e/home.spec.ts` (drop suggestions and hand-off for each case).*
+- [x] Pasting a JWT, JSON, timestamp, URL, and Base64 opens the right tool pre-filled. *`e2e/home.spec.ts`, one test per detector, plus plain text staying in the search field.*
+- [x] Command palette finds every tool by name and by at least one synonym; fully keyboard operable. *`search-index.test.ts` (every tool with its synonyms) and `e2e/shell.spec.ts` (name, synonym, file type; keyboard, Escape, focus return).*
+- [x] Offline E2E passes for at least one tool per category. *`e2e/pwa.spec.ts`: developer, PDF and image tools.*
+- [x] Homepage meets budgets (≤ 100 KB initial JS gzipped; LCP target). *Not met; deferred with owner approval to P9-T08 / P9-T11 (R-14). The cause is the shared baseline, not the homepage (+18 KB); see [performance.md §2](../../05-quality/performance.md) "Phase 7".*
 
 ## Risks & fallbacks
 | Risk | Fallback |

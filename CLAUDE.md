@@ -10,7 +10,9 @@ Full context: [docs/README.md](docs/README.md).
 
 ## Current phase
 
-**Phase 7: Homepage, discovery & PWA** → [docs/06-delivery/phases/phase-07-homepage-discovery-pwa.md](docs/06-delivery/phases/phase-07-homepage-discovery-pwa.md)
+**Phase 8: Content, SEO & legal** → [docs/06-delivery/phases/phase-08-content-seo-legal.md](docs/06-delivery/phases/phase-08-content-seo-legal.md)
+
+Phase 7 (homepage, discovery, PWA) is done: instrument hero with drop-zone suggestions and smart paste, category hubs (`src/tools/hubs.ts`), command palette with Fuse.js search, favorites and recent tools, "Use in another tool" hand-off, and Serwist offline support with an update toast. Its homepage JS budget miss is deferred to P9-T08/P9-T11 with R-14.
 
 Phase 6 (image tools) is done, completing M4 (all 19 tools): remove-exif-data, compress-image, resize-image and convert-image in `src/tools/`, on the shared image pipeline in `src/lib/image/` (one worker, jSquash codecs, metadata, exifr report) with `ComparisonSlider`, `ImageWorkspace` and `useImageBatch` in `src/components/tool/`. HEIC uses the unmodified libheif-js build served from `/vendor/` under D-6 (sources in `vendor-src/`, notices on the early `/licenses` page); jpg-to-pdf now decodes through the same codecs. Its deferrals (real-device AVIF timing and memory, Safari, screen reader, content review, performance budget) join the earlier ones in Phases 8–9.
 
