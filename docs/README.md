@@ -67,8 +67,8 @@ Status: ✅ Written · 📝 Planned · ➖ Not needed
 | [seo-strategy.md](03-seo-growth/seo-strategy.md) | ✅ | Technical and on-page SEO strategy (technical SEO as built) |
 | [keyword-research.md](03-seo-growth/keyword-research.md) | ✅ | Keyword findings, final slugs (from free sources only) |
 | [page-seo-specs.md](03-seo-growth/page-seo-specs.md) | ✅ | Per-page title, meta, H1, FAQs, schema, links |
-| geo-strategy.md | 📝 | AI-assisted search visibility |
-| content-strategy.md | 📝 | Guides and topical authority plan |
+| [geo-strategy.md](03-seo-growth/geo-strategy.md) | ✅ | AI-assisted search visibility: what we do and don't claim works |
+| [content-strategy.md](03-seo-growth/content-strategy.md) | ✅ | Guides: topics, format, review process, cadence |
 | monetization.md | 📝 | Revenue models and sequencing |
 
 ### 04-architecture: how it is built

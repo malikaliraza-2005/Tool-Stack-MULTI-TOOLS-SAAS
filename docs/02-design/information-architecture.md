@@ -20,7 +20,8 @@
 ├─ /privacy               How local processing works, how to verify    Phase 8
 ├─ /terms                                                              Phase 8
 ├─ /licenses              Third-party licenses (generated)             Phase 8 (started in Phase 6 for HEIC, D-6)
-├─ /guides/[slug]         After MVP content starts
+├─ /guides               Guide index                                  Phase 8
+├─ /guides/[slug]         Guides (content-strategy.md)                 Phase 8
 ├─ /sitemap.xml, /robots.txt                                           Phase 8
 └─ /_gallery              Component gallery: not linked, noindex, not in sitemap (Phase 2)
 ```
@@ -40,8 +41,8 @@
 | Header (≥ `md`) | Logo (→ `/`), category links **PDF · Image · Developer** (→ hubs), search trigger (⌘K / Ctrl K), theme menu | `Header`, `src/config/nav.ts` |
 | Header (< `md`) | Logo, search icon, theme menu, **Menu** button opening a side sheet with the category links (with one-line descriptions) and the site links | `MobileNav` |
 | Command palette | Empty query: Favorites, Recent, one group per category, Go to (Home, hubs), Actions (theme). With a query: matching tools (Fuse.js over name, synonyms and accepted file types), then matching Go to and Actions | `CommandPalette`, `/search-index.json` |
-| Category hubs | Breadcrumbs, intro, every tool of the category, guide links to tools' "How to use" sections, the other hubs | `CategoryHub` |
-| Footer | Tagline; **Tools:** PDF tools, Image tools, Developer tools; **Sprigkit:** About, Privacy, Terms, Licenses; © year | `Footer` |
+| Category hubs | Breadcrumbs, intro, every tool of the category, "Which tool do I need?", guides (real guides first, then links to tools' "How to use" sections), the other hubs | `CategoryHub` |
+| Footer | Tagline; **Tools:** PDF tools, Image tools, Developer tools; **Sprigkit:** Guides, About, Privacy, Terms, Licenses; © year | `Footer` |
 | Breadcrumbs | Home › Category hub › Tool, on tool and hub pages | `Breadcrumbs` (JSON-LD added with SEO in Phase 3/8) |
 
 The current section is marked with `aria-current="page"` and the accent underline (the accent's "active navigation" role).

@@ -10,7 +10,9 @@ Full context: [docs/README.md](docs/README.md).
 
 ## Current phase
 
-**Phase 8: Content, SEO & legal** → [docs/06-delivery/phases/phase-08-content-seo-legal.md](docs/06-delivery/phases/phase-08-content-seo-legal.md)
+**Phase 9: Quality hardening** → [docs/06-delivery/phases/phase-09-quality-hardening.md](docs/06-delivery/phases/phase-09-quality-hardening.md)
+
+Phase 8 (content, SEO, legal) is done, completing M5: per-page SEO specs (`docs/03-seo-growth/page-seo-specs.md`), homepage metadata and JSON-LD, all 19 tools' content reviewed against the code, "Which tool do I need?" on the hubs, About/Privacy/Terms on the shared `SitePage` layout (legal evidence in `docs/07-legal/`), a Licenses page generated from the license report (`scripts/license-report.mjs` → `.generated/licenses.json` and `public/third-party-notices.txt`), the guides system (`src/guides/`, `/guides`, Article JSON-LD) with 3 guides, `llms.txt`, and `e2e/structured-data.spec.ts` over every sitemap page. Its deferrals (Rich Results Test on preview, owner's second read, unenforced pasted-text limits, file-count limit message) are in P9-T02, P9-T12 and P9-T16.
 
 Phase 7 (homepage, discovery, PWA) is done: instrument hero with drop-zone suggestions and smart paste, category hubs (`src/tools/hubs.ts`), command palette with Fuse.js search, favorites and recent tools, "Use in another tool" hand-off, and Serwist offline support with an update toast. Its homepage JS budget miss is deferred to P9-T08/P9-T11 with R-14.
 

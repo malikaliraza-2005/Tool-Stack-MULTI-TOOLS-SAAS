@@ -46,7 +46,8 @@ Keyword research §2 found privacy, cost and offline questions for every tool. E
 | `/about` | Site page | About Sprigkit | BreadcrumbList · AboutPage | P8-T06 |
 | `/privacy` | Site page | Privacy policy · Sprigkit | BreadcrumbList · WebPage | P8-T07 |
 | `/terms` | Site page | Terms of use · Sprigkit | BreadcrumbList · WebPage | P8-T08 |
-| `/licenses` | Site page | Open-source licenses | BreadcrumbList · WebPage | P6 (early), P8-T09 |
+| `/licenses` | Site page | Open-source licenses · Sprigkit | BreadcrumbList · WebPage | P6 (early), P8-T09 |
+| `/llms.txt` | Text | (none) | none | P8-T15 |
 | `/guides` | Guide index | see §4.4 | BreadcrumbList · CollectionPage + ItemList | P8-T11 |
 | `/guides/<slug>` | Guide | see §4.4 | BreadcrumbList · Article | P8-T12 |
 | 404 | Error | Page not found | none, `noindex` | P2 |
@@ -78,9 +79,9 @@ Copy in `src/tools/hubs.ts`; tool lists from the registry.
 | `/image-tools` | image tools (not researched in P0) | Free Image Tools Online: Private, No Upload \| Sprigkit (54) | Compress, convert, resize and clean images in your browser, including HEIC photos from iPhones. Images stay on your device and are never uploaded. (146) | Image tools |
 | `/developer-tools` | developer tools (not researched in P0) | Free Developer Tools Online: Private, Local \| Sprigkit (54) | Format JSON, decode JWTs, encode Base64 and URLs, compare text and test regex in your browser. Your input is never sent anywhere. (129) | Developer tools |
 
-- H2 outline (as built): "<n> PDF tools" (the tool list) · Guides (short links to each tool's "How to use" section) · More tools (the other categories).
+- H2 outline (as built): "<n> PDF tools" (the tool list) · Which tool do I need? · Guides (guides whose main tool is in the category, then short links to tools' "How to use" sections) · More tools (the other categories).
 - Schema: BreadcrumbList · CollectionPage with an ItemList of the hub's tools.
-- **P8-T05:** the intro is one paragraph. Add a short "Choosing a tool" passage that tells apart the tools users confuse (PDF: split vs organize vs PDF to JPG; image: compress vs resize vs convert; developer: Base64 vs URL encoding, decode vs verify a JWT), and link the guides from §4.4 once published. No FAQ block on hubs (it would repeat the tool pages).
+- **Done (P8-T05):** "Which tool do I need?" says when to pick each tool of the hub (`choosing` in `hubs.ts`; a test requires every published tool once). It tells apart the tools users confuse: split vs organize vs PDF to JPG, compress vs resize vs convert, Base64 vs URL encoding. The guides from §4.4 are linked. No FAQ block on hubs (it would repeat the tool pages).
 
 ### 4.3 Site pages
 
@@ -95,17 +96,18 @@ Facts these pages must state consistently (product facts, product.md §10): 19 t
 
 ### 4.4 Guides
 
-Final topics, mapping and review process are decided in `content-strategy.md` (P8-T10). Candidates from keyword research (§2.3: device and how-to queries belong in guides, not tool pages):
+Topics, format and review process: [content-strategy.md](content-strategy.md). Copy lives in `src/guides/<slug>.tsx` (`meta`); `src/guides/registry.test.ts` enforces lengths and uniqueness.
 
-| Proposed URL | Primary query | Links to |
-|---|---|---|
-| `/guides/remove-location-from-photos` | remove location from photo (iPhone, Android) | `remove-exif-data` |
-| `/guides/what-is-inside-a-jwt` | decode jwt without secret, is jwt decode safe | `jwt-decoder` |
-| `/guides/heic-vs-jpg` | heic to jpg, what is heic | `convert-image` |
-| `/guides/web-image-formats-compared` | webp vs avif vs jpg (Sprigkit's own measurements) | `convert-image`, `compress-image` |
+| URL | Primary query (keyword-research) | Title | Main tool |
+|---|---|---|---|
+| `/guides` | | Guides: PDFs, Images and Code, Done Privately \| Sprigkit | |
+| `/guides/remove-location-from-photos` | remove location from photo (iPhone, Android) | How to Remove Location Data from Photos \| Sprigkit | `remove-exif-data` |
+| `/guides/what-is-inside-a-jwt` | decode jwt locally, is jwt decode safe | What’s Inside a JWT, and Is It Safe to Decode? \| Sprigkit | `jwt-decoder` |
+| `/guides/heic-vs-jpg` | heic to jpg, safest heic to jpg converter | HEIC vs JPG: What’s the Difference, How to Convert \| Sprigkit | `convert-image` |
 
-- Guide index title (56): "Guides: PDFs, Images and Code, Done Privately \| Sprigkit".
-- Each guide: unique title and description, H1 = the question or task, author and date visible, sources cited, `Article` JSON-LD (headline, author, datePublished, dateModified) matching the visible byline.
+- H1 = the question or task; byline with author (linked to /about), published and updated dates; then the article, "Tools used in this guide" and "Sources".
+- Schema: BreadcrumbList (Sprigkit › Guides › guide) · `Article` (headline, author, datePublished, dateModified, publisher, `citation` = sources) matching the visible byline. The index: BreadcrumbList · CollectionPage + ItemList.
+- Next in the backlog: web image formats compared, with Sprigkit's own measurements (content-strategy §2).
 
 ## 5. Tool pages
 
