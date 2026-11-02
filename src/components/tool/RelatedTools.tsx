@@ -3,12 +3,18 @@ import Link from "next/link";
 import type { ToolDefinition } from "@/tools/types";
 
 /** Related tools from the registry; only tools that have a page are listed. */
-export function RelatedTools({ tools }: { tools: ToolDefinition[] }) {
+export function RelatedTools({
+  tools,
+  title = "Related tools",
+}: {
+  tools: ToolDefinition[];
+  title?: string;
+}) {
   if (tools.length === 0) return null;
   return (
     <section aria-labelledby="related-heading" className="flex flex-col gap-4">
       <h2 id="related-heading" className="text-h2 text-fg">
-        Related tools
+        {title}
       </h2>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {tools.map((tool) => (

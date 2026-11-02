@@ -1,12 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { HOME_FAQS, HOME_SEO } from "@/components/home/home-content";
 import { CONTACT_EMAIL, SITE_URL } from "@/config/site";
+import { GUIDES } from "@/guides/registry";
 import { HUBS } from "@/tools/hubs";
 import { getTool, TOOLS } from "@/tools/registry";
 import {
   absoluteUrl,
   breadcrumbJsonLd,
   faqJsonLd,
+  guideJsonLd,
+  guideMetadata,
+  guidesIndexJsonLd,
   homeJsonLd,
   homeMetadata,
   serializeJsonLd,
@@ -146,5 +150,42 @@ describe("site pages", () => {
     expect(sitePageJsonLd(undated)["@graph"]).not.toContainEqual(
       expect.objectContaining({ dateModified: expect.anything() }),
     );
+  });
+});
+
+describe("guides", () => {
+  const guide = GUIDES[0]!.meta;
+
+  it("metadata is an article with its dates and canonical", () => {
+    const meta = guideMetadata(guide);
+    expect(meta.alternates?.canonical).toBe(absoluteUrl(`/guides/${guide.slug}`));
+    expect(meta.openGraph).toMatchObject({
+      type: "article",
+      publishedTime: guide.published,
+      modifiedTime: guide.updated,
+    });
+  });
+
+  it("JSON-LD: Sprigkit › Guides › guide, and an Article matching the byline", () => {
+    const graph = guideJsonLd(guide)["@graph"] as Record<string, unknown>[];
+    const crumbs = (graph[0]!.itemListElement as { name: string }[]).map((item) => item.name);
+    expect(crumbs).toEqual(["Sprigkit", "Guides", guide.h1]);
+    expect(graph[1]).toMatchObject({
+      "@type": "Article",
+      headline: guide.h1,
+      datePublished: guide.published,
+      dateModified: guide.updated,
+      author: { "@type": "Person", name: guide.author },
+      citation: guide.sources.map((source) => source.url),
+    });
+  });
+
+  it("the index lists every guide", () => {
+    const graph = guidesIndexJsonLd(GUIDES.map((g) => g.meta))["@graph"] as Record<
+      string,
+      unknown
+    >[];
+    const list = (graph[1]!.mainEntity as { itemListElement: unknown[] }).itemListElement;
+    expect(list).toHaveLength(GUIDES.length);
   });
 });

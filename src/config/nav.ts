@@ -9,6 +9,7 @@ export const CATEGORY_LINKS: readonly NavLink[] = [
 ];
 
 export const SITE_LINKS: readonly NavLink[] = [
+  { href: "/guides", label: "Guides" },
   { href: "/about", label: "About" },
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },

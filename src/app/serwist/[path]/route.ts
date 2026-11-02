@@ -1,4 +1,6 @@
 import { createSerwistRoute } from "@serwist/turbopack";
+import { GUIDES } from "@/guides/registry";
+import { guidePath } from "@/lib/seo";
 import { CATEGORIES, CATEGORY_ORDER, publishedTools } from "@/tools/registry";
 
 // Builds the service worker (src/sw.ts) at build time into out/serwist/sw.js
@@ -10,7 +12,12 @@ const PAGES = [
   "/",
   ...CATEGORY_ORDER.map((category) => CATEGORIES[category].href),
   ...publishedTools().map((tool) => `/${tool.slug}`),
+  "/about",
+  "/privacy",
+  "/terms",
   "/licenses",
+  "/guides",
+  ...GUIDES.map(({ meta }) => guidePath(meta)),
   "/search-index.json",
 ];
 
@@ -48,6 +55,8 @@ export const { dynamic, dynamicParams, revalidate, generateStaticParams, GET } =
       "public/_redirects",
       // Copied pdf.js and libheif assets: runtime-cached when a tool needs them.
       "public/vendor/**",
+      // License texts (~270 KB), linked from /licenses; fetched only when opened.
+      "public/third-party-notices.txt",
     ],
     // Sizes are filtered in `precached`, which knows the shell from the rest.
     maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,

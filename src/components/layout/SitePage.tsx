@@ -1,16 +1,10 @@
 import type { ReactNode } from "react";
 import { JsonLd } from "@/components/tool/JsonLd";
 import { SITE_NAME } from "@/config/site";
+import { formatLongDate } from "@/lib/dates";
 import { sitePageJsonLd, type SitePageSeo } from "@/lib/seo";
 import { Breadcrumbs } from "./Breadcrumbs";
 import { Container } from "./Container";
-
-/** "2026-11-02" → "November 2, 2026" (fixed locale and zone: rendered at build time). */
-function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("en-US", { dateStyle: "long", timeZone: "UTC" }).format(
-    new Date(`${iso}T00:00:00Z`),
-  );
-}
 
 /** Layout of the site pages (About, Privacy, Terms): breadcrumbs, H1, intro, sections. */
 export function SitePage({
@@ -35,7 +29,7 @@ export function SitePage({
             <p className="max-w-prose text-body-lg text-fg-muted">{intro}</p>
             {page.updated && (
               <p className="text-small text-fg-muted">
-                Last updated <time dateTime={page.updated}>{formatDate(page.updated)}</time>
+                Last updated <time dateTime={page.updated}>{formatLongDate(page.updated)}</time>
               </p>
             )}
           </header>
