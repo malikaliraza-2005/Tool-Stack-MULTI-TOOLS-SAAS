@@ -198,6 +198,12 @@ test.describe("command palette", () => {
       "aria-pressed",
       "true",
     );
+    // The toast region loads with the first toast (P9-T08); the toast is in its live region.
+    await expect(
+      page
+        .getByRole("region", { name: /Notifications/ })
+        .getByText("JSON Formatter added to favorites"),
+    ).toBeVisible();
     await page.goto("/merge-pdf");
     // The shortcut listener exists only after hydration.
     await page.waitForFunction(() => document.documentElement.hasAttribute("data-app-started"));

@@ -64,7 +64,12 @@ export const test = base.extend<Fixtures>({
     async ({ page }, use) => {
       let allowed = false;
       const pageErrors: string[] = [];
-      page.on("pageerror", (error) => pageErrors.push(error.message));
+      page.on("pageerror", (error) => {
+        // Firefox reports a worker script load cancelled by a reload or
+        // navigation as a page error; the page is already going away.
+        if (error.message.startsWith('"NS_BINDING_ABORTED')) return;
+        pageErrors.push(error.message);
+      });
       await page.addInitScript(() => {
         window.__cspViolations = [];
         document.addEventListener("securitypolicyviolation", (event) => {

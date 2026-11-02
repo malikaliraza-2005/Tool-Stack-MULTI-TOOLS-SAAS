@@ -1,60 +1,45 @@
 "use client";
 
-import { CircleAlert, CircleCheck, Info, TriangleAlert } from "lucide-react";
-import { useSyncExternalStore, type ReactNode } from "react";
-import { Toaster as Sonner, toast } from "sonner";
-import { cn } from "@/lib/cn";
+import { lazy, Suspense, useSyncExternalStore, type ReactNode } from "react";
 
-const DESKTOP_QUERY = "(min-width: 48rem)";
+// Toasts (design-system §8). sonner and the region load with the first toast,
+// not with the page (P9-T08: ≈ 11 KB gzipped off every page's initial JS).
+
+const loadRegion = () => import("./ToastRegion");
+const ToastRegion = lazy(loadRegion);
+
+let requested = false;
+const listeners = new Set<() => void>();
 
 function subscribe(callback: () => void) {
-  const query = matchMedia(DESKTOP_QUERY);
-  query.addEventListener("change", callback);
-  return () => query.removeEventListener("change", callback);
+  listeners.add(callback);
+  return () => listeners.delete(callback);
 }
 
-/**
- * Toast region (design-system §8): bottom-centre on mobile, bottom-right on
- * desktop; sonner announces toasts politely. Restyled with tokens only.
- */
+/** Mounts the toast region once the first toast is requested. */
 export function Toaster() {
-  const desktop = useSyncExternalStore(
+  const show = useSyncExternalStore(
     subscribe,
-    () => matchMedia(DESKTOP_QUERY).matches,
-    () => true,
+    () => requested,
+    () => false,
   );
-  return (
-    <Sonner
-      position={desktop ? "bottom-right" : "bottom-center"}
-      duration={4000}
-      gap={8}
-      containerAriaLabel="Notifications"
-      icons={{
-        success: <CircleCheck aria-hidden className="size-5 text-success" />,
-        info: <Info aria-hidden className="size-5 text-info" />,
-        warning: <TriangleAlert aria-hidden className="size-5 text-warning" />,
-        error: <CircleAlert aria-hidden className="size-5 text-danger" />,
-      }}
-      toastOptions={{
-        unstyled: true,
-        classNames: {
-          toast: cn(
-            "flex w-full items-start gap-3 rounded-lg border border-border bg-surface p-4 text-fg shadow-2",
-            "sm:w-(--width)",
-          ),
-          title: "text-ui text-fg",
-          description: "text-small text-fg-muted",
-          icon: "mt-px shrink-0",
-          actionButton:
-            "ml-auto h-8 shrink-0 cursor-pointer rounded-md bg-accent px-3 text-ui text-accent-fg transition-control hover:bg-accent-hover",
-          cancelButton:
-            "ml-auto h-8 shrink-0 cursor-pointer rounded-md px-3 text-ui text-fg transition-control hover:bg-surface-2",
-          closeButton:
-            "order-last ml-auto inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-sm text-fg-muted transition-control hover:bg-surface-2 hover:text-fg",
-        },
-      }}
-    />
-  );
+  return show ? (
+    <Suspense>
+      <ToastRegion />
+    </Suspense>
+  ) : null;
+}
+
+type Toast = Awaited<ReturnType<typeof loadRegion>>["toast"];
+
+async function show(publish: (toast: Toast) => void) {
+  if (!requested) {
+    requested = true;
+    listeners.forEach((listener) => listener());
+  }
+  const { toast, mounted } = await loadRegion();
+  await mounted;
+  publish(toast);
 }
 
 type NotifyOptions = {
@@ -71,10 +56,13 @@ const sonnerOptions = ({ persistent, ...options }: NotifyOptions = {}) =>
 /** Toasts auto-dismiss after 4s, except errors, which stay until closed (§8). */
 export const notify = {
   success: (message: ReactNode, options?: NotifyOptions) =>
-    toast.success(message, sonnerOptions(options)),
+    void show((toast) => toast.success(message, sonnerOptions(options))),
   info: (message: ReactNode, options?: NotifyOptions) =>
-    toast.info(message, sonnerOptions(options)),
-  warning: (message: ReactNode, options?: NotifyOptions) => toast.warning(message, options),
+    void show((toast) => toast.info(message, sonnerOptions(options))),
+  warning: (message: ReactNode, options?: NotifyOptions) =>
+    void show((toast) => toast.warning(message, options)),
   error: (message: ReactNode, options?: NotifyOptions) =>
-    toast.error(message, { ...options, duration: Infinity, closeButton: true }),
+    void show((toast) =>
+      toast.error(message, { ...options, duration: Infinity, closeButton: true }),
+    ),
 };
