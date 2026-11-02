@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Last updated** | 2026-10-14 (Phase 3: technical SEO implemented for tool pages) |
-| **Status** | Technical SEO as built. On-page copy per tool (titles, FAQs) is finalized in `page-seo-specs.md` (Phase 8) |
-| **Related** | [keyword-research.md](keyword-research.md) · [tool-registry.md](../04-architecture/tool-registry.md) · [architecture.md §12](../04-architecture/architecture.md#12-seo-generation) · [information-architecture.md](../02-design/information-architecture.md) |
+| **Status** | Technical SEO as built. Per-page targets, titles, outlines and FAQs: [page-seo-specs.md](page-seo-specs.md) (Phase 8) |
+| **Related** | [page-seo-specs.md](page-seo-specs.md) · [keyword-research.md](keyword-research.md) · [tool-registry.md](../04-architecture/tool-registry.md) · [architecture.md §12](../04-architecture/architecture.md#12-seo-generation) · [information-architecture.md](../02-design/information-architecture.md) |
 
 Sprigkit wins search by being the best page for one task: a fast tool above the fold, honest privacy, and clear supporting content. Everything technical is generated from the tool registry, so every tool page gets the same correct treatment.
 
@@ -52,5 +52,5 @@ Validation rules for these fields (uniqueness, lengths, FAQ count) fail the buil
 |---|---|
 | Rich Results Test on a preview deployment (P3-T07) | **Not done.** Needs a pushed preview URL. Structure is checked by unit tests (`src/lib/seo.test.ts`) and E2E (`e2e/seo.spec.ts`: JSON-LD parses, FAQPage matches the visible FAQs) |
 | OG image `Content-Type` on Cloudflare | Rule in `public/_headers`; verify on the first preview (fallback: render to `public/og/*.png`, architecture §3) |
-| Final titles, descriptions, FAQs | Pilot copy follows keyword-research §3; finalized in `page-seo-specs.md` (Phase 8) |
+| Final titles, descriptions, FAQs | Reviewed for every page in [page-seo-specs.md](page-seo-specs.md) (P8-T01); changes applied in P8-T02 |
 | Performance as a ranking signal | Lighthouse SEO 100 on both pilots; Performance below target (see [performance.md](../05-quality/performance.md) §2.2, R-14) |
