@@ -145,6 +145,24 @@ test.describe("theme", () => {
     await expect(page.locator("html")).not.toHaveClass(/dark/);
   });
 
+  test("reduced motion makes CSS animations and transitions instant (P9-T11)", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    for (const path of ["/", "/merge-pdf", "/guides"]) {
+      await page.goto(path);
+      await page.waitForFunction(() => document.documentElement.hasAttribute("data-app-started"));
+      const slow = await page.evaluate(() =>
+        document
+          .getAnimations()
+          .filter(
+            (animation) => animation instanceof CSSAnimation || animation instanceof CSSTransition,
+          )
+          .map((animation) => Number(animation.effect?.getComputedTiming().duration ?? 0))
+          .filter((duration) => duration > 1),
+      );
+      expect(slow, path).toEqual([]);
+    }
+  });
+
   test("theme changes use a View Transition, except under reduced motion", async ({
     page,
     browserName,

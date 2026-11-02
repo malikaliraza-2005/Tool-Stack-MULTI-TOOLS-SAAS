@@ -16,6 +16,7 @@ test.describe("axe on every page", () => {
 
   for (const route of [...paths, "/this-page-does-not-exist"]) {
     test(route, async ({ page }) => {
+      test.slow(); // Two axe scans; Firefox needs the time when the suite runs in parallel.
       await page.goto(route);
       for (const colorScheme of ["light", "dark"] as const) {
         await page.emulateMedia({ colorScheme });

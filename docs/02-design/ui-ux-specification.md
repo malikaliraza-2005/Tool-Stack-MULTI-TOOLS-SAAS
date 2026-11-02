@@ -114,7 +114,7 @@ Per design-system §10.5: ComparisonSlider centre stage (arrow keys move the div
 
 ## 8. 404 (built, Phase 2)
 
-H1 "Page not found", one sentence explaining the page doesn't exist or isn't built yet, primary button "Go to the homepage".
+H1 "Page not found", a short explanation that the page doesn't exist (moved, or a typo in the address), primary button "Go to the homepage".
 
 ## 9. Component gallery (built, Phase 2)
 
