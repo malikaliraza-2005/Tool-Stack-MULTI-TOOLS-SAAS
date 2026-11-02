@@ -345,7 +345,7 @@ All generated from the registry (see [tool-registry.md](tool-registry.md)):
 
 ## 15. CI/CD
 
-**GitHub Actions on every push/PR:** install → typecheck → lint → unit tests → build → E2E (incl. privacy + axe) → Lighthouse CI → license check.
+**GitHub Actions on every push/PR:** install → typecheck → lint → unit tests → build → E2E (incl. privacy + axe) → Lighthouse CI → license check. *Since Phase 7* E2E runs in three parallel jobs (Chromium + mobile, Firefox, WebKit + iPhone), each building the site itself, next to a `checks` job with everything else: as one job the suite passed its 30-minute timeout, which GitHub reports as "cancelled".
 
 **Cloudflare Pages (Git integration):**
 - `main` → production.
