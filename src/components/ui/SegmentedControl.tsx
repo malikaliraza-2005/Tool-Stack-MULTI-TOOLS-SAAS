@@ -2,7 +2,7 @@
 
 import { m } from "motion/react";
 import { RadioGroup } from "radix-ui";
-import { useId, useState } from "react";
+import { memo, useId, useState } from "react";
 import { cn } from "@/lib/cn";
 import { slide } from "@/lib/motion";
 
@@ -64,14 +64,7 @@ export function SegmentedControl({
               size === "sm" ? "h-7" : "h-9",
             )}
           >
-            {selected && (
-              <m.span
-                layoutId={layoutId}
-                transition={slide}
-                aria-hidden
-                className="absolute inset-0 rounded-sm border border-border-strong bg-surface shadow-1"
-              />
-            )}
+            {selected && <Pill layoutId={layoutId} />}
             <span className="relative">{option.label}</span>
           </RadioGroup.Item>
         );
@@ -79,3 +72,19 @@ export function SegmentedControl({
     </RadioGroup.Root>
   );
 }
+
+/**
+ * The sliding pill. Memoized: a layout-animated element measures the page
+ * every time it renders, and the tool UI around it re-renders on every
+ * keystroke (P9-T10: up to 576 ms per keystroke on a slow phone).
+ */
+const Pill = memo(function Pill({ layoutId }: { layoutId: string }) {
+  return (
+    <m.span
+      layoutId={layoutId}
+      transition={slide}
+      aria-hidden
+      className="absolute inset-0 rounded-sm border border-border-strong bg-surface shadow-1"
+    />
+  );
+});

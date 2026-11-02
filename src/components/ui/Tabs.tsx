@@ -2,7 +2,7 @@
 
 import { m } from "motion/react";
 import { Tabs as RadixTabs } from "radix-ui";
-import { createContext, useContext, useId, useState, type ComponentProps } from "react";
+import { createContext, memo, useContext, useId, useState, type ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 import { slide } from "@/lib/motion";
 
@@ -57,14 +57,7 @@ export function TabsTrigger({
       {...props}
     >
       {children}
-      {tabs?.value === value && (
-        <m.span
-          layoutId={tabs.indicatorId}
-          transition={slide}
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-accent"
-        />
-      )}
+      {tabs?.value === value && <Indicator layoutId={tabs.indicatorId} />}
     </RadixTabs.Trigger>
   );
 }
@@ -77,3 +70,15 @@ export function TabsContent({ className, ...props }: ComponentProps<typeof Radix
     />
   );
 }
+
+/** The sliding underline, memoized like SegmentedControl's pill (layout elements measure on render). */
+const Indicator = memo(function Indicator({ layoutId }: { layoutId: string }) {
+  return (
+    <m.span
+      layoutId={layoutId}
+      transition={slide}
+      aria-hidden
+      className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-accent"
+    />
+  );
+});

@@ -2,27 +2,23 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-14 (Phase 3 tool pages measured) |
+| **Last updated** | 2026-11-02 (Phase 9: budgets set and enforced, all 26 page URLs measured) |
 | **Related** | [architecture.md §14](../04-architecture/architecture.md#14-performance-budgets-target) · [testing-strategy.md](testing-strategy.md) · [risks-and-decisions.md](../06-delivery/risks-and-decisions.md) (R-14) |
 
-## 1. Budgets **[Target]**
+## 1. Budgets
 
-The budgets are defined in [architecture.md §14](../04-architecture/architecture.md#14-performance-budgets-target) and enforced by Lighthouse CI (`lighthouserc.cjs`):
+The targets are in [architecture.md §14](../04-architecture/architecture.md#14-performance-budgets-target). Lighthouse CI (`lighthouserc.cjs`, mobile emulation, 3 runs per URL) **enforces** these budgets since P9-T08 (owner decision 2026-11-02, R-14): the measured Phase 9 baseline plus a margin for noise.
 
-| Budget | Lighthouse CI assertion | Level |
+| Budget | Homepage | Every other page (hubs, tools, site pages, guides) |
 |---|---|---|
-| Performance ≥ 90 | `categories:performance` minScore 0.9 | warn until P9 |
-| Accessibility 100 | `categories:accessibility` minScore 1 | warn until P9 |
-| Best Practices ≥ 95 | `categories:best-practices` minScore 0.95 | warn until P9 |
-| SEO 100 | `categories:seo` minScore 1 | warn until P9 |
-| LCP ≤ 2.5 s | `largest-contentful-paint` ≤ 2500 ms | warn until P9 |
-| CLS ≤ 0.1 | `cumulative-layout-shift` ≤ 0.1 | warn until P9 |
-| INP ≤ 200 ms (field) | lab proxy: `total-blocking-time` ≤ 200 ms | warn until P9 |
-| Homepage initial JS ≤ 100 KB gzipped | `resource-summary:script:size` ≤ 102 400 bytes (transfer size, gzip) | warn until P9 |
-| Tool page initial JS ≤ 120 KB gzipped | `resource-summary:script:size` ≤ 122 880 bytes on tool URLs (`assertMatrix` in `lighthouserc.cjs`, Phase 3) | warn until P9 |
-| ≤ 2 font files | `resource-summary:font:count` ≤ 2 | warn until P9 |
+| Performance | ≥ 80 | ≥ 75 |
+| LCP (simulated) | ≤ 4.0 s | ≤ 4.5 s |
+| TBT (lab proxy for INP) | ≤ 400 ms | ≤ 500 ms |
+| Initial JS (gzipped transfer) | ≤ 300 KB | ≤ 340 KB |
+| Accessibility · Best Practices · SEO | 100 · ≥ 95 · 100 | 100 · ≥ 95 · 100 |
+| CLS · font files | ≤ 0.1 · ≤ 2 | ≤ 0.1 · ≤ 2 |
 
-INP can only be measured in the field; TBT is the lab stand-in.
+INP can only be measured in the field; TBT is the lab stand-in, and `e2e/inp.spec.ts` measures real interaction latency on a 4× slowed CPU (§2.3).
 
 ## 2. Phase 1 baseline
 
@@ -86,6 +82,37 @@ Findings:
 - Accessibility, Best Practices and SEO are 100; no layout shift from the entrance animation (opacity and transform only).
 
 Deferred to Phase 9 with R-14 (P9-T08 budget decision, P9-T11 device traces).
+
+## 2.3 Phase 9: enforced budgets
+
+Measured 2026-11-02 with `lhci collect` on a quiet machine (3 runs per URL; median, worst run in brackets), after loading toasts on intent (−10 KB on every page, P9-T08).
+
+| Page | Perf | A11y | BP | SEO | LCP | TBT | CLS | Script |
+|---|---|---|---|---|---|---|---|---|
+| `/` | 84 | 100 | 100 | 100 | 3.55 s | 271 ms (287) | 0.001 | 255 KB |
+| Hubs (3) | 89–90 | 100 | 100 | 100 | 3.07–3.21 s | 204–224 ms (243) | ≤ 0.006 | 270 KB |
+| Developer tools (8) | 80–85 | 100 | 100 | 100 | 3.46–3.88 s | 230–419 ms (419) | ≤ 0.030 | 282–309 KB |
+| PDF tools (6) | 82–85 | 100 | 100 | 100 | 3.70–3.94 s | 228–291 ms (293) | ≤ 0.003 | 289–318 KB |
+| Image tools (4) | 80–83 | 100 | 100 | 100 | 3.86–3.92 s | 236–336 ms (358) | ≤ 0.018 | 300–320 KB |
+| `/about` | 89 | 100 | 100 | 100 | 2.89 s | 274 ms (304) | 0 | 257 KB |
+| `/guides` | 93 | 100 | 96 | 100 | 2.82 s | 195 ms (280) | 0 | 257 KB |
+| `/guides/heic-vs-jpg` | 87 | 100 | 100 | 100 | 3.18 s | 257 ms (269) | 0 | 257 KB |
+
+Findings:
+- **LCP is simulated JavaScript time, not a late paint.** In the observed (unthrottled) trace, FCP and LCP are both ≈ 0.3 s: the H1 is in the static HTML and paints on the first frame. Lighthouse's simulated slow phone attributes ≈ 0.8 s of script evaluation (mostly the Next.js runtime chunk) to the LCP, which puts it at 2.8–3.9 s. The 2.5 s target can't be met without shipping less framework code.
+- **Initial JS** (from the built HTML, gzipped): 214 KB on every page before page code, of which ≈ 132 KB is Next.js and React. The shell adds Radix Tooltip with Popper (≈ 20 KB), Motion (≈ 13 KB) and the theme menu (≈ 6 KB). The polyfills chunk (39 KB) is `noModule` and never loads in supported browsers. Lighthouse's larger figures include the tool UI chunk and `<Link>` prefetches loaded after `load`.
+- **Not done, and why:** loading tooltips or the theme menu on intent would swap the button under the user's focus (focus loss); ≈ 25 KB isn't worth that risk. Geist fonts are not preloaded; with `font-display: swap` and size-adjusted fallbacks they don't affect LCP or CLS.
+- **Interaction latency (P9-T10)**, `npm run e2e:inp` (Event Timing API, Chromium, CPU slowed 4×, one worker; worst interaction of 3 runs):
+
+  | Interaction | Before | After |
+  |---|---|---|
+  | Typing in the JSON editor, 40 KB formatted (85 KB, 2,800 lines) | 248 ms | 152–216 ms |
+  | Typing in the JSON editor, 40 KB minified (one line) | 576–664 ms | 272–432 ms |
+  | Organize PDF, 300-page grid: select and move with arrows | 224 ms | 104–160 ms |
+  | Compress Image: quality slider · comparison slider | 56–112 ms · 40–48 ms | unchanged |
+
+  Two fixes: (1) the sliding indicators of `SegmentedControl` and `Tabs` are memoized, because a Motion `layoutId` element measures the page (`measureScroll`) every time it renders, and tool UIs re-render on every keystroke; (2) `CodeEditor`'s `setValue` replaces only the changed span, so the output editor and its parser update incrementally instead of re-parsing the whole document. Moving JSON formatting to the worker for inputs over 32 KB made no difference and was reverted. Typing inside one very long line stays CodeMirror's slow case (it redraws the line on every key); formatted JSON is at the 200 ms budget on this lab setup. The full E2E suite only logs these timings (parallel workers distort them).
+- Field INP and real mid-range-phone traces remain P9-T11.
 
 ## 3. Rules that keep us inside the budgets
 
