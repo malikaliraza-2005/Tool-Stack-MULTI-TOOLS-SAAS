@@ -1,42 +1,56 @@
 // Third-party licenses (information-architecture: /licenses). Generated at
-// build time from package.json and the notice files the packages ship.
-// Phase 6 adds it early for the HEIC decoder (D-6: LGPL-3.0 notices, license
-// texts and corresponding source) and the image codecs' BSD/IJG notices;
-// Phase 8 completes it.
+// build time from the license report (scripts/license-report.mjs, run before
+// dev and build) and the notice files the packages ship. Phase 6 added the
+// HEIC decoder (D-6: LGPL-3.0 notices, license texts and corresponding source)
+// and the image codecs' BSD/IJG notices; Phase 8 lists every production
+// package with its license text (P8-T09).
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Container, Section } from "@/components/layout/Container";
+import { SitePage } from "@/components/layout/SitePage";
 import { TextLink } from "@/components/tool/content";
 import { LIBHEIF_BASE, LIBHEIF_VERSION } from "@/lib/image/heic";
+import { sitePageMetadata, type SitePageSeo } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Open-source licenses",
+const PAGE: SitePageSeo = {
+  path: "/licenses",
+  title: "Open-source licenses · Sprigkit",
   description:
     "The open-source software Sprigkit is built with, its licenses and notices, and the source code of the LGPL-licensed HEIC decoder.",
-  alternates: { canonical: "/licenses" },
+  name: "Open-source licenses",
+  type: "WebPage",
 };
+
+export const metadata: Metadata = sitePageMetadata(PAGE);
 
 const root = process.cwd();
 const read = (...path: string[]) => readFileSync(join(root, ...path), "utf8");
 
-type Package = { name: string; version: string; license: string };
+type Package = {
+  name: string;
+  version: string;
+  license: string;
+  repository: string | null;
+  text: string | null;
+};
 
-function packages(): Package[] {
-  const { dependencies } = JSON.parse(read("package.json")) as {
-    dependencies: Record<string, string>;
-  };
-  return Object.keys(dependencies)
-    .sort()
-    .map((name) => {
-      const pkg = JSON.parse(read("node_modules", name, "package.json")) as {
-        version: string;
-        license?: string;
-      };
-      return { name, version: pkg.version, license: pkg.license ?? "See package" };
-    });
+/** Every production package, and each distinct license text with the packages using it. */
+function report() {
+  const packages = JSON.parse(read(".generated", "licenses.json")) as Package[];
+  const texts = new Map<string, { id: string; license: string; packages: string[] }>();
+  for (const pkg of packages) {
+    if (!pkg.text) continue;
+    const entry = texts.get(pkg.text) ?? {
+      id: `text-${texts.size + 1}`,
+      license: pkg.license,
+      packages: [],
+    };
+    entry.packages.push(pkg.name);
+    texts.set(pkg.text, entry);
+  }
+  return { packages, texts: [...texts].map(([text, entry]) => ({ ...entry, text })) };
 }
 
 const CODECS: { title: string; parts: string; files: string[] }[] = [
@@ -93,137 +107,161 @@ function Notice({ label, text }: { label: string; text: string }) {
 }
 
 export default function LicensesPage() {
+  const { packages, texts } = report();
   const vendor = LIBHEIF_BASE;
   const source = `${vendor}/source`;
   return (
-    <Section>
-      <Container size="content" className="flex flex-col gap-10">
-        <header className="flex flex-col gap-3">
-          <h1 className="text-h1 text-fg">Open-source licenses</h1>
-          <p className="text-body-lg text-fg-muted">
-            Sprigkit is built with open-source software. This page lists it with its licenses and
-            the notices those licenses ask us to show.
-          </p>
-        </header>
-
-        <section className="flex flex-col gap-4">
-          <Heading id="libheif">HEIC decoder: libheif (LGPL-3.0)</Heading>
-          <p className="text-body text-fg">
-            Convert Image and JPG to PDF open HEIC/HEIF photos with{" "}
-            <strong className="font-medium">libheif-js {LIBHEIF_VERSION}</strong>, a WebAssembly
-            build of libheif {LIBHEIF_VERSION} and the HEVC decoder libde265 1.0.15. They are
-            licensed under the GNU Lesser General Public License version 3 (LGPL-3.0), which
-            includes the GNU General Public License version 3 by reference.
-          </p>
-          <ul className="flex list-disc flex-col gap-1 pl-5 text-body text-fg">
-            <li>libheif: Copyright © 2017–2025 Dirk Farin.</li>
-            <li>libde265: Copyright © 2013–2014 struktur AG, Dirk Farin.</li>
-            <li>libheif-js: packaging by Kiril Vatev (LGPL-3.0).</li>
-          </ul>
-          <p className="text-body text-fg">
-            The decoder is not part of Sprigkit’s code: it is served unmodified as a separate file,{" "}
-            <TextLink href={`${vendor}/libheif-wasm/libheif-bundle.mjs`} prefetch={false}>
-              libheif-bundle.mjs
+    <SitePage
+      page={PAGE}
+      h1="Open-source licenses"
+      intro="Sprigkit is built with open-source software. This page lists it with its licenses and the notices those licenses ask us to show."
+    >
+      <section aria-labelledby="libheif" className="flex flex-col gap-4">
+        <Heading id="libheif">HEIC decoder: libheif (LGPL-3.0)</Heading>
+        <p className="text-body text-fg">
+          Convert Image and JPG to PDF open HEIC/HEIF photos with{" "}
+          <strong className="font-medium">libheif-js {LIBHEIF_VERSION}</strong>, a WebAssembly build
+          of libheif {LIBHEIF_VERSION} and the HEVC decoder libde265 1.0.15. They are licensed under
+          the GNU Lesser General Public License version 3 (LGPL-3.0), which includes the GNU General
+          Public License version 3 by reference.
+        </p>
+        <ul className="flex list-disc flex-col gap-1 pl-5 text-body text-fg">
+          <li>libheif: Copyright © 2017–2025 Dirk Farin.</li>
+          <li>libde265: Copyright © 2013–2014 struktur AG, Dirk Farin.</li>
+          <li>libheif-js: packaging by Kiril Vatev (LGPL-3.0).</li>
+        </ul>
+        <p className="text-body text-fg">
+          The decoder is not part of Sprigkit’s code: it is served unmodified as a separate file,{" "}
+          <TextLink href={`${vendor}/libheif-wasm/libheif-bundle.mjs`} prefetch={false}>
+            libheif-bundle.mjs
+          </TextLink>
+          , and loaded only when you add a HEIC file. You may replace it with your own compatible
+          build of libheif-js {LIBHEIF_VERSION} served at the same address.
+        </p>
+        <ul className="flex list-disc flex-col gap-1 pl-5 text-body text-fg">
+          <li>
+            License texts:{" "}
+            <TextLink href={`${vendor}/libheif-wasm/LICENSE`} prefetch={false}>
+              libheif (LGPL-3.0 and GPL-3.0)
             </TextLink>
-            , and loaded only when you add a HEIC file. You may replace it with your own compatible
-            build of libheif-js {LIBHEIF_VERSION} served at the same address.
-          </p>
-          <ul className="flex list-disc flex-col gap-1 pl-5 text-body text-fg">
-            <li>
-              License texts:{" "}
-              <TextLink href={`${vendor}/libheif-wasm/LICENSE`} prefetch={false}>
-                libheif (LGPL-3.0 and GPL-3.0)
-              </TextLink>
-              ,{" "}
-              <TextLink href={`${vendor}/LICENSE`} prefetch={false}>
-                libheif-js (LGPL-3.0)
-              </TextLink>
-            </li>
-            <li>
-              Corresponding source, hosted here:{" "}
-              <TextLink href={`${source}/libheif-${LIBHEIF_VERSION}.tar.gz`} prefetch={false}>
-                libheif {LIBHEIF_VERSION}
-              </TextLink>
-              ,{" "}
-              <TextLink href={`${source}/libde265-1.0.15.tar.gz`} prefetch={false}>
-                libde265 1.0.15
-              </TextLink>
-              ,{" "}
-              <TextLink
-                href={`${source}/libheif-emscripten-${LIBHEIF_VERSION}.tar.gz`}
-                prefetch={false}
-              >
-                build scripts (libheif-emscripten {LIBHEIF_VERSION})
-              </TextLink>
-              ,{" "}
-              <TextLink href={`${source}/libheif-js-${LIBHEIF_VERSION}.tar.gz`} prefetch={false}>
-                libheif-js {LIBHEIF_VERSION}
-              </TextLink>
-            </li>
-            <li>
-              Upstream: github.com/strukturag/libheif (tag v{LIBHEIF_VERSION}),
-              github.com/strukturag/libde265 (v1.0.15), github.com/catdad-experiments/libheif-js
-            </li>
-          </ul>
-        </section>
+            ,{" "}
+            <TextLink href={`${vendor}/LICENSE`} prefetch={false}>
+              libheif-js (LGPL-3.0)
+            </TextLink>
+          </li>
+          <li>
+            Corresponding source, hosted here:{" "}
+            <TextLink href={`${source}/libheif-${LIBHEIF_VERSION}.tar.gz`} prefetch={false}>
+              libheif {LIBHEIF_VERSION}
+            </TextLink>
+            ,{" "}
+            <TextLink href={`${source}/libde265-1.0.15.tar.gz`} prefetch={false}>
+              libde265 1.0.15
+            </TextLink>
+            ,{" "}
+            <TextLink
+              href={`${source}/libheif-emscripten-${LIBHEIF_VERSION}.tar.gz`}
+              prefetch={false}
+            >
+              build scripts (libheif-emscripten {LIBHEIF_VERSION})
+            </TextLink>
+            ,{" "}
+            <TextLink href={`${source}/libheif-js-${LIBHEIF_VERSION}.tar.gz`} prefetch={false}>
+              libheif-js {LIBHEIF_VERSION}
+            </TextLink>
+          </li>
+          <li>
+            Upstream: github.com/strukturag/libheif (tag v{LIBHEIF_VERSION}),
+            github.com/strukturag/libde265 (v1.0.15), github.com/catdad-experiments/libheif-js
+          </li>
+        </ul>
+      </section>
 
-        <section className="flex flex-col gap-4">
-          <Heading id="codecs">Image codecs</Heading>
-          <p className="text-body text-fg">
-            The image tools encode and decode with jSquash (Apache-2.0), which bundles these codecs.
-            Their notices follow.
-          </p>
-          {CODECS.map((codec) => (
-            <div key={codec.title} className="flex flex-col gap-2">
-              <h3 className="text-h3 text-fg">{codec.title}</h3>
-              <p className="text-small text-fg-muted">{codec.parts}</p>
-              {codec.files.map((file) => (
-                <Notice
-                  key={file}
-                  label={`Notice: ${file.split("/").pop()}`}
-                  text={read(...file.split("/"))}
-                />
-              ))}
-            </div>
-          ))}
-          <p className="text-body text-fg">
-            The PDF tools use pdf.js (Apache-2.0) with its runtime files: PDFium’s JBIG2 decoder
-            (BSD-3-Clause), OpenJPEG (BSD-2-Clause), qcms (MIT) and its CMaps and standard fonts.
-          </p>
-        </section>
+      <section aria-labelledby="codecs" className="flex flex-col gap-4">
+        <Heading id="codecs">Image codecs</Heading>
+        <p className="text-body text-fg">
+          The image tools encode and decode with jSquash (Apache-2.0), which bundles these codecs.
+          Their notices follow.
+        </p>
+        {CODECS.map((codec) => (
+          <div key={codec.title} className="flex flex-col gap-2">
+            <h3 className="text-h3 text-fg">{codec.title}</h3>
+            <p className="text-small text-fg-muted">{codec.parts}</p>
+            {codec.files.map((file) => (
+              <Notice
+                key={file}
+                label={`Notice: ${file.split("/").pop()}`}
+                text={read(...file.split("/"))}
+              />
+            ))}
+          </div>
+        ))}
+        <p className="text-body text-fg">
+          The PDF tools use pdf.js (Apache-2.0) with its runtime files: PDFium’s JBIG2 decoder
+          (BSD-3-Clause), OpenJPEG (BSD-2-Clause), qcms (MIT) and its CMaps and standard fonts.
+        </p>
+      </section>
 
-        <section className="flex flex-col gap-4">
-          <Heading id="packages">All packages</Heading>
-          <div className="overflow-x-auto rounded-md border border-border">
-            <table className="w-full text-left text-small">
-              <thead className="bg-surface-2 text-fg-muted">
-                <tr>
-                  <th scope="col" className="px-3 py-2 font-medium">
-                    Package
-                  </th>
-                  <th scope="col" className="px-3 py-2 font-medium">
-                    Version
-                  </th>
-                  <th scope="col" className="px-3 py-2 font-medium">
-                    License
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {packages().map((pkg) => (
-                  <tr key={pkg.name}>
-                    <td className="px-3 py-2 font-mono text-fg">{pkg.name}</td>
+      <section aria-labelledby="packages" className="flex flex-col gap-4">
+        <Heading id="packages">All packages</Heading>
+        <p className="text-body text-fg">
+          Every package in Sprigkit’s production dependencies, {packages.length} in total. Some are
+          used only to build the site. Each license links to its text below.
+        </p>
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full text-left text-small">
+            <thead className="bg-surface-2 text-fg-muted">
+              <tr>
+                <th scope="col" className="px-3 py-2 font-medium">
+                  Package
+                </th>
+                <th scope="col" className="px-3 py-2 font-medium">
+                  Version
+                </th>
+                <th scope="col" className="px-3 py-2 font-medium">
+                  License
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {packages.map((pkg) => {
+                const text = texts.find((entry) => entry.text === pkg.text);
+                return (
+                  <tr key={`${pkg.name}@${pkg.version}`}>
+                    <td className="px-3 py-2 font-mono break-all text-fg">{pkg.name}</td>
                     <td className="px-3 py-2 font-mono text-fg-muted tabular-nums">
                       {pkg.version}
                     </td>
-                    <td className="px-3 py-2 text-fg">{pkg.license}</td>
+                    <td className="px-3 py-2 text-fg">
+                      {text ? (
+                        <TextLink href={`#${text.id}`}>{pkg.license}</TextLink>
+                      ) : (
+                        <>
+                          {pkg.license}{" "}
+                          <span className="text-fg-muted">(no license file in the package)</span>
+                        </>
+                      )}
+                    </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section aria-labelledby="texts" className="flex flex-col gap-4">
+        <Heading id="texts">License texts</Heading>
+        <p className="text-body text-fg">
+          Each distinct license text, with the copyright notices it carries, shown once with the
+          packages that use it.
+        </p>
+        {texts.map((entry) => (
+          <div key={entry.id} id={entry.id} className="scroll-mt-(--header-height)">
+            <Notice label={`${entry.license}: ${entry.packages.join(", ")}`} text={entry.text} />
           </div>
-        </section>
-      </Container>
-    </Section>
+        ))}
+      </section>
+    </SitePage>
   );
 }

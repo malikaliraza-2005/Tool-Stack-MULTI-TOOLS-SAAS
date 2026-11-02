@@ -1,12 +1,25 @@
 import { expect, expectNoA11yViolations, test } from "./fixtures";
 
-// About, Privacy and Terms (P8-T06..T08): metadata, JSON-LD, accessibility and
+// About, Privacy, Terms and Licenses (P8-T06..T09): metadata, JSON-LD, accessibility and
 // the facts other pages link to.
 
 const PAGES = [
-  { path: "/about", h1: "About Sprigkit", name: "About", type: "AboutPage" },
-  { path: "/privacy", h1: "Privacy policy", name: "Privacy policy", type: "WebPage" },
-  { path: "/terms", h1: "Terms of use", name: "Terms of use", type: "WebPage" },
+  { path: "/about", h1: "About Sprigkit", name: "About", type: "AboutPage", contact: true },
+  {
+    path: "/privacy",
+    h1: "Privacy policy",
+    name: "Privacy policy",
+    type: "WebPage",
+    contact: true,
+  },
+  { path: "/terms", h1: "Terms of use", name: "Terms of use", type: "WebPage", contact: true },
+  {
+    path: "/licenses",
+    h1: "Open-source licenses",
+    name: "Open-source licenses",
+    type: "WebPage",
+    contact: false,
+  },
 ];
 
 for (const site of PAGES) {
@@ -27,10 +40,11 @@ for (const site of PAGES) {
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(site.h1);
     await expect(page.getByRole("navigation", { name: "Breadcrumb" })).toContainText(site.name);
-    await expect(page.getByRole("link", { name: "officialaliraza2005@gmail.com" })).toHaveAttribute(
-      "href",
-      "mailto:officialaliraza2005@gmail.com",
-    );
+    if (site.contact) {
+      await expect(
+        page.getByRole("link", { name: "officialaliraza2005@gmail.com" }),
+      ).toHaveAttribute("href", "mailto:officialaliraza2005@gmail.com");
+    }
 
     for (const scheme of ["light", "dark"] as const) {
       await page.emulateMedia({ colorScheme: scheme });
@@ -54,5 +68,20 @@ test("About lists the tools by category", async ({ page }) => {
   await page.goto("/about");
   for (const name of ["Merge PDF", "Convert Image", "Regex Tester"]) {
     await expect(page.getByRole("main").getByText(name, { exact: false }).first()).toBeVisible();
+  }
+});
+
+test("Licenses lists every package with its license text", async ({ page }) => {
+  await page.goto("/licenses");
+  const rows = page.getByRole("region", { name: "All packages" }).getByRole("row");
+  expect(await rows.count()).toBeGreaterThan(100);
+  const pdfLib = rows.filter({ hasText: "pdf-lib" }).first();
+  const href = await pdfLib.getByRole("link").getAttribute("href");
+  expect(href).toMatch(/^#text-\d+$/);
+  const notice = page.locator(href!);
+  await expect(notice.locator("summary")).toContainText("pdf-lib");
+  // Every license link points at a text on the page.
+  for (const link of await page.locator('a[href^="#text-"]').all()) {
+    await expect(page.locator((await link.getAttribute("href"))!)).toHaveCount(1);
   }
 });

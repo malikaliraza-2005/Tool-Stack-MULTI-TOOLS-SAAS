@@ -38,7 +38,7 @@ Make every page genuinely useful and search-ready: final supporting content and 
 - [x] **P8-T06** About page (G-10): what Sprigkit is, how it works, who runs it, contact method; consistent product facts.
 - [x] **P8-T07** Write `07-legal/privacy-policy.md` → Privacy page (G-9): local processing, analytics used (exact provider), no cookies/ads at launch, how to verify with DevTools.
 - [x] **P8-T08** Write `07-legal/terms-of-use.md` → Terms page (incl. "visual signature, not certified" and "provided as is").
-- [ ] **P8-T09** Licenses page generated from the license report (dependencies-licenses §7).
+- [x] **P8-T09** Licenses page generated from the license report (dependencies-licenses §7).
 
 ### Guides
 - [ ] **P8-T10** Write `03-seo-growth/content-strategy.md` (topics, mapping to tools, review process, cadence).

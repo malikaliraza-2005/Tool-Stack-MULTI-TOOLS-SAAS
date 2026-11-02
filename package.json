@@ -7,9 +7,9 @@
     "node": ">=24"
   },
   "scripts": {
-    "predev": "node scripts/copy-pdfjs-assets.mjs && node scripts/copy-libheif-assets.mjs",
+    "predev": "node scripts/copy-pdfjs-assets.mjs && node scripts/copy-libheif-assets.mjs && node scripts/license-report.mjs",
     "dev": "next dev --webpack",
-    "prebuild": "node scripts/copy-pdfjs-assets.mjs && node scripts/copy-libheif-assets.mjs",
+    "prebuild": "node scripts/copy-pdfjs-assets.mjs && node scripts/copy-libheif-assets.mjs && node scripts/license-report.mjs",
     "build": "next build --webpack",
     "postbuild": "node scripts/flatten-segment-prefetch.mjs",
     "serve": "node scripts/serve-out.mjs",
