@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Last updated** | 2026-11-02 (Phase 8, P8-T01) |
-| **Status** | Spec for every indexable page. Tool and hub copy reviewed against keyword research; changes marked **Change (P8-T02)** are applied in P8-T02 |
+| **Status** | Spec for every indexable page. Tool and hub copy reviewed against keyword research; the P8-T02 changes are applied |
 | **Related** | [seo-strategy.md](seo-strategy.md) · [keyword-research.md](keyword-research.md) · [content-voice-ux-copy.md](../02-design/content-voice-ux-copy.md) · [tool-registry.md](../04-architecture/tool-registry.md) |
 
 What each page targets, what it is called, what it must answer, and which structured data it carries.
@@ -34,13 +34,13 @@ Keyword research §2 found privacy, cost and offline questions for every tool. E
 3. **Does it work offline?** One line in the shared section, matching the PWA as built: pages work offline after the first visit; file tools after their first use.
 4. **Limits:** the tool's real numbers in "Formats and limits" (from `limits` in the registry).
 
-**Change (P8-T02):** the shared section answers (1) only. Add (2) and (3) as list items: "No account, no sign-up, no watermarks." and the offline sentence above. The homepage FAQ already uses this wording.
+**Changed (P8-T02):** the shared section answered (1) only; (2) and (3) are now a closing paragraph, in the homepage FAQ's wording ("no account, no sign-up and no watermark"; pages offline after the first visit, a tool's larger parts saved on first use).
 
 ## 3. Page inventory
 
 | URL | Type | Title | Schema | Phase |
 |---|---|---|---|---|
-| `/` | Home | see §4.1 | WebSite · Organization · FAQPage | P7, **Change (P8-T02)** |
+| `/` | Home | see §4.1 | WebSite · Organization · FAQPage | P7, metadata P8-T02 |
 | `/pdf-tools`, `/image-tools`, `/developer-tools` | Hub | see §4.2 | BreadcrumbList · CollectionPage + ItemList | P7, content P8-T05 |
 | `/<slug>` × 19 | Tool | see §5 | BreadcrumbList · WebApplication · FAQPage | P3–P6 |
 | `/about` | Site page | About Sprigkit | BreadcrumbList · AboutPage | P8-T06 |
@@ -66,7 +66,7 @@ Keyword research §2 found privacy, cost and offline questions for every tool. E
 | Schema | `WebSite` (name, url) · `Organization` (name, url, logo, contact email from `src/config/site.ts`) · `FAQPage` mirroring the visible FAQs |
 | Related | Every published tool (the index), the three hubs |
 
-**Change (P8-T02):** today the homepage inherits the layout's default title ("Sprigkit") and description, and has no JSON-LD although it shows FAQs. Add page metadata (title as `absolute`, description, canonical, Open Graph) and the JSON-LD above. No `SearchAction`: the site has no search results URL.
+**Changed (P8-T02):** the homepage inherited the layout's default title ("Sprigkit") and description, and had no JSON-LD although it shows FAQs. Added: page metadata (title as `absolute`, description, canonical, Open Graph) and the JSON-LD above. No `SearchAction`: the site has no search results URL.
 
 ### 4.2 Category hubs
 
@@ -269,7 +269,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 | Primary query | compress image |
 | Secondary | reduce image size, image compressor; size targets (compress image to 100kb) |
 | Title (65) | Compress Image: Reduce JPG, PNG, WebP Size (No Upload) \| Sprigkit |
-| Description (129) | Reduce image file size with adjustable quality and a before/after slider. JPG, PNG, WebP and AVIF, many at once, in your browser. |
+| Description (129) | Reduce JPG, PNG, WebP and AVIF file size with a quality slider and a before/after view, many images at once. Nothing is uploaded. |
 | H1 | Compress images |
 | H2 outline | How to compress images · Options · Smaller files, same look · Formats and limits · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
 | Schema | BreadcrumbList · WebApplication · FAQPage |
@@ -281,7 +281,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
   - Can I compress without losing quality?
   - Is it safe to compress images online?
   - Can I compress many images at once?
-- Review: **Change (P8-T02):** the description is the only file-tool description without a privacy statement; proposed: "Reduce JPG, PNG, WebP and AVIF file size with a quality slider and a before/after view, many images at once. Nothing is uploaded." **Accuracy (P8-T04):** keyword-research §2.5 assumes a target-size mode; the tool has none, and the FAQ correctly explains the slider route. Keep content honest; do not promise a target-size mode.
+- Review: **Changed (P8-T02):** the description was the only file-tool description without a privacy statement; now it ends "Nothing is uploaded." **Accuracy (P8-T04):** keyword-research §2.5 assumes a target-size mode; the tool has none, and the FAQ correctly explains the slider route. Keep content honest; do not promise a target-size mode.
 
 #### `/resize-image`
 

@@ -23,7 +23,7 @@ export const meta: ToolDefinition = {
   seo: {
     title: "Compress Image: Reduce JPG, PNG, WebP Size (No Upload) | Sprigkit",
     description:
-      "Reduce image file size with adjustable quality and a before/after slider. JPG, PNG, WebP and AVIF, many at once, in your browser.",
+      "Reduce JPG, PNG, WebP and AVIF file size with a quality slider and a before/after view, many images at once. Nothing is uploaded.",
     h1: "Compress images",
     faqs: [
       {
@@ -64,5 +64,5 @@ export const meta: ToolDefinition = {
   processing: { local: true, worker: true, offline: true },
   handoff: ["resize-image", "jpg-to-pdf"],
   addedAt: "2026-11-01",
-  updatedAt: "2026-11-01",
+  updatedAt: "2026-11-02",
 };

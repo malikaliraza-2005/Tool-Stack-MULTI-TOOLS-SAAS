@@ -27,7 +27,7 @@ Make every page genuinely useful and search-ready: final supporting content and 
 
 ### SEO specs
 - [x] **P8-T01** Write `03-seo-growth/page-seo-specs.md`: per page URL, title, meta description, H1, H2 outline, FAQs (from P0 research), schema, related links.
-- [ ] **P8-T02** Apply specs to every registry entry; build passes uniqueness validation.
+- [x] **P8-T02** Apply specs to every registry entry; build passes uniqueness validation.
 
 ### Tool content (per tool, in `content.tsx`)
 - [ ] **P8-T03** For all 19 tools: intro, how-to steps, supported formats & limits, explanation of options/results, privacy note, troubleshooting, FAQs. No arbitrary word counts; no repeated boilerplate across pages.

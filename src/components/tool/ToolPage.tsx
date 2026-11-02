@@ -93,6 +93,11 @@ function PrivacySection() {
           </>,
         ]}
       />
+      <Paragraph>
+        There is no account, no sign-up and no watermark. After your first visit, pages open without
+        a connection; a tool’s larger parts, such as the PDF and image engines, are saved the first
+        time you use it, so it works offline from then on.
+      </Paragraph>
     </ContentSection>
   );
 }

@@ -2,10 +2,10 @@
 // Everything here is built from registry data, never from user content.
 
 import type { Metadata } from "next";
-import { SITE_NAME, SITE_URL } from "@/config/site";
+import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from "@/config/site";
 import { HUBS } from "@/tools/hubs";
 import { CATEGORIES } from "@/tools/registry";
-import type { ToolCategory, ToolDefinition } from "@/tools/types";
+import type { ToolCategory, ToolDefinition, ToolFaq } from "@/tools/types";
 
 /** `absoluteUrl("/merge-pdf")` → "https://sprigkit.com/merge-pdf". */
 export function absoluteUrl(path: string): string {
@@ -81,11 +81,11 @@ export function webApplicationJsonLd(tool: ToolDefinition): JsonLdNode {
 }
 
 /** Only for FAQs that are visible on the page (architecture §12). */
-export function faqJsonLd(tool: ToolDefinition): JsonLdNode | null {
-  if (tool.seo.faqs.length === 0) return null;
+function faqPageJsonLd(faqs: readonly ToolFaq[]): JsonLdNode | null {
+  if (faqs.length === 0) return null;
   return {
     "@type": "FAQPage",
-    mainEntity: tool.seo.faqs.map((faq) => ({
+    mainEntity: faqs.map((faq) => ({
       "@type": "Question",
       name: faq.q,
       acceptedAnswer: { "@type": "Answer", text: faq.a },
@@ -93,11 +93,45 @@ export function faqJsonLd(tool: ToolDefinition): JsonLdNode | null {
   };
 }
 
+export function faqJsonLd(tool: ToolDefinition): JsonLdNode | null {
+  return faqPageJsonLd(tool.seo.faqs);
+}
+
 /** All structured data of a tool page as one `@graph`. */
 export function toolJsonLd(tool: ToolDefinition): JsonLdNode {
   const graph = [breadcrumbJsonLd(tool), webApplicationJsonLd(tool), faqJsonLd(tool)].filter(
     (node): node is JsonLdNode => node !== null,
   );
+  return { "@context": "https://schema.org", "@graph": graph };
+}
+
+/** Metadata for the homepage (page-seo-specs §4.1). */
+export function homeMetadata(seo: { title: string; description: string }): Metadata {
+  const url = absoluteUrl("/");
+  const { title, description } = seo;
+  return {
+    title: { absolute: title },
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "website", url, title, description, siteName: SITE_NAME, locale: "en_US" },
+    twitter: { card: "summary", title, description },
+  };
+}
+
+/** WebSite, Organization and the visible homepage FAQs. No SearchAction: there is no search URL. */
+export function homeJsonLd(faqs: readonly ToolFaq[]): JsonLdNode {
+  const url = absoluteUrl("/");
+  const graph = [
+    { "@type": "WebSite", name: SITE_NAME, url },
+    {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url,
+      logo: absoluteUrl("/icons/icon-512.png"),
+      email: CONTACT_EMAIL,
+    },
+    faqPageJsonLd(faqs),
+  ].filter((node): node is JsonLdNode => node !== null);
   return { "@context": "https://schema.org", "@graph": graph };
 }
 

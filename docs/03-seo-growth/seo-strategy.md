@@ -36,6 +36,8 @@ Sprigkit wins search by being the best page for one task: a fast tool above the 
 
 **Category hubs (Phase 7):** title and description from `src/tools/hubs.ts` (same length limits, unique against every tool; `hubs.test.ts`), canonical, Open Graph, and JSON-LD `BreadcrumbList` + `CollectionPage` with an `ItemList` of the hub's tools (`hubMetadata`, `hubJsonLd` in `src/lib/seo.ts`).
 
+**Homepage (Phase 8):** title and description from `src/components/home/home-content.ts` (same length limits, unique against every tool and hub; `seo.test.ts`), canonical, Open Graph, and JSON-LD `WebSite` + `Organization` (logo, contact email) + `FAQPage` mirroring the visible homepage FAQs (`homeMetadata`, `homeJsonLd`). No `SearchAction`: there is no search results URL.
+
 Validation rules for these fields (uniqueness, lengths, FAQ count) fail the build: [tool-registry.md §3](../04-architecture/tool-registry.md#3-validation-rules).
 
 ## 3. Site-level files
