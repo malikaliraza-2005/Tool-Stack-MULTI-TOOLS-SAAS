@@ -21,6 +21,7 @@ import {
   decodeUpright,
   inspectImage,
   listKinds,
+  MAX_PIXELS,
   processImage,
   savings,
   type ProcessOptions,
@@ -128,6 +129,45 @@ describe("checkPixels", () => {
     );
     expect(() => checkPixels("big.jpg", info, { maxPixels: 100e6 })).not.toThrow();
   });
+});
+
+describe("hostile images (P9-T13)", () => {
+  // Small files that declare huge images: the header check rejects them
+  // before anything is decoded, on every device class.
+  const bombs: [string, Uint8Array][] = [
+    [
+      "png",
+      patch(
+        makePng(1, 1, () => [0, 0, 0, 255]),
+        (v) => {
+          v.setUint32(16, 60_000);
+          v.setUint32(20, 60_000);
+        },
+      ),
+    ],
+    [
+      "gif",
+      patch(gif(1), (v) => {
+        v.setUint16(6, 65_535, true);
+        v.setUint16(8, 65_535, true);
+      }),
+    ],
+  ];
+
+  function patch(bytes: Uint8Array, edit: (view: DataView) => void): Uint8Array {
+    const copy = bytes.slice();
+    edit(new DataView(copy.buffer));
+    return copy;
+  }
+
+  for (const [kind, bytes] of bombs) {
+    it(`rejects a ${bytes.length}-byte ${kind} that declares billions of pixels`, () => {
+      const info = inspectImage("bomb", bytes, ALL_KINDS, "Test");
+      for (const maxPixels of Object.values(MAX_PIXELS)) {
+        expect(() => checkPixels("bomb", info, { maxPixels })).toThrow(/The limit on this device/);
+      }
+    });
+  }
 });
 
 describe("processImage", () => {

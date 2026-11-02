@@ -11,6 +11,7 @@ import {
   type PDFImage,
 } from "pdf-lib";
 import { isOutOfMemory, toolErrors, ToolError } from "@/lib/errors";
+import type { DeviceClass } from "@/lib/files/limits";
 import { describeKind, detectFileType, type FileKind } from "@/lib/files/sniff";
 import { heicCouldNotOpen } from "@/lib/image/pipeline";
 import {
@@ -146,7 +147,7 @@ export async function imagesToPdf(
 // Worker protocol (logic.worker.ts)
 
 export type JpgToPdfJob =
-  | { op: "inspect"; file: ImageInput }
+  | { op: "inspect"; file: ImageInput; device: DeviceClass }
   | { op: "convert"; files: ImageInput[]; options: LayoutOptions };
 
 export type JpgToPdfJobResult =
