@@ -10,6 +10,8 @@ import {
   homeJsonLd,
   homeMetadata,
   serializeJsonLd,
+  sitePageJsonLd,
+  sitePageMetadata,
   toolJsonLd,
   toolMetadata,
   webApplicationJsonLd,
@@ -116,5 +118,33 @@ describe("homepage", () => {
     expect(graph.map((node) => node["@type"])).toEqual(["WebSite", "Organization", "FAQPage"]);
     expect(graph[1]).toMatchObject({ url: ORIGIN, email: CONTACT_EMAIL });
     expect(graph[2]?.mainEntity).toHaveLength(HOME_FAQS.length);
+  });
+});
+
+describe("site pages", () => {
+  const privacy = {
+    path: "/privacy",
+    title: "Privacy policy · Sprigkit",
+    description: "How Sprigkit handles your data.",
+    name: "Privacy policy",
+    type: "WebPage" as const,
+    updated: "2026-11-02",
+  };
+
+  it("metadata uses the full title and an absolute canonical", () => {
+    const meta = sitePageMetadata(privacy);
+    expect(meta.title).toEqual({ absolute: "Privacy policy · Sprigkit" });
+    expect(meta.alternates?.canonical).toBe(absoluteUrl("/privacy"));
+  });
+
+  it("JSON-LD: Sprigkit › page, with dateModified only when dated", () => {
+    const graph = sitePageJsonLd(privacy)["@graph"] as Record<string, unknown>[];
+    const crumbs = (graph[0]!.itemListElement as { name: string }[]).map((item) => item.name);
+    expect(crumbs).toEqual(["Sprigkit", "Privacy policy"]);
+    expect(graph[1]).toMatchObject({ "@type": "WebPage", dateModified: "2026-11-02" });
+    const undated = { ...privacy, type: "AboutPage" as const, updated: undefined };
+    expect(sitePageJsonLd(undated)["@graph"]).not.toContainEqual(
+      expect.objectContaining({ dateModified: expect.anything() }),
+    );
   });
 });

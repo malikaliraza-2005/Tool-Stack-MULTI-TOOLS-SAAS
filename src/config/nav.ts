@@ -1,6 +1,4 @@
-// Site navigation (information-architecture.md). The About, Privacy, Terms
-// and Licenses pages are built in Phase 8; until then those links lead to
-// the 404 page.
+// Site navigation (information-architecture.md).
 
 export type NavLink = { href: string; label: string; description?: string };
 

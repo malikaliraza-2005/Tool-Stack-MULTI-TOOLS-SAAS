@@ -16,7 +16,7 @@ What each page targets, what it is called, what it must answer, and which struct
 
 | Element | Rule | Enforced by |
 |---|---|---|
-| Title | ≤ 65 characters, unique across the site, primary query first, ends with "\| Sprigkit" (tools, hubs, home, guides) or the layout template "· Sprigkit" (site pages) | `src/tools/validate.ts`, `hubs.test.ts` |
+| Title | ≤ 65 characters, unique across the site, primary query first, ends with "\| Sprigkit" (tools, hubs, home, guides) or "· Sprigkit" (site pages; About is "About Sprigkit") | `src/tools/validate.ts`, `hubs.test.ts` |
 | Meta description | 70–160 characters, unique, says what the page does and that nothing is uploaded where that applies | same |
 | H1 | One per page, unique, sentence case | same (tools) |
 | Canonical | `SITE_URL` + path, no trailing slash | `toolMetadata`, `hubMetadata`, per-page `alternates` |
@@ -44,8 +44,8 @@ Keyword research §2 found privacy, cost and offline questions for every tool. E
 | `/pdf-tools`, `/image-tools`, `/developer-tools` | Hub | see §4.2 | BreadcrumbList · CollectionPage + ItemList | P7, content P8-T05 |
 | `/<slug>` × 19 | Tool | see §5 | BreadcrumbList · WebApplication · FAQPage | P3–P6 |
 | `/about` | Site page | About Sprigkit | BreadcrumbList · AboutPage | P8-T06 |
-| `/privacy` | Site page | Privacy policy | BreadcrumbList · WebPage | P8-T07 |
-| `/terms` | Site page | Terms of use | BreadcrumbList · WebPage | P8-T08 |
+| `/privacy` | Site page | Privacy policy · Sprigkit | BreadcrumbList · WebPage | P8-T07 |
+| `/terms` | Site page | Terms of use · Sprigkit | BreadcrumbList · WebPage | P8-T08 |
 | `/licenses` | Site page | Open-source licenses | BreadcrumbList · WebPage | P6 (early), P8-T09 |
 | `/guides` | Guide index | see §4.4 | BreadcrumbList · CollectionPage + ItemList | P8-T11 |
 | `/guides/<slug>` | Guide | see §4.4 | BreadcrumbList · Article | P8-T12 |
@@ -84,11 +84,11 @@ Copy in `src/tools/hubs.ts`; tool lists from the registry.
 
 ### 4.3 Site pages
 
-| URL | Title (template adds "· Sprigkit") | Description (draft) | H1 | H2 outline |
+| URL | Title | Description | H1 | H2 outline |
 |---|---|---|---|---|
-| `/about` | About Sprigkit | Who builds Sprigkit, how its tools run in your browser without uploading anything, and how to get in touch. | About Sprigkit | What Sprigkit is · How it works · Who runs it · Contact |
-| `/privacy` | Privacy policy | How Sprigkit handles your data: files and text are processed in your browser and never uploaded. No accounts, cookies or ads. | Privacy policy | Summary · What happens to your files and text · What is stored in your browser · Hosting · Analytics · How to verify it yourself · Changes · Contact |
-| `/terms` | Terms of use | The terms for using Sprigkit: free tools provided as is, a visual signature that is not a certified digital signature, and your responsibilities. | Terms of use | Using Sprigkit · Your files · Signatures · No warranty · Liability · Changes · Contact |
+| `/about` | About Sprigkit (no suffix: the name is in it) | Who builds Sprigkit, how its PDF, image and developer tools run in your browser without uploading anything, and how to get in touch. | About Sprigkit | What Sprigkit is (tools by category) · How it works · Who runs it · Contact |
+| `/privacy` | Privacy policy · Sprigkit | How Sprigkit handles your data: files and text are processed in your browser and never uploaded. No accounts, cookies, ads or analytics. | Privacy policy | Summary · What happens to your files and text · What is stored in your browser · Hosting · Analytics, cookies and ads · How to verify it yourself (`#verify`) · Changes to this policy · Contact |
+| `/terms` | Terms of use · Sprigkit | The terms for using Sprigkit: free tools provided as is, a visual signature that is not a certified digital signature, and your responsibilities. | Terms of use | Using Sprigkit · Your files · Signatures · Results and accuracy · Open-source software · No warranty · Limitation of liability · Changes to these terms · Governing law · Contact |
 | `/licenses` | Open-source licenses (as built) | as built | Open-source licenses | as built; generated from the license report in P8-T09 |
 
 Facts these pages must state consistently (product facts, product.md §10): 19 tools; processing in the browser; no accounts; no cookies or ads at launch; analytics off until P9-T19 (the Privacy page names the provider when it is enabled); hosting on Cloudflare Pages; contact officialaliraza2005@gmail.com.

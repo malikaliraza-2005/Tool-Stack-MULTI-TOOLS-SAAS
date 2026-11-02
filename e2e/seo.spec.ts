@@ -114,7 +114,7 @@ test("the workspace is in the static HTML (no JavaScript)", async ({ browser }) 
   await context.close();
 });
 
-test("sitemap lists the home page, hubs and published tools", async ({ request }) => {
+test("sitemap lists the home page, hubs, published tools and site pages", async ({ request }) => {
   const res = await request.get("/sitemap.xml");
   expect(res.status()).toBe(200);
   const xml = await res.text();
@@ -143,6 +143,10 @@ test("sitemap lists the home page, hubs and published tools", async ({ request }
     "/compress-image",
     "/resize-image",
     "/convert-image",
+    "/about",
+    "/privacy",
+    "/terms",
+    "/licenses",
   ]);
   expect(xml).toContain("<lastmod>");
   expect(xml).not.toContain("_gallery");

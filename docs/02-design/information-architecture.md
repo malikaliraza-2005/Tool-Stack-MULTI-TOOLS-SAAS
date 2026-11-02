@@ -46,7 +46,7 @@
 
 The current section is marked with `aria-current="page"` and the accent underline (the accent's "active navigation" role).
 
-**Known gap:** until Phase 8, the site-page links (About, Privacy, Terms, Licenses, and the homepage "How to verify") lead to the 404 page. They use `prefetch={false}` so no failing prefetches are made.
+**Site pages (Phase 8):** About, Privacy and Terms share the `SitePage` layout (breadcrumbs, H1, intro, "Last updated" on dated pages); the homepage "How to verify" link opens `/privacy#verify`. Footer links keep `prefetch={false}`.
 
 ## 4. Internal linking (from the registry, Phase 3+)
 

@@ -44,7 +44,7 @@ Validation rules for these fields (uniqueness, lengths, FAQ count) fail the buil
 
 | File | As built |
 |---|---|
-| `/sitemap.xml` | `app/sitemap.ts` (force-static): the homepage, the three category hubs, and every published tool with `lastmod` = registry `updatedAt`. Pages that don't exist yet (About, Privacy) are added in their phases. `/_gallery` is never listed |
+| `/sitemap.xml` | `app/sitemap.ts` (force-static): the homepage, the three category hubs, and every published tool with `lastmod` = registry `updatedAt`. The site pages (About, Privacy, Terms, Licenses) are listed since Phase 8; guides join with P8-T11. `/_gallery` is never listed |
 | `/robots.txt` | `app/robots.ts`: allow all (D-7) + sitemap URL. `/_gallery` is kept out of the index by its `noindex` meta tag (a Disallow would hide that tag) |
 | Previews | `X-Robots-Tag: noindex` on every `*.pages.dev` host (`public/_headers`, P1-T16) |
 

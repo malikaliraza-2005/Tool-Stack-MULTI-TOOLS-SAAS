@@ -135,6 +135,52 @@ export function homeJsonLd(faqs: readonly ToolFaq[]): JsonLdNode {
   return { "@context": "https://schema.org", "@graph": graph };
 }
 
+/** A site page such as About or Privacy (page-seo-specs §4.3). */
+export type SitePageSeo = {
+  path: string;
+  /** Full title; site pages other than About end with "· Sprigkit". */
+  title: string;
+  description: string;
+  /** Breadcrumb and JSON-LD name. */
+  name: string;
+  type: "AboutPage" | "WebPage";
+  /** ISO date shown as "Last updated" and used as dateModified. */
+  updated?: string;
+};
+
+export function sitePageMetadata(page: SitePageSeo): Metadata {
+  const url = absoluteUrl(page.path);
+  const { title, description } = page;
+  return {
+    title: { absolute: title },
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "website", url, title, description, siteName: SITE_NAME, locale: "en_US" },
+    twitter: { card: "summary", title, description },
+  };
+}
+
+/** BreadcrumbList (Sprigkit › page) and the page itself. */
+export function sitePageJsonLd(page: SitePageSeo): JsonLdNode {
+  const url = absoluteUrl(page.path);
+  const breadcrumb = {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SITE_NAME, item: absoluteUrl("/") },
+      { "@type": "ListItem", position: 2, name: page.name, item: url },
+    ],
+  };
+  const node = {
+    "@type": page.type,
+    name: page.name,
+    url,
+    description: page.description,
+    ...(page.updated ? { dateModified: page.updated } : {}),
+    isPartOf: { "@type": "WebSite", name: SITE_NAME, url: absoluteUrl("/") },
+  };
+  return { "@context": "https://schema.org", "@graph": [breadcrumb, node] };
+}
+
 /** Metadata for a category hub (G-8). */
 export function hubMetadata(category: ToolCategory): Metadata {
   const url = absoluteUrl(CATEGORIES[category].href);
