@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | 🟨 In progress |
 | **Effort** | 5–7 days [Estimate] |
 | **Milestone** | M6: Launch-ready |
 
@@ -26,6 +26,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 ### Functional & device testing
 - [ ] **P9-T01** Full device matrix run: Chrome, Edge, Firefox, Safari (macOS), Safari (iOS, real device), Chrome (mid-range Android, real device). Every tool's main flow + one error flow. The Phase 3 pilots have never run on real Safari: give them the full Definition of Done there (deferred from P3-T24). The same for the 8 Phase 4 developer tools on real Android and Safari (deferred from P4-T10), including whether the theme switch's View Transition crashes Safari on long pages, as it does Playwright's WebKit.
 - [ ] **P9-T02** Large-file and memory testing on mobile; confirm limits and error messages. From the P8-T04 content review: registry `limits` are not enforced on pasted text in jwt-decoder (64 KB / 1 MB) and regex-tester (1 MB / 10 MB), and json-formatter and base64-encode-decode enforce 50 MB only on opened files. Enforce them or change the registry. Going over a file-count limit (e.g. 101 files in merge-pdf) shows a byte-size message (`src/lib/files/limits.ts`); give it its own message.
+  - *Done (code):* `checkTextLimits` enforces the registry hard limit on pasted text in all four tools (UTF-8 bytes); `maxFiles` now has its own `tooManyFiles` message. Mobile large-file and memory testing still to do.
 - [ ] **P9-T03** Fix all P0/P1 bugs; log the rest.
 
 ### Accessibility

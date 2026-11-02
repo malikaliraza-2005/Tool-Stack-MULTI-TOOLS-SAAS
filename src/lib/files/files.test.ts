@@ -2,7 +2,7 @@ import { unzipSync } from "fflate";
 import { describe, expect, it } from "vitest";
 import type { ToolLimits } from "@/tools/types";
 import { formatBytes, plural } from "./format";
-import { checkLimits, getDeviceClass } from "./limits";
+import { checkLimits, checkTextLimits, getDeviceClass, utf8Length } from "./limits";
 import {
   baseName,
   ensureExtension,
@@ -127,7 +127,9 @@ describe("checkLimits", () => {
     expect(result.map((r) => r.status)).toEqual(["warn", "warn", "reject"]);
     const third = result[2];
     // Rejected for the file count (2 on mobile), before the bytes.
-    expect(third?.status === "reject" && third.error.message).toMatch(/up to 2 files/);
+    expect(third?.status === "reject" && third.error.message).toBe(
+      "c.pdf wasn’t added. The limit on this device is 2 files at a time. Remove some files, then try again.",
+    );
 
     const overTotal = checkLimits([{ name: "big.pdf", size: 100 * MB }], total, "mobile", {
       count: 1,
@@ -201,5 +203,29 @@ describe("createZip", () => {
     const files = unzipSync(zip);
     expect(Object.keys(files)).toEqual(["a.txt", "a (2).txt", "doc.pdf"]);
     expect(new TextDecoder().decode(files["a (2).txt"])).toBe("second");
+  });
+});
+
+describe("checkTextLimits", () => {
+  const KB = 2 ** 10;
+  const limits: ToolLimits = {
+    desktop: { softBytes: 64 * KB, hardBytes: 1024 * KB },
+    mobile: { softBytes: 64 * KB, hardBytes: 1024 * KB },
+  };
+
+  it("measures UTF-8 bytes", () => {
+    for (const text of ["", "abc", "Grüße", "€", "👋", "a\uD800b"]) {
+      expect(utf8Length(text)).toBe(new TextEncoder().encode(text).length);
+    }
+  });
+
+  it("accepts, warns above the soft limit, rejects above the hard limit", () => {
+    expect(checkTextLimits("x".repeat(64 * KB), limits, "desktop").status).toBe("ok");
+    expect(checkTextLimits("x".repeat(64 * KB + 1), limits, "desktop").status).toBe("warn");
+    const rejected = checkTextLimits("€".repeat(400 * KB), limits, "mobile");
+    expect(rejected.status === "reject" && rejected.error.code).toBe("E_TOO_LARGE");
+    expect(rejected.status === "reject" && rejected.error.message).toBe(
+      "The text is 1.2 MB. The limit on this device is 1 MB. Try a shorter text.",
+    );
   });
 });

@@ -42,6 +42,17 @@ test.describe("jwt-decoder", () => {
     await bothThemesAccessible(page);
   });
 
+  test("rejects pasted text over the 1 MB limit (P9-T02)", async ({ page, browserName }) => {
+    // Playwright's WebKit can't type 1 MB into CodeMirror in time; real Safari is P9-T01.
+    test.skip(browserName === "webkit", "Typing 1 MB is too slow in Playwright's WebKit");
+    await open(page);
+    await fill(page, "a".repeat(1.2 * 1024 * 1024));
+    await expect(page.getByText("Too long for a JWT", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("The text is 1.2 MB. The limit on this device is 1 MB. Try a shorter text."),
+    ).toBeVisible();
+  });
+
   test("decodes the sample and verifies it with its secret", async ({ page }) => {
     test.slow(); // Four axe scans.
     await open(page);
