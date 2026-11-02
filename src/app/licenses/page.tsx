@@ -3,9 +3,9 @@
 // dev and build) and the notice files the packages ship. Phase 6 added the
 // HEIC decoder (D-6: LGPL-3.0 notices, license texts and corresponding source)
 // and the image codecs' BSD/IJG notices; Phase 8 lists every production
-// package with its license text (P8-T09).
+// package and links their license texts in /third-party-notices.txt (P8-T09).
 
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
@@ -28,30 +28,14 @@ export const metadata: Metadata = sitePageMetadata(PAGE);
 const root = process.cwd();
 const read = (...path: string[]) => readFileSync(join(root, ...path), "utf8");
 
-type Package = {
-  name: string;
-  version: string;
-  license: string;
-  repository: string | null;
-  text: string | null;
-};
+type Package = { name: string; version: string; license: string; hasText: boolean };
 
-/** Every production package, and each distinct license text with the packages using it. */
-function report() {
-  const packages = JSON.parse(read(".generated", "licenses.json")) as Package[];
-  const texts = new Map<string, { id: string; license: string; packages: string[] }>();
-  for (const pkg of packages) {
-    if (!pkg.text) continue;
-    const entry = texts.get(pkg.text) ?? {
-      id: `text-${texts.size + 1}`,
-      license: pkg.license,
-      packages: [],
-    };
-    entry.packages.push(pkg.name);
-    texts.set(pkg.text, entry);
-  }
-  return { packages, texts: [...texts].map(([text, entry]) => ({ ...entry, text })) };
-}
+/** Every production package (scripts/license-report.mjs). */
+const packages = () => JSON.parse(read(".generated", "licenses.json")) as Package[];
+
+/** Size of the generated notices file, shown next to its link. */
+const noticesKb = () =>
+  Math.round(statSync(join(root, "public", "third-party-notices.txt")).size / 1024);
 
 const CODECS: { title: string; parts: string; files: string[] }[] = [
   {
@@ -107,7 +91,7 @@ function Notice({ label, text }: { label: string; text: string }) {
 }
 
 export default function LicensesPage() {
-  const { packages, texts } = report();
+  const all = packages();
   const vendor = LIBHEIF_BASE;
   const source = `${vendor}/source`;
   return (
@@ -205,8 +189,12 @@ export default function LicensesPage() {
       <section aria-labelledby="packages" className="flex flex-col gap-4">
         <Heading id="packages">All packages</Heading>
         <p className="text-body text-fg">
-          Every package in Sprigkit’s production dependencies, {packages.length} in total. Some are
-          used only to build the site. Each license links to its text below.
+          Every package in Sprigkit’s production dependencies, {all.length} in total. Some are used
+          only to build the site. Their license texts and copyright notices are in one file:{" "}
+          <TextLink href="/third-party-notices.txt" prefetch={false}>
+            third-party-notices.txt
+          </TextLink>{" "}
+          ({noticesKb()} KB).
         </p>
         <div className="overflow-x-auto rounded-md border border-border">
           <table className="w-full text-left text-small">
@@ -224,43 +212,21 @@ export default function LicensesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {packages.map((pkg) => {
-                const text = texts.find((entry) => entry.text === pkg.text);
-                return (
-                  <tr key={`${pkg.name}@${pkg.version}`}>
-                    <td className="px-3 py-2 font-mono break-all text-fg">{pkg.name}</td>
-                    <td className="px-3 py-2 font-mono text-fg-muted tabular-nums">
-                      {pkg.version}
-                    </td>
-                    <td className="px-3 py-2 text-fg">
-                      {text ? (
-                        <TextLink href={`#${text.id}`}>{pkg.license}</TextLink>
-                      ) : (
-                        <>
-                          {pkg.license}{" "}
-                          <span className="text-fg-muted">(no license file in the package)</span>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
+              {all.map((pkg) => (
+                <tr key={`${pkg.name}@${pkg.version}`}>
+                  <td className="px-3 py-2 font-mono break-all text-fg">{pkg.name}</td>
+                  <td className="px-3 py-2 font-mono text-fg-muted tabular-nums">{pkg.version}</td>
+                  <td className="px-3 py-2 text-fg">
+                    {pkg.license}
+                    {!pkg.hasText && (
+                      <span className="text-fg-muted"> (no license file in the package)</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-      </section>
-
-      <section aria-labelledby="texts" className="flex flex-col gap-4">
-        <Heading id="texts">License texts</Heading>
-        <p className="text-body text-fg">
-          Each distinct license text, with the copyright notices it carries, shown once with the
-          packages that use it.
-        </p>
-        {texts.map((entry) => (
-          <div key={entry.id} id={entry.id} className="scroll-mt-(--header-height)">
-            <Notice label={`${entry.license}: ${entry.packages.join(", ")}`} text={entry.text} />
-          </div>
-        ))}
       </section>
     </SitePage>
   );

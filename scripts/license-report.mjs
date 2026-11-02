@@ -1,7 +1,10 @@
 // License report for the /licenses page (dependencies-licenses §7, P8-T09).
-// Runs before dev and build; writes .generated/licenses.json: every production
-// package with its license and the text of its license file, which MIT, BSD
-// and Apache notice terms ask us to show.
+// Runs before dev and build and writes two gitignored files:
+// - .generated/licenses.json: every production package and its license, for
+//   the table on /licenses;
+// - public/third-party-notices.txt: each distinct license text with the
+//   packages using it, which MIT, BSD and Apache notice terms ask us to show.
+//   A plain file keeps ~250 KB of text out of the page's HTML and payload.
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
@@ -30,6 +33,37 @@ const report = Object.entries(production)
   })
   .sort((a, b) => a.name.localeCompare(b.name));
 
+const texts = new Map();
+for (const pkg of report) {
+  if (pkg.text) texts.set(pkg.text, [...(texts.get(pkg.text) ?? []), pkg]);
+}
+const rule = "=".repeat(78);
+const notices = [
+  "Third-party software notices for Sprigkit",
+  "",
+  "Each license text below is headed by its license and the packages it covers. Generated at",
+  "build time from the production dependencies; the list is also on /licenses.",
+  ...[...texts].flatMap(([text, pkgs]) => [
+    "",
+    rule,
+    `${pkgs[0].license}: ${pkgs.map((pkg) => `${pkg.name}@${pkg.version}`).join(", ")}`,
+    rule,
+    "",
+    text,
+  ]),
+  "",
+  rule,
+  "Packages without a license file (license as declared in package.json):",
+  ...report.filter((pkg) => !pkg.text).map((pkg) => `${pkg.name}@${pkg.version}: ${pkg.license}`),
+  "",
+].join("\n");
+
 mkdirSync(".generated", { recursive: true });
-writeFileSync(join(".generated", "licenses.json"), JSON.stringify(report));
-console.log(`License report: ${report.length} packages → .generated/licenses.json`);
+writeFileSync(
+  join(".generated", "licenses.json"),
+  JSON.stringify(report.map(({ text, ...pkg }) => ({ ...pkg, hasText: text !== null }))),
+);
+writeFileSync(join("public", "third-party-notices.txt"), notices);
+console.log(
+  `License report: ${report.length} packages, ${texts.size} license texts → .generated/licenses.json, public/third-party-notices.txt`,
+);

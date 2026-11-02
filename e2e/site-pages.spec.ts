@@ -71,17 +71,15 @@ test("About lists the tools by category", async ({ page }) => {
   }
 });
 
-test("Licenses lists every package with its license text", async ({ page }) => {
+test("Licenses lists every package and links the license texts", async ({ page }) => {
   await page.goto("/licenses");
   const rows = page.getByRole("region", { name: "All packages" }).getByRole("row");
   expect(await rows.count()).toBeGreaterThan(100);
-  const pdfLib = rows.filter({ hasText: "pdf-lib" }).first();
-  const href = await pdfLib.getByRole("link").getAttribute("href");
-  expect(href).toMatch(/^#text-\d+$/);
-  const notice = page.locator(href!);
-  await expect(notice.locator("summary")).toContainText("pdf-lib");
-  // Every license link points at a text on the page.
-  for (const link of await page.locator('a[href^="#text-"]').all()) {
-    await expect(page.locator((await link.getAttribute("href"))!)).toHaveCount(1);
-  }
+  await expect(rows.filter({ hasText: "pdf-lib" }).first()).toContainText("MIT");
+  const href = await page
+    .getByRole("link", { name: "third-party-notices.txt" })
+    .getAttribute("href");
+  const notices = await (await page.request.get(href!)).text();
+  expect(notices).toContain("pdf-lib@");
+  expect(notices).toMatch(/Permission is hereby granted/);
 });

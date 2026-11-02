@@ -19,6 +19,7 @@
 
 # build-time reports (scripts/license-report.mjs)
 /.generated/
+/public/third-party-notices.txt
 
 # production
 /build
