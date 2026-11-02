@@ -32,7 +32,7 @@ Make every page genuinely useful and search-ready: final supporting content and 
 ### Tool content (per tool, in `content.tsx`)
 - [x] **P8-T03** For all 19 tools: intro, how-to steps, supported formats & limits, explanation of options/results, privacy note, troubleshooting, FAQs. No arbitrary word counts; no repeated boilerplate across pages.
 - [x] **P8-T04** Accuracy review of every page against the actual tool behaviour.
-- [ ] **P8-T05** Hub page content (`/pdf-tools`, `/image-tools`, `/developer-tools`).
+- [x] **P8-T05** Hub page content (`/pdf-tools`, `/image-tools`, `/developer-tools`).
 
 ### Trust & legal
 - [x] **P8-T06** About page (G-10): what Sprigkit is, how it works, who runs it, contact method; consistent product facts.

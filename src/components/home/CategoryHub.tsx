@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Container } from "@/components/layout/Container";
 import { JsonLd } from "@/components/tool/JsonLd";
 import { PrivacyMeter } from "@/components/tool/PrivacyMeter";
+import { TextLink } from "@/components/tool/content";
 import { ToolIcon } from "@/components/tool/ToolIcon";
 import { SITE_NAME } from "@/config/site";
 import { hubJsonLd } from "@/lib/seo";
@@ -14,7 +15,8 @@ import { firstSentence } from "./summary";
 
 /**
  * Category hub (G-8, architecture §5): intro, every tool of the category
- * from the registry, short guide links and the other hubs.
+ * from the registry, when to pick each one, short guide links and the other
+ * hubs.
  */
 export function CategoryHub({ category }: { category: ToolCategory }) {
   const hub = HUBS[category];
@@ -66,6 +68,26 @@ export function CategoryHub({ category }: { category: ToolCategory }) {
               </li>
             ))}
           </ul>
+        </section>
+
+        <section aria-labelledby="hub-choosing" className="flex flex-col gap-4">
+          <h2 id="hub-choosing" className="text-h2 text-fg">
+            Which tool do I need?
+          </h2>
+          <dl className="grid max-w-prose grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-3">
+            {hub.choosing.map((entry) => {
+              const tool = tools.find((t) => t.slug === entry.slug);
+              if (!tool) return null;
+              return (
+                <div key={entry.slug} className="contents">
+                  <dt className="text-ui">
+                    <TextLink href={`/${tool.slug}`}>{tool.name}</TextLink>
+                  </dt>
+                  <dd className="text-body text-fg-muted sm:col-span-2">{entry.when}</dd>
+                </div>
+              );
+            })}
+          </dl>
         </section>
 
         <div className="grid gap-12 lg:grid-cols-2">

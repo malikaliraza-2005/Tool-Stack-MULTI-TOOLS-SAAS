@@ -27,4 +27,12 @@ describe("category hubs (G-8)", () => {
       expect(tool?.category, guide.slug).toBe(category);
     }
   });
+
+  it.each(CATEGORY_ORDER)("%s hub explains when to pick each of its tools, once", (category) => {
+    const listed = HUBS[category].choosing.map((entry) => entry.slug);
+    const tools = publishedTools()
+      .filter((tool) => tool.category === category)
+      .map((tool) => tool.slug);
+    expect([...listed].sort()).toEqual([...tools].sort());
+  });
 });
