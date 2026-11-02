@@ -31,6 +31,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 
 ### Accessibility
 - [ ] **P9-T04** axe on every page (both themes): zero violations.
+  - *Progress:* `e2e/a11y.spec.ts` runs axe on every sitemap page and the 404 page in both themes; passes in Chromium (33 pages). Other projects: see the full run.
 - [ ] **P9-T05** Manual keyboard-only pass of every tool, including drag-and-drop alternatives.
 - [ ] **P9-T06** Screen-reader pass (NVDA on Windows; VoiceOver on iOS for key flows).
 - [ ] **P9-T07** 200% zoom and 320px width pass.
@@ -46,15 +47,20 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 
 ### Security & privacy
 - [ ] **P9-T13** Security review: CSP verified on production headers; no `dangerouslySetInnerHTML` with user content; malicious file fixtures (malformed PDF, decompression bombs, huge dimensions) handled safely.
+  - *Progress:* static review: `dangerouslySetInnerHTML` only for the theme and startup scripts (constants) and JSON-LD (escaped by `serializeJsonLd`). Found and fixed: jpg-to-pdf didn't apply the pixel limit, so a small PNG declaring a huge image would be decoded; it now uses `checkPixels` with `MAX_PIXELS` (moved to `src/lib/image/pipeline.ts`), with unit and E2E tests. Still to do: PDF bombs, production headers.
 - [ ] **P9-T14** Privacy verification: no-network E2E for all 19 tools; localStorage contains no user content; analytics sends no content.
+  - *Progress:* no-network already runs on every E2E test (`noNetwork` fixture). New `noStoredContent` fixture fails any test that leaves a storage key outside the allow-list (theme, tool options, favorites, recent, opt-in signature); stored option schemas hold no content (only flags, time zone, colour). Analytics: depends on P9-T19.
 - [ ] **P9-T15** `npm audit` clean (or documented exceptions); license gate green; Licenses page current. Owner decides on `pako` (Zlib): add Zlib to the allow-list or keep the named exception ([dependencies-licenses.md §3.1](../../04-architecture/dependencies-licenses.md)).
 
 ### SEO
 - [ ] **P9-T16** Crawl the preview (free crawler or custom script): no broken links, correct canonicals, no orphan pages, sitemap complete. Run Google's Rich Results Test and the Schema.org validator on one page of each type (home, hub, tool, site page, guide index, guide), deferred from P3-T07 and P8-T14; `e2e/structured-data.spec.ts` already checks every page locally.
+  - *Progress:* `e2e/crawl.spec.ts` crawls the local build from `/`: no broken internal links, canonicals match, no orphan pages. The crawl of the preview and the Rich Results Test remain.
 - [ ] **P9-T17** Verify production build will be indexable (no stray `noindex`) and previews are not.
+  - *Progress:* only 404, `_not-found` and `_gallery` carry `noindex`; `*.pages.dev` gets `X-Robots-Tag: noindex`. A production build (`CF_PAGES_BRANCH=main`) without an `https://` `NEXT_PUBLIC_SITE_URL` now fails (`next.config.ts`). Check headers on production at launch.
 
 ### Launch preparation
 - [ ] **P9-T18** Write `06-delivery/launch-checklist.md` and do a dry run.
+  - *Progress:* [launch-checklist.md](../launch-checklist.md) written; dry run on a preview still to do.
 - [ ] **P9-T19** Write `06-delivery/analytics-monitoring.md`; decide analytics provider (Cloudflare Web Analytics proposed); add its hosts to CSP and Privacy page.
 
 ## Docs to write / update
