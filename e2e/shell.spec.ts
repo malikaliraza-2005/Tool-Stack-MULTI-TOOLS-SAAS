@@ -7,9 +7,9 @@ async function storeTheme(page: Page, theme: string) {
   await page.addInitScript(
     ([key, value]) => {
       // Only seed once, so later reloads keep what the page stored.
-      if (!sessionStorage.getItem("seeded")) {
+      if (!sessionStorage.getItem("e2e:seeded")) {
         localStorage.setItem(key!, value!);
-        sessionStorage.setItem("seeded", "1");
+        sessionStorage.setItem("e2e:seeded", "1");
       }
     },
     [THEME_KEY, theme],
