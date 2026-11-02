@@ -16,7 +16,7 @@ Versions below were the **latest published at the time of writing**. Packages in
 
 | Category | Licenses | Rule |
 |---|---|---|
-| ✅ **Allowed** | MIT, ISC, BSD-2-Clause, BSD-3-Clause, Apache-2.0, 0BSD, Unlicense, CC0-1.0; fonts: OFL-1.1 | Use freely; keep license notices |
+| ✅ **Allowed** | MIT, ISC, BSD-2-Clause, BSD-3-Clause, Apache-2.0, 0BSD, Unlicense, CC0-1.0, Zlib (added P9-T15, owner decision 2026-11-02); fonts: OFL-1.1 | Use freely; keep license notices |
 | ⚠️ **Review required** | MPL-2.0, LGPL-2.1/3.0, dual licenses containing these, CC-BY | Document how obligations are met before use (see §4). Approved exceptions: `libheif-js` (LGPL-3.0, D-6); `@axe-core/playwright` (MPL-2.0, dev-only) |
 | ❌ **Forbidden** | GPL (any version), AGPL, SSPL, BUSL, "non-commercial" (e.g. CC-BY-NC, model licenses restricting commercial use), "no license" | Never ship |
 
@@ -133,6 +133,10 @@ All permissive. The `/licenses` page reproduces these notices (BSD/IJG attributi
 | `@serwist/turbopack` | 9.5.13 📌 | MIT | ✅ | Builds the service worker from the route handler `app/serwist/[path]/route.ts` at build time (works with webpack builds, P1-T22). Build-only, so a dev dependency: its `glob` family (`glob`, `minimatch`, `minipass`, `lru-cache`, `path-scurry`) is BlueOak-1.0.0, a permissive license that is not on the production allow-list and never ships |
 | `esbuild` | 0.28.2 📌 | MIT | ✅ | Bundles `src/sw.ts` for `@serwist/turbopack` (native build; `format: "iife"` for a classic worker) |
 
+### 3.0 `npm audit` exceptions (P9-T15, owner decision 2026-11-02)
+
+`npm audit --omit=dev` (everything that can reach `out/`): **0 vulnerabilities** (2026-11-02). The full tree reports 58 advisories (2 low, 39 moderate, 17 high), all in dev-only tooling that never runs in users' browsers: older `zod` copies inside `@lhci/cli` (via `lighthouse` → `puppeteer-core` → `chromium-bidi`) and `@serwist/turbopack` / `@serwist/build`, plus the transitive trees named in §3. The only automatic fix (`npm audit fix --force`) downgrades `@lhci/cli` to 0.1.0, which breaks Lighthouse CI. The owner accepted these as documented exceptions. Re-check on every dependency update and monthly after launch; the release gate is `npm audit --omit=dev` = 0.
+
 ### 3.1 Build-time and dev-only transitive licenses (license gate findings, 2026-10-13)
 
 `npm run licenses` checks the production tree against the §1 allow-list and the whole tree against the forbidden list. These non-allow-list licenses were found and accepted because the code is **never shipped to users** (not in `out/`):
@@ -145,9 +149,9 @@ All permissive. The `/licenses` page reproduces these notices (BSD/IJG attributi
 | `glob`, `minimatch`, `lru-cache`, … | BlueOak-1.0.0 | Dev tooling | Dev-only, allowed |
 | `argparse` | Python-2.0 | Dev tooling | Dev-only, allowed |
 | `spdx-exceptions` / `spdx-ranges` | CC-BY-3.0 | License-checker data | Dev-only, allowed |
-| `pako` 1.0.11 | MIT AND Zlib | Deflate inside `pdf-lib` (shipped in the merge-pdf worker) | Production exception by name (Phase 3). Zlib is permissive (attribution only) but not on the §1 allow-list. **Owner review requested:** add Zlib to the allow-list, or keep the exception |
+| `pako` 1.0.11 | MIT AND Zlib | Deflate inside `pdf-lib` (shipped in the PDF tool workers) | Allowed: the owner added Zlib to the §1 allow-list (P9-T15, 2026-11-02); no exception needed |
 
-The exception list lives in `scripts/check-licenses.mjs` and must stay in sync with this table. **Owner review requested** for the two production-tree exceptions (LGPL/CC-BY are "review required" in §1); they would only matter if the files were distributed, which they are not.
+The exception list lives in `scripts/check-licenses.mjs` and must stay in sync with this table. **Owner review requested** for the two remaining production-tree exceptions (LGPL/CC-BY are "review required" in §1); they would only matter if the files were distributed, which they are not.
 
 ---
 

@@ -25,7 +25,7 @@ Not legal advice: written as a plain, honest description of actual behaviour (ph
 | Storage | Offline copy of the site's own files, no user content | Serwist precache and runtime caches (`src/sw.ts`, architecture §10): pages, shell, fonts, on-intent libraries and WASM |
 | Hosting | Cloudflare Pages receives standard request data (IP, URL, user agent, time) | deployment.md (Cloudflare Pages). Wording kept general; links Cloudflare's own policy |
 | Hosting | Cloudflare can see which files load (e.g. the PDF engine), not content | Engines load on intent from the same origin (architecture §8); content never leaves the page |
-| Analytics, cookies, ads | None | No analytics script; CSP would block a third-party one (`script-src 'self'`). No `document.cookie` writes in `src/`. Cloudflare Web Analytics stays off until P9-T19 (deployment.md, step 6) |
+| Analytics, cookies, ads | None | No analytics script; CSP would block a third-party one (`script-src 'self'`). No `document.cookie` writes in `src/`. No analytics at launch (owner decision P9-T19, [analytics-monitoring.md](../06-delivery/analytics-monitoring.md)) |
 | Verify | Network tab shows only same-origin requests; tools work offline | CSP; `e2e/pwa.spec.ts` (offline per category) |
 | Contact | Run by Ali Raza; officialaliraza2005@gmail.com | Owner decision 2026-11-02; `CONTACT_EMAIL` in `src/config/site.ts` |
 
@@ -33,7 +33,7 @@ Not legal advice: written as a plain, honest description of actual behaviour (ph
 
 | Change | Update |
 |---|---|
-| Analytics enabled (P9-T19, P10-T03) | "Analytics, cookies and ads": name the provider, what it receives, and whether it sets cookies; Summary bullet; date. Publish **before** enabling (the page promises this) |
+| Analytics enabled (only if the P9-T19 decision changes; analytics-monitoring.md §4) | "Analytics, cookies and ads": name the provider, what it receives, and whether it sets cookies; Summary bullet; date. Publish **before** enabling (the page promises this) |
 | A new `localStorage` key or other browser storage | "What is stored in your browser" |
 | Hosting moves away from Cloudflare Pages | "Hosting" and the Summary |
 | Ads or a paid plan (monetization) | Summary, "Analytics, cookies and ads", About page |

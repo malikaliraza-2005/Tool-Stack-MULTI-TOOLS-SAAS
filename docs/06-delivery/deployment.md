@@ -38,7 +38,7 @@ Needs the Cloudflare dashboard and a pushed GitHub repository.
 
 4. Environment variables (Settings → Variables): `NEXT_PUBLIC_SITE_URL=https://sprigkit.com` for **Production** and **Preview**, and `NEXT_TELEMETRY_DISABLED=1`.
 5. Settings → Builds → **Preview branch control:** all non-production branches.
-6. Leave Cloudflare Web Analytics **off** until the analytics decision (architecture §11.1; adding it requires CSP changes).
+6. Leave Cloudflare Web Analytics **off**: no analytics at launch (P9-T19, [analytics-monitoring.md](analytics-monitoring.md)).
 7. Domain (after D-1 purchase): Custom domains → add `sprigkit.com` (and redirect `www`).
 
 ## 3. Verifying a deployment (P1-T17)

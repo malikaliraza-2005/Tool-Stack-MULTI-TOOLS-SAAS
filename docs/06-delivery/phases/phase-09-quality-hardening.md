@@ -51,6 +51,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 - [ ] **P9-T14** Privacy verification: no-network E2E for all 19 tools; localStorage contains no user content; analytics sends no content.
   - *Progress:* no-network already runs on every E2E test (`noNetwork` fixture). New `noStoredContent` fixture fails any test that leaves a storage key outside the allow-list (theme, tool options, favorites, recent, opt-in signature); stored option schemas hold no content (only flags, time zone, colour). Analytics: depends on P9-T19.
 - [ ] **P9-T15** `npm audit` clean (or documented exceptions); license gate green; Licenses page current. Owner decides on `pako` (Zlib): add Zlib to the allow-list or keep the named exception ([dependencies-licenses.md §3.1](../../04-architecture/dependencies-licenses.md)).
+  - *Decided:* Zlib added to the licence allow-list (pako exception removed); the dev-only `npm audit` findings are documented exceptions (dependencies-licenses.md §3.0). `npm audit --omit=dev`: 0.
 
 ### SEO
 - [ ] **P9-T16** Crawl the preview (free crawler or custom script): no broken links, correct canonicals, no orphan pages, sitemap complete. Run Google's Rich Results Test and the Schema.org validator on one page of each type (home, hub, tool, site page, guide index, guide), deferred from P3-T07 and P8-T14; `e2e/structured-data.spec.ts` already checks every page locally.
@@ -61,7 +62,8 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 ### Launch preparation
 - [ ] **P9-T18** Write `06-delivery/launch-checklist.md` and do a dry run.
   - *Progress:* [launch-checklist.md](../launch-checklist.md) written; dry run on a preview still to do.
-- [ ] **P9-T19** Write `06-delivery/analytics-monitoring.md`; decide analytics provider (Cloudflare Web Analytics proposed); add its hosts to CSP and Privacy page.
+- [x] **P9-T19** Write `06-delivery/analytics-monitoring.md`; decide analytics provider (Cloudflare Web Analytics proposed); add its hosts to CSP and Privacy page.
+  - *Done:* owner decided no analytics at launch (2026-11-02); [analytics-monitoring.md](../analytics-monitoring.md) written; CSP and Privacy page unchanged; P10-T03 skipped.
 
 ## Docs to write / update
 launch-checklist.md · analytics-monitoring.md · browser-device-support.md (final) · acceptance-criteria.md (results)

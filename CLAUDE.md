@@ -32,7 +32,7 @@ Work from the current phase's task checklist. Tick tasks when done and reference
 
 1. **No backend, database, API routes, auth, or paid service.** The site is a Next.js static export (`output: "export"`).
 2. **No network requests with user data.** Tools must not call any external origin. Never load libraries, fonts, or WASM from a CDN; self-host everything.
-3. **Only permissive licenses.** Allowed: MIT, ISC, BSD, Apache-2.0, OFL (fonts). LGPL/MPL need review. GPL, AGPL, and non-commercial licenses are forbidden. Record every new dependency in [docs/04-architecture/dependencies-licenses.md](docs/04-architecture/dependencies-licenses.md).
+3. **Only permissive licenses.** Allowed: MIT, ISC, BSD, Apache-2.0, Zlib, OFL (fonts). LGPL/MPL need review. GPL, AGPL, and non-commercial licenses are forbidden. Record every new dependency in [docs/04-architecture/dependencies-licenses.md](docs/04-architecture/dependencies-licenses.md).
 4. **Never store user content** (files, text, tokens) in localStorage, URLs, logs, or analytics. Only preferences/options. Sole exception: sign-pdf's opt-in "Remember my signature" (tool-specifications §3.6).
 5. **Use design tokens only.** No hard-coded colors, sizes, radii, shadows, durations, or easings. See [docs/02-design/design-system.md](docs/02-design/design-system.md).
 6. **Motion:** animate `transform`/`opacity`; respect `prefers-reduced-motion`; never block input; durations from tokens (≤ 380ms).

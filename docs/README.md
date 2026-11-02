@@ -95,7 +95,7 @@ Status: ✅ Written · 📝 Planned · ➖ Not needed
 | [implementation-roadmap.md](06-delivery/implementation-roadmap.md) | ✅ | Master plan: phases, milestones, dependencies, doc schedule |
 | [phases/](06-delivery/phases/README.md) | ✅ | One file per phase (0–11): tasks, exit criteria, risks; current phase and status |
 | [deployment.md](06-delivery/deployment.md) | ✅ | Cloudflare setup, environments, rollback |
-| analytics-monitoring.md | 📝 | Analytics, Search Console, error monitoring |
+| [analytics-monitoring.md](06-delivery/analytics-monitoring.md) | ✅ | Analytics, Search Console, error monitoring |
 | [launch-checklist.md](06-delivery/launch-checklist.md) | ✅ | Pre-launch and launch-day steps |
 | maintenance.md | 📝 | Updates, bug triage, monthly reviews, tool retirement |
 | [risks-and-decisions.md](06-delivery/risks-and-decisions.md) | ✅ | Decision log (ADR-style) and risk register |

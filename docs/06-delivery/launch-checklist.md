@@ -25,8 +25,8 @@ The steps from a green `main` to a public, indexed site. Work top to bottom; eac
 - [ ] Rollback tested once (P1-T18, [deployment.md §4](deployment.md#4-rollback-p1-t18)).
 
 ### Decisions
-- [ ] Analytics provider decided and documented (P9-T19). If enabled: CSP hosts added, Privacy page updated and **published before** analytics is switched on ([privacy-policy.md](../07-legal/privacy-policy.md)).
-- [ ] `pako` licence decision recorded (P9-T15).
+- [x] Analytics decided: none at launch (P9-T19, [analytics-monitoring.md](analytics-monitoring.md)). CSP and Privacy page unchanged.
+- [x] `pako` licence decision recorded: Zlib added to the allow-list (P9-T15).
 
 ### Repository
 - [ ] CI green on `main`: typecheck, lint, format, unit, E2E, Lighthouse, license gate.
@@ -72,7 +72,6 @@ Run on the preview during the dry run, and again on `https://sprigkit.com` on la
 - [ ] Merge the release PR to `main`; watch the Cloudflare build to completion.
 - [ ] Section 3 on `https://sprigkit.com`.
 - [ ] Smoke test every tool's main flow on production (P10-T02).
-- [ ] If analytics is enabled: data arrives and contains no tool content (P10-T03).
 - [ ] Google Search Console: verify the domain, submit the sitemap, inspect the homepage and five tool pages (P10-T04).
 - [ ] Bing Webmaster Tools: verify, submit the sitemap (P10-T05).
 
