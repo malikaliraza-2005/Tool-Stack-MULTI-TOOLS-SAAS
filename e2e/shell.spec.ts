@@ -7,9 +7,9 @@ async function storeTheme(page: Page, theme: string) {
   await page.addInitScript(
     ([key, value]) => {
       // Only seed once, so later reloads keep what the page stored.
-      if (!sessionStorage.getItem("seeded")) {
+      if (!sessionStorage.getItem("e2e:seeded")) {
         localStorage.setItem(key!, value!);
-        sessionStorage.setItem("seeded", "1");
+        sessionStorage.setItem("e2e:seeded", "1");
       }
     },
     [THEME_KEY, theme],
@@ -145,6 +145,24 @@ test.describe("theme", () => {
     await expect(page.locator("html")).not.toHaveClass(/dark/);
   });
 
+  test("reduced motion makes CSS animations and transitions instant (P9-T11)", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    for (const path of ["/", "/merge-pdf", "/guides"]) {
+      await page.goto(path);
+      await page.waitForFunction(() => document.documentElement.hasAttribute("data-app-started"));
+      const slow = await page.evaluate(() =>
+        document
+          .getAnimations()
+          .filter(
+            (animation) => animation instanceof CSSAnimation || animation instanceof CSSTransition,
+          )
+          .map((animation) => Number(animation.effect?.getComputedTiming().duration ?? 0))
+          .filter((duration) => duration > 1),
+      );
+      expect(slow, path).toEqual([]);
+    }
+  });
+
   test("theme changes use a View Transition, except under reduced motion", async ({
     page,
     browserName,
@@ -198,6 +216,12 @@ test.describe("command palette", () => {
       "aria-pressed",
       "true",
     );
+    // The toast region loads with the first toast (P9-T08); the toast is in its live region.
+    await expect(
+      page
+        .getByRole("region", { name: /Notifications/ })
+        .getByText("JSON Formatter added to favorites"),
+    ).toBeVisible();
     await page.goto("/merge-pdf");
     // The shortcut listener exists only after hydration.
     await page.waitForFunction(() => document.documentElement.hasAttribute("data-app-started"));

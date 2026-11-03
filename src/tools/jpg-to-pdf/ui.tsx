@@ -138,7 +138,11 @@ export default function JpgToPdfUI() {
       const bytes = await readAsArrayBuffer(entry.file);
       inspector.current ??= createRunner();
       const checked = await inspector.current.run(
-        { op: "inspect", file: { name: entry.file.name, bytes } },
+        {
+          op: "inspect",
+          file: { name: entry.file.name, bytes },
+          device: getDeviceClass(),
+        },
         { transfer: [bytes] },
       );
       if (!live.current.has(entry.id) || checked.op !== "inspect") return;

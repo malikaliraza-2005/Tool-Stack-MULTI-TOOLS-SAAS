@@ -19,6 +19,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "e2e": "playwright test",
+    "e2e:inp": "playwright test e2e/inp.spec.ts --project=chromium --workers=1",
     "lhci": "lhci autorun",
     "licenses": "node scripts/check-licenses.mjs"
   },

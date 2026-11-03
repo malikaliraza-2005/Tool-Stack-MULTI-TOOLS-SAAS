@@ -18,6 +18,7 @@ import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { toToolError, type ToolError } from "@/lib/errors";
 import { downloadText } from "@/lib/files/download";
 import { plural } from "@/lib/files/format";
+import { checkTextLimits, getDeviceClass } from "@/lib/files/limits";
 import { createWorkerRunner, type WorkerRunner } from "@/lib/worker/runner";
 // The explanation only reads the pattern (never runs it): safe on the page.
 import { explain } from "./explain";
@@ -97,6 +98,8 @@ export default function RegexTesterUI() {
         () => new Worker(new URL("./logic.worker.ts", import.meta.url), { type: "module" }),
       );
       try {
+        const check = checkTextLimits(text, meta.limits, getDeviceClass());
+        if (check.status === "reject") throw check.error;
         const result = await runner.current.run(job, {
           timeoutMs: TIMEOUT_MS,
           timeoutMessage: TIMEOUT_MESSAGE,
@@ -222,7 +225,9 @@ export default function RegexTesterUI() {
               title={
                 current.error.code === "E_TIMEOUT"
                   ? "The pattern was stopped"
-                  : "The pattern couldn’t run"
+                  : current.error.code === "E_TOO_LARGE"
+                    ? "The text is too long"
+                    : "The pattern couldn’t run"
               }
               description={current.error.message}
             />

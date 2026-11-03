@@ -13,8 +13,8 @@ export default function NotFound() {
       <Container size="content" className="flex flex-col items-start gap-4">
         <h1 className="text-h1 text-fg">Page not found</h1>
         <p className="text-body-lg text-fg-muted">
-          This page doesn’t exist or hasn’t been built yet. Check the address, or start from the
-          homepage.
+          This page doesn’t exist. It may have moved, or the address has a typo. Check it, or start
+          from the homepage.
         </p>
         <Link href="/" className={buttonClasses({ variant: "primary" })}>
           Go to the homepage

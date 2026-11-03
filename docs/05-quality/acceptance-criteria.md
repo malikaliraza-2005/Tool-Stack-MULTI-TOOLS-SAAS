@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-14 (Phase 3: gates defined; pilot results recorded) |
+| **Last updated** | 2026-11-02 (Phase 9: automated results for all 19 tools, §4) |
 | **Related** | [mvp-scope.md §6](../01-product/mvp-scope.md#6-definition-of-done-per-tool) · [testing-strategy.md](testing-strategy.md) · [performance.md](performance.md) · [browser-device-support.md](browser-device-support.md) |
 
 Release gates: what must be true before a tool or page ships. The Definition of Done (mvp-scope §6) is the source; this document turns each item into a check with a command or a manual step, and records where each pilot stands.
@@ -18,7 +18,7 @@ Release gates: what must be true before a tool or page ships. The Definition of 
 | G3 | No network requests during processing (DoD 3) | `noNetwork` fixture in every E2E test | Yes |
 | G4 | Works offline after first load (DoD 4) | Chromium E2E with the service worker | From Phase 7 (G-5) |
 | G5 | Keyboard only; axe clean; announcements for results and errors (DoD 5) | E2E keyboard flows; `expectNoA11yViolations` in empty, working and result states, both themes; manual screen-reader check | Partly |
-| G6 | Motion rules and performance budgets (DoD 6) | Manual motion checklist (design-system §7.4); `npm run lhci` | Partly (warn-only until P9) |
+| G6 | Motion rules and performance budgets (DoD 6) | Manual motion checklist (design-system §7.4); `npm run lhci` (enforced since P9-T08); `npm run e2e:inp` | Partly |
 | G7 | Chrome, Firefox, Safari (macOS, iOS), mid-range Android (DoD 7) | Playwright Chromium/Firefox/WebKit/mobile viewport + real devices | Partly |
 | G8 | Registry entry complete; structured data valid (DoD 8) | Registry rules fail the build; JSON-LD unit + E2E tests; Rich Results Test on a preview | Partly |
 | G9 | Supporting content written and reviewed (DoD 9) | Build fails without `content.tsx`; owner review | Partly |
@@ -31,9 +31,9 @@ Release gates: what must be true before a tool or page ships. The Definition of 
 | Static HTML is meaningful without JavaScript | E2E with JavaScript disabled (`e2e/seo.spec.ts` for tool pages) |
 | Unique title, description, H1; canonical | Registry rules; `e2e/seo.spec.ts` |
 | No CSP violation, no uncaught error | `csp` fixture |
-| axe: 0 violations, both themes | `expectNoA11yViolations` |
-| 320 px width, 200% zoom: no horizontal page scroll | Manual (accessibility.md §2) |
-| Lighthouse: Performance ≥ 90, Accessibility 100, Best Practices ≥ 95, SEO 100 | `npm run lhci` |
+| axe: 0 violations, both themes | `e2e/a11y.spec.ts` (every page) and `expectNoA11yViolations` in tool states |
+| 320 px width, 200% zoom: no horizontal page scroll | `e2e/reflow.spec.ts` (320 px and 640 px, every page); `noOverflow` fixture on every E2E state |
+| Lighthouse budgets ([performance.md §1](performance.md#1-budgets)) | `npm run lhci` (errors since P9-T08) |
 
 ## 3. Pilot status (2026-10-31)
 
@@ -55,3 +55,22 @@ Phase 3 closed with owner-approved deferrals (2026-10-31); ⏳ items name the ta
 All pages also pass the `noOverflow` E2E fixture (no content wider than the viewport, 320px included), added after Merge PDF overflowed on a 360px phone.
 
 Accessibility 100, Best Practices 100 and SEO 100 in Lighthouse for both pilots. Performance details: [performance.md §2.2](performance.md#22-phase-3-tool-pages).
+
+## 4. Phase 9 results: all 19 tools (2026-11-02)
+
+Automated gates on the `p9/quality-hardening` build, in the five Playwright projects (Chromium, Firefox, WebKit, Pixel 7, iPhone 14). ⏳ items need people or devices and name the task.
+
+| Gate | Status |
+|---|---|
+| G1, G2 | ✅ 733 unit tests; E2E main and error flows for every tool |
+| G3 | ✅ `noNetwork` on every E2E test; `noStoredContent` fails any test leaving a storage key outside the allow-list |
+| G4 | ✅ offline E2E (Chromium, `e2e/pwa.spec.ts`) |
+| G5 | ✅ axe on every page and tool state, both themes; keyboard flows in E2E. ⏳ manual keyboard pass → P9-T05; screen readers → P9-T06 |
+| G6 | ✅ Lighthouse budgets enforced, 26 URLs pass; INP check (`npm run e2e:inp`). ⏳ motion walk-through and mid-range phone traces → P9-T11 |
+| G7 | ✅ Playwright projects above. ⏳ real Safari (macOS, iOS) and Android → P9-T01 |
+| G8 | ✅ registry rules, JSON-LD on every page (`e2e/structured-data.spec.ts`), crawl (`e2e/crawl.spec.ts`). ⏳ Rich Results Test on a preview → P9-T16 |
+| G9 | ✅ content reviewed against the code (P8-T04). ⏳ owner's second read of guides and site pages → P9-T12 |
+| G10 | ✅ license gate; Zlib on the allow-list (P9-T15) |
+
+Security: hostile inputs tested (decompression-bomb images, self-referencing and oversized PDFs, a 512 MB deflate stream, malformed files); see P9-T13. ⏳ CSP on production headers → launch checklist §3.
+

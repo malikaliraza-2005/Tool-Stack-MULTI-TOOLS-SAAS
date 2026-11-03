@@ -28,6 +28,7 @@ This document defines how every MVP tool behaves. **Acceptance tests listed here
 - Mixed valid/invalid files: valid ones are accepted; each rejected file shows its own reason.
 - The FileList shows name, size, type, thumbnail (images, PDF first page), and remove; reorder by drag and by keyboard (move up/down).
 - *Clarified in Phase 3:* the registry says whether limits apply per file or to all files together (`limits.per`; PDF tools: total). Rejected and damaged files **stay in the list** with their reason and are left out of processing; the primary action counts only valid files. Files are checked when added (magic bytes, then a quick load in the worker), so problems show next to the file before the user starts. Files pasted with Ctrl+V (⌘V) are accepted anywhere on a file tool's page. PDF thumbnails are rendered with pdf.js on intent; when a PDF can't be rendered, a generic icon is shown.
+- *Clarified in Phase 9:* text tools with registry limits (json-formatter, base64-encode-decode, jwt-decoder, regex-tester) also check pasted or typed text against the hard limit, measured as UTF-8 bytes, before processing (`checkTextLimits` in `src/lib/files/limits.ts`). Going over `maxFiles` has its own message (see §2.4).
 
 ### 2.2 Output and download
 - Single output: download with a sensible name: `<original>-<action>.<ext>` (e.g. `report-merged.pdf`, `photo-compressed.webp`). Merged outputs default to `merged.pdf`, editable before download.
@@ -49,7 +50,7 @@ This document defines how every MVP tool behaves. **Acceptance tests listed here
 | Code | When | User message pattern |
 |---|---|---|
 | `E_UNSUPPORTED_FORMAT` | Type not accepted | "This file is a {type}. {Tool} accepts {formats}." |
-| `E_TOO_LARGE` | Above hard limit | "{name} is {size}. The limit on this device is {limit}. Try {suggestion}." |
+| `E_TOO_LARGE` | Above hard limit | "{name} is {size}. The limit on this device is {limit}. Try {suggestion}." Text: "The text is {size}. The limit on this device is {limit}. Try a shorter text." Too many files: "{name} wasn't added. The limit on this device is {max} files at a time. Remove some files, then try again." |
 | `E_CORRUPT` | Parsing failed | "{name} couldn't be read. It may be damaged or incomplete." |
 | `E_ENCRYPTED` | Password-protected PDF | "{name} is password-protected. Remove the password first, then try again." |
 | `E_OUT_OF_MEMORY` | Allocation failure | "Your browser ran out of memory. Try fewer or smaller files, or a desktop browser." |

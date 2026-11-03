@@ -65,6 +65,9 @@ export type ProcessResult = {
 
 export type ImageLimits = { maxPixels: number };
 
+/** Largest image decoded per device class (decoding needs 4 bytes per pixel). */
+export const MAX_PIXELS = { desktop: 120_000_000, mobile: 50_000_000 } as const;
+
 const WHITE: Rgb = [255, 255, 255];
 
 /** Header facts, or E_UNSUPPORTED_FORMAT (other types) / E_CORRUPT (damaged header). */

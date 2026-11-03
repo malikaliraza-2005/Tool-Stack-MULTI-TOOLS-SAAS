@@ -15,10 +15,12 @@ import { Field } from "@/components/ui/Field";
 import { IconButton } from "@/components/ui/IconButton";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
+import { checkTextLimits, getDeviceClass } from "@/lib/files/limits";
 import { formatRelative } from "@/lib/time";
 import { SAMPLE_SECRET, SAMPLE_TOKEN } from "./constants";
 // logic.ts is small and has no dependencies; jose (verify.ts) loads on Verify.
 import { decodeJwt, type DecodedJwt, type TimeStatus } from "./logic";
+import { meta } from "./meta";
 import type { VerifyOutcome } from "./verify";
 
 /** Live update delay after typing (tool-specifications §2.3). */
@@ -54,7 +56,9 @@ export default function JwtDecoderUI() {
 
   const { now } = live;
   const empty = live.text.trim() === "";
-  const result = empty ? null : decodeJwt(live.text, now);
+  const limit = checkTextLimits(live.text, meta.limits, getDeviceClass());
+  const tooLarge = limit.status === "reject" ? limit.error : null;
+  const result = empty || tooLarge ? null : decodeJwt(live.text, now);
   const jwt = result?.ok ? result.jwt : null;
   const error = result && !result.ok ? result.error : null;
 
@@ -68,6 +72,9 @@ export default function JwtDecoderUI() {
       }
       footer={
         <>
+          {tooLarge && (
+            <ErrorState title="This is too long for a JWT" description={tooLarge.message} />
+          )}
           {error && (
             <div id={errorId}>
               <ErrorState
@@ -84,7 +91,8 @@ export default function JwtDecoderUI() {
           {jwt ? (
             <VerifyPanel key={jwt.token} jwt={jwt} />
           ) : (
-            !error && (
+            !error &&
+            !tooLarge && (
               <p className="text-small text-fg-muted">
                 Verify the signature here once a token is decoded.
               </p>
@@ -117,6 +125,11 @@ export default function JwtDecoderUI() {
           <span role="status">
             {empty ? (
               "Paste a JWT. “Bearer ” and line breaks are removed."
+            ) : tooLarge ? (
+              <span className="inline-flex items-center gap-1.5 text-danger">
+                <CircleAlert aria-hidden className="size-4" />
+                Too long for a JWT
+              </span>
             ) : error ? (
               <span className="inline-flex items-center gap-1.5 text-danger">
                 <CircleAlert aria-hidden className="size-4" />
@@ -151,14 +164,23 @@ export default function JwtDecoderUI() {
           <div className="flex h-full items-center p-4">
             <EmptyState
               className="w-full"
-              title={error ? "Fix the token to see its contents" : "Nothing to show yet"}
+              title={
+                tooLarge
+                  ? "Shorten the input to see its contents"
+                  : error
+                    ? "Fix the token to see its contents"
+                    : "Nothing to show yet"
+              }
               description={
-                error
-                  ? "The first problem is highlighted in the input."
-                  : "Paste a JWT. Its header, payload and claims appear here."
+                tooLarge
+                  ? "A JWT is rarely more than a few kilobytes."
+                  : error
+                    ? "The first problem is highlighted in the input."
+                    : "Paste a JWT. Its header, payload and claims appear here."
               }
               action={
-                !error && (
+                !error &&
+                !tooLarge && (
                   <Button size="sm" onClick={() => setInput(SAMPLE_TOKEN)}>
                     Insert sample
                   </Button>

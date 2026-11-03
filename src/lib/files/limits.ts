@@ -50,12 +50,7 @@ export function checkLimits(
     if (maxFiles !== undefined && count >= maxFiles) {
       return {
         status: "reject",
-        error: toolErrors.tooLarge({
-          name: file.name,
-          size: file.size,
-          limit: hardBytes,
-          suggestion: `up to ${maxFiles} files at a time`,
-        }),
+        error: toolErrors.tooManyFiles({ name: file.name, max: maxFiles }),
       };
     }
     const measured = total ? bytes + file.size : file.size;
@@ -84,4 +79,43 @@ export function checkLimits(
     }
     return { status: "ok" };
   });
+}
+
+/** UTF-8 size of a string without allocating its encoding. */
+export function utf8Length(text: string): number {
+  let bytes = 0;
+  for (let i = 0; i < text.length; i++) {
+    const code = text.charCodeAt(i);
+    if (code < 0x80) bytes += 1;
+    else if (code < 0x800) bytes += 2;
+    else if (code >= 0xd800 && code <= 0xdbff && i + 1 < text.length) {
+      const next = text.charCodeAt(i + 1);
+      if (next >= 0xdc00 && next <= 0xdfff) {
+        bytes += 4;
+        i += 1;
+      } else bytes += 3;
+    } else bytes += 3;
+  }
+  return bytes;
+}
+
+/**
+ * Checks pasted or typed text against the tool's limits (its UTF-8 size, as
+ * if saved to a file). Lengths that can't cross a limit skip the count.
+ */
+export function checkTextLimits(text: string, limits: ToolLimits, device: DeviceClass): LimitCheck {
+  const { softBytes, hardBytes } = limits[device];
+  if (text.length * 3 <= softBytes) return { status: "ok" };
+  const size = utf8Length(text);
+  if (size > hardBytes) {
+    return { status: "reject", error: toolErrors.textTooLarge({ size, limit: hardBytes }) };
+  }
+  if (size > softBytes) {
+    const where = device === "mobile" ? "on phones and tablets" : "on this device";
+    return {
+      status: "warn",
+      message: `The text is ${formatBytes(size)}. This may be slow ${where}.`,
+    };
+  }
+  return { status: "ok" };
 }

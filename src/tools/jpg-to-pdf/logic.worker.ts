@@ -6,6 +6,7 @@
 import { toolErrors } from "@/lib/errors";
 import { codecs } from "@/lib/image/codecs";
 import { readImageInfo, type ImageKind } from "@/lib/image/formats";
+import { checkPixels, MAX_PIXELS } from "@/lib/image/pipeline";
 import { hasTransparency, orient } from "@/lib/image/pixels";
 import { toTransferable } from "@/lib/pdf/load";
 import { expose } from "@/lib/worker/expose";
@@ -32,6 +33,8 @@ expose<JpgToPdfJob, JpgToPdfJobResult>(async (job, { progress }) => {
     const kind = imageKind(job.file);
     const info = readImageInfo(new Uint8Array(job.file.bytes));
     if (!info) throw toolErrors.corrupt(job.file.name);
+    // A small file can declare a huge image (a decompression bomb).
+    checkPixels(job.file.name, info, { maxPixels: MAX_PIXELS[job.device] });
     return { result: { op: "inspect", width: info.width, height: info.height, kind } };
   }
   const { bytes, pageCount } = await imagesToPdf(job.files, job.options, decode, progress);

@@ -27,7 +27,16 @@ type Fixtures = {
    * state a test reaches is checked at desktop and phone widths.
    */
   noOverflow: void;
+  /**
+   * Fails the test if localStorage or sessionStorage holds a key other than
+   * the preferences Sprigkit stores (CLAUDE.md rule 4, P9-T14): theme, tool
+   * options, favorites, recent tools and sign-pdf's opt-in signature.
+   */
+  noStoredContent: void;
 };
+
+/** Every key Sprigkit may store (architecture §9). */
+const STORAGE_KEYS = /^ts:v1:(theme|favorites|recent|sign-pdf:signature|opts:[a-z0-9-]+)$/;
 
 export const test = base.extend<Fixtures>({
   noNetwork: [
@@ -55,7 +64,12 @@ export const test = base.extend<Fixtures>({
     async ({ page }, use) => {
       let allowed = false;
       const pageErrors: string[] = [];
-      page.on("pageerror", (error) => pageErrors.push(error.message));
+      page.on("pageerror", (error) => {
+        // Firefox reports a worker script load cancelled by a reload or
+        // navigation as a page error; the page is already going away.
+        if (error.message.startsWith('"NS_BINDING_ABORTED')) return;
+        pageErrors.push(error.message);
+      });
       await page.addInitScript(() => {
         window.__cspViolations = [];
         document.addEventListener("securitypolicyviolation", (event) => {
@@ -81,6 +95,23 @@ export const test = base.extend<Fixtures>({
       await use();
       if (page.isClosed() || !page.url().startsWith("http")) return;
       expect(await horizontalOverflow(page), "elements wider than the viewport").toEqual([]);
+    },
+    { auto: true },
+  ],
+
+  noStoredContent: [
+    async ({ page }, use) => {
+      await use();
+      if (page.isClosed() || !page.url().startsWith("http")) return;
+      const keys = await page.evaluate(() => [
+        ...Object.keys(localStorage),
+        ...Object.keys(sessionStorage).map((key) => `session:${key}`),
+      ]);
+      expect(
+        // Tests' own helpers mark their keys "e2e:".
+        keys.filter((key) => !STORAGE_KEYS.test(key) && !/^(session:)?e2e:/.test(key)),
+        "unexpected storage keys",
+      ).toEqual([]);
     },
     { auto: true },
   ],

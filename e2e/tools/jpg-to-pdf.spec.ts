@@ -137,6 +137,18 @@ test.describe("jpg-to-pdf", () => {
     await bothThemesAccessible(page);
   });
 
+  test("rejects a small PNG that declares a huge image (P9-T13)", async ({ page }) => {
+    await open(page);
+    const bomb = halfTransparentPng().slice();
+    const view = new DataView(bomb.buffer);
+    view.setUint32(16, 60_000);
+    view.setUint32(20, 60_000);
+    await addImages(page, [{ name: "bomb.png", mimeType: "image/png", buffer: Buffer.from(bomb) }]);
+    await expect(
+      list(page).getByText(/bomb\.png is 60000 × 60000 \(3600 megapixels\)\. The limit/),
+    ).toBeVisible();
+  });
+
   test("HEIC photos become pages in every browser (libheif, P6-T11)", async ({ page }) => {
     await open(page);
     await addImages(page, [

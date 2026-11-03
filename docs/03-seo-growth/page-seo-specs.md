@@ -92,7 +92,7 @@ Copy in `src/tools/hubs.ts`; tool lists from the registry.
 | `/terms` | Terms of use · Sprigkit | The terms for using Sprigkit: free tools provided as is, a visual signature that is not a certified digital signature, and your responsibilities. | Terms of use | Using Sprigkit · Your files · Signatures · Results and accuracy · Open-source software · No warranty · Limitation of liability · Changes to these terms · Governing law · Contact |
 | `/licenses` | Open-source licenses (as built) | as built | Open-source licenses | as built; generated from the license report in P8-T09 |
 
-Facts these pages must state consistently (product facts, product.md §10): 19 tools; processing in the browser; no accounts; no cookies or ads at launch; analytics off until P9-T19 (the Privacy page names the provider when it is enabled); hosting on Cloudflare Pages; contact officialaliraza2005@gmail.com.
+Facts these pages must state consistently (product facts, product.md §10): 19 tools; processing in the browser; no accounts; no cookies or ads at launch; no analytics at launch (P9-T19; if that changes, the Privacy page names the provider first); hosting on Cloudflare Pages; contact officialaliraza2005@gmail.com.
 
 ### 4.4 Guides
 

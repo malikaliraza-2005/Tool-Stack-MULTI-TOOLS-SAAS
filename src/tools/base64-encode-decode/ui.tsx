@@ -29,7 +29,7 @@ import { notify } from "@/components/ui/Toast";
 import { toToolError, type ToolError } from "@/lib/errors";
 import { downloadBlob, downloadText } from "@/lib/files/download";
 import { formatBytes } from "@/lib/files/format";
-import { checkLimits, getDeviceClass } from "@/lib/files/limits";
+import { checkLimits, checkTextLimits, getDeviceClass } from "@/lib/files/limits";
 import { outputFileName } from "@/lib/files/names";
 import { readAsArrayBuffer, readAsText } from "@/lib/files/read";
 import { createWorkerRunner, type WorkerRunner } from "@/lib/worker/runner";
@@ -133,6 +133,10 @@ export default function Base64UI() {
       const abort = new AbortController();
       controller.current = abort;
       try {
+        if (!source) {
+          const check = checkTextLimits(input, meta.limits, getDeviceClass());
+          if (check.status === "reject") throw check.error;
+        }
         let result: Base64JobResult;
         if (source || input.length > WORKER_THRESHOLD) {
           setBusy(true);

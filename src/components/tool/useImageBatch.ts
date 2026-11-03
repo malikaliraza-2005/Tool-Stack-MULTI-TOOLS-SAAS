@@ -9,13 +9,11 @@ import { isToolError, toolErrors, toToolError, type ToolError } from "@/lib/erro
 import { checkLimits, getDeviceClass } from "@/lib/files/limits";
 import { readAsArrayBuffer } from "@/lib/files/read";
 import { readImageInfo, type ImageInfo, type ImageKind } from "@/lib/image/formats";
-import { checkPixels, inspectImage } from "@/lib/image/pipeline";
+import { checkPixels, inspectImage, MAX_PIXELS } from "@/lib/image/pipeline";
 import { createImagePool, forEachLimited, type ImagePool } from "@/lib/image/pool";
 import type { ToolDefinition } from "@/tools/types";
 
 /** Largest image decoded on each device class (P6-T10 tunes these). */
-export const MAX_PIXELS = { desktop: 120_000_000, mobile: 50_000_000 } as const;
-
 /** Header bytes read to check a file when it is added; the whole file only when needed. */
 const HEAD_BYTES = 2 * 2 ** 20;
 

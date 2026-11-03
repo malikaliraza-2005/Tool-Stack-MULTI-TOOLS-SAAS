@@ -28,7 +28,7 @@ import { notify } from "@/components/ui/Toast";
 import { toToolError, type ToolError } from "@/lib/errors";
 import { downloadText } from "@/lib/files/download";
 import { formatBytes, plural } from "@/lib/files/format";
-import { checkLimits, getDeviceClass } from "@/lib/files/limits";
+import { checkLimits, checkTextLimits, getDeviceClass } from "@/lib/files/limits";
 import { outputFileName } from "@/lib/files/names";
 import { readAsText } from "@/lib/files/read";
 import { createWorkerRunner, type WorkerRunner } from "@/lib/worker/runner";
@@ -123,6 +123,8 @@ export default function JsonFormatterUI() {
       const abort = new AbortController();
       controller.current = abort;
       try {
+        const check = checkTextLimits(input, meta.limits, getDeviceClass());
+        if (check.status === "reject") throw check.error;
         let result: JsonJobResult;
         if (input.length > WORKER_THRESHOLD) {
           setBusy(true);

@@ -77,6 +77,21 @@ export const toolErrors = {
       { fileName: p.name },
     ),
 
+  /** E_TOO_LARGE when a file would go over the tool's `maxFiles`. */
+  tooManyFiles: (p: { name: string; max: number }) =>
+    new ToolError(
+      "E_TOO_LARGE",
+      `${p.name} wasn’t added. The limit on this device is ${p.max} files at a time. Remove some files, then try again.`,
+      { fileName: p.name },
+    ),
+
+  /** E_TOO_LARGE for pasted or typed text above the tool's hard limit. */
+  textTooLarge: (p: { size: number; limit: number }) =>
+    new ToolError(
+      "E_TOO_LARGE",
+      `The text is ${formatBytes(p.size)}. The limit on this device is ${formatBytes(p.limit)}. Try a shorter text.`,
+    ),
+
   corrupt: (name: string, cause?: unknown) =>
     new ToolError("E_CORRUPT", `${name} couldn’t be read. It may be damaged or incomplete.`, {
       fileName: name,

@@ -60,7 +60,7 @@ Placeholders show an example of the expected format ("merged.pdf", `{ "paste": "
 
 ### Not built yet
 
-"Soon" badge; 404 says the page "doesn’t exist or hasn’t been built yet". Don't promise dates.
+"Soon" badge on planned tools. Don't promise dates. Since all 19 tools are live (P9-T12), the 404 no longer mentions unbuilt pages.
 
 ## 4. Microcopy reference (Phase 2 shell)
 
@@ -83,7 +83,7 @@ Placeholders show an example of the expected format ("merged.pdf", `{ "paste": "
 | Theme menu | Theme: Light / Dark / System |
 | Mobile menu | Menu · Tools · Sprigkit |
 | Footer tagline | Private tools that run in your browser. Your files never leave your device. |
-| 404 | Page not found · This page doesn’t exist or hasn’t been built yet. Check the address, or start from the homepage. · Go to the homepage |
+| 404 | Page not found · This page doesn’t exist. It may have moved, or the address has a typo. Check it, or start from the homepage. · Go to the homepage |
 | Copy button | Copy → Copied (announced) |
 | Dialog close | Close |
 | Combobox empty | No matches. Try a shorter search. |

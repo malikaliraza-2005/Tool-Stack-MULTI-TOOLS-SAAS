@@ -17,6 +17,7 @@ const ALLOWED = new Set([
   "0BSD",
   "Unlicense",
   "CC0-1.0",
+  "Zlib", // Owner decision, P9-T15 (2026-11-02): permissive, attribution only.
   "OFL-1.1",
 ]);
 
@@ -31,9 +32,6 @@ const EXCEPTIONS = [
   // Optional native image optimizer of `next`. Never executed (images.unoptimized)
   // and never part of the static output.
   { name: "@img/sharp-*", license: /LGPL-3\.0/ },
-  // Deflate used by pdf-lib (merge-pdf worker). Zlib is a permissive license
-  // (OSI-approved, attribution only) not yet on the allow-list (Phase 3).
-  { name: "pako", license: /^\(MIT AND Zlib\)$/ },
   // Browser-support data read by build tools; not shipped to users.
   { name: "caniuse-lite", license: /^CC-BY-4\.0$/ },
 ];

@@ -175,8 +175,25 @@ export function createEditor(options: EditorOptions): EditorController {
   return {
     view,
     setValue(value) {
+      // Replace only the part that changed, so the parser and the view update
+      // incrementally: output re-formatted after a keystroke differs in a few
+      // characters (P9-T10).
+      const old = view.state.doc.toString();
+      const shortest = Math.min(old.length, value.length);
+      let from = 0;
+      while (from < shortest && old.charCodeAt(from) === value.charCodeAt(from)) from++;
+      let oldEnd = old.length;
+      let newEnd = value.length;
+      while (
+        oldEnd > from &&
+        newEnd > from &&
+        old.charCodeAt(oldEnd - 1) === value.charCodeAt(newEnd - 1)
+      ) {
+        oldEnd--;
+        newEnd--;
+      }
       view.dispatch({
-        changes: { from: 0, to: view.state.doc.length, insert: value },
+        changes: { from, to: oldEnd, insert: value.slice(from, newEnd) },
         selection: EditorSelection.cursor(0),
         effects: setErrorLine.of(null),
         annotations: external.of(true),
