@@ -2,8 +2,9 @@ import { cn } from "@/lib/cn";
 import { SITE_NAME } from "@/config/site";
 
 /**
- * Logo mark (brand-identity.md): a sprig drawn in the Lucide stroke style,
- * with the accent as the single bud. Same geometry as src/app/icon.svg.
+ * Logo mark (brand-identity.md): an "O" ring in the Lucide stroke style
+ * holding the accent dot, your data, which stays inside (D-15). Same
+ * geometry as src/app/icon.svg and the Open Graph images.
  */
 export function LogoMark({ className }: { className?: string }) {
   return (
@@ -17,10 +18,8 @@ export function LogoMark({ className }: { className?: string }) {
       aria-hidden
       className={cn("size-6 shrink-0", className)}
     >
-      <path d="M12 21V9" />
-      <path d="M12 17c-3.6 0-5.8-1.9-6.5-5.2 3.6 0 5.8 1.9 6.5 5.2Z" />
-      <path d="M12 13.5c3.6 0 5.8-1.9 6.5-5.2-3.6 0-5.8 1.9-6.5 5.2Z" />
-      <circle cx="12" cy="5.5" r="2.25" className="fill-accent stroke-accent" />
+      <circle cx="12" cy="12" r="8.25" />
+      <circle cx="14.6" cy="14.6" r="2.4" className="fill-accent stroke-accent" />
     </svg>
   );
 }

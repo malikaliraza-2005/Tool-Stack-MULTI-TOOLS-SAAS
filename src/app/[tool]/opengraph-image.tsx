@@ -52,10 +52,8 @@ export default async function Image({ params }: { params: Promise<{ tool: string
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <path d="M12 21V9" />
-          <path d="M12 17c-3.6 0-5.8-1.9-6.5-5.2 3.6 0 5.8 1.9 6.5 5.2Z" />
-          <path d="M12 13.5c3.6 0 5.8-1.9 6.5-5.2-3.6 0-5.8 1.9-6.5 5.2Z" />
-          <circle cx="12" cy="5.5" r="2.25" fill={c.accent} stroke={c.accent} />
+          <circle cx="12" cy="12" r="8.25" />
+          <circle cx="14.6" cy="14.6" r="2.4" fill={c.accent} stroke={c.accent} />
         </svg>
         <span style={{ fontSize: 36, fontWeight: 600, letterSpacing: -0.5 }}>Ondevo</span>
         <span style={{ fontSize: 28, color: c["fg-muted"], marginLeft: 8 }}>

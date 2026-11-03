@@ -196,7 +196,7 @@ D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; th
 - **Options considered:** plant-themed names (Tendril, Mossbench), descriptive names (ZeroUpload, KeepLocal), catchy names (Hushkit, Byteless: already used by websites), and coined words. Web searches on 2026-11-03 found no product named **Ondevo**, **Hushora** or **Lokavo**; most other candidates were taken or close to existing brands.
 - **Decision:** **Ondevo** ("on device"), chosen by the owner on 2026-11-03. It states the product's promise: everything runs on your device. Domain `ondevo.com`; `NEXT_PUBLIC_SITE_URL=https://ondevo.com`.
 - **Consequences:**
-  - Name, metadata, structured data, `llms.txt`, legal pages and docs renamed in one change. The sprig logo mark is name-independent and stays.
+  - Name, metadata, structured data, `llms.txt`, legal pages and docs renamed in one change. The sprig mark was replaced by a new mark for the name: an "O" ring holding the accent dot, "the dot that stays inside" ([brand-identity.md §4.1](../02-design/brand-identity.md)).
   - The Cloudflare Pages project keeps its name (`sprigkit.pages.dev` hosts in the docs are real); it can be renamed in the dashboard later.
   - The JWT decoder's sample token was re-signed with the new sample secret.
   - Owner, before buying the domain: confirm `ondevo.com` is free and search "Ondevo" in WIPO, USPTO and TMview (classes 9 and 42). Fallbacks: Hushora, Lokavo.
