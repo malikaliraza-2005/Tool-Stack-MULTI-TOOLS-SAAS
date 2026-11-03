@@ -16,8 +16,8 @@ Not legal advice: plain terms matching actual behaviour, checked against the usu
 
 | Section | Decision | Why |
 |---|---|---|
-| Using Sprigkit | Operator named: Ali Raza | Owner decision 2026-11-02; the same name is on About and Privacy |
-| Using Sprigkit | Acceptable use limited to two rules (nothing unlawful, don't attack the site) | The service has no accounts or user-generated public content, so longer lists add nothing enforceable |
+| Using Ondevo | Operator named: Ali Raza | Owner decision 2026-11-02; the same name is on About and Privacy |
+| Using Ondevo | Acceptable use limited to two rules (nothing unlawful, don't attack the site) | The service has no accounts or user-generated public content, so longer lists add nothing enforceable |
 | Your files | User keeps all rights; we never receive files | Local processing (privacy-policy.md §1). Originals are never modified: browsers can't write to a selected file |
 | Signatures | "Visual signature, not a certified digital signature" stated plainly | Phase 8 task text and keyword-research §3.1: demand exists for certified signing ("with dsc", "cac"), which sign-pdf doesn't do. Same wording as the sign-pdf FAQ |
 | Results | Users check results that matter | Tools can fail on unusual or damaged files; each tool page states its limits |
@@ -31,6 +31,6 @@ Not legal advice: plain terms matching actual behaviour, checked against the usu
 
 | Change | Update |
 |---|---|
-| Paid plans, ads or accounts | Using Sprigkit, liability cap, privacy policy; consider a lawyer review |
+| Paid plans, ads or accounts | Using Ondevo, liability cap, privacy policy; consider a lawyer review |
 | A tool that produces certified signatures | Signatures section |
 | The operator becomes a company | Every "Ali Raza" reference on Terms, Privacy and About |

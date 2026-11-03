@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "word diff",
   ],
   seo: {
-    title: "Diff Checker: Compare Text and Files (No Upload) | Sprigkit",
+    title: "Diff Checker: Compare Text and Files (No Upload) | Ondevo",
     description:
       "Compare two texts or files side by side with line, word and character highlights. Ignore whitespace or case, copy a unified diff. Nothing is uploaded.",
     h1: "Diff checker: compare text and files",

@@ -1,6 +1,6 @@
-# Sprigkit Documentation
+# Ondevo Documentation
 
-This folder is the single source of truth for what Sprigkit is, how it looks, and how it is built.
+This folder is the single source of truth for what Ondevo is, how it looks, and how it is built.
 Code must follow these documents. When a decision changes, update the relevant document in the same change.
 
 ## Reading order

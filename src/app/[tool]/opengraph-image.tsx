@@ -8,7 +8,7 @@ import { CATEGORIES, getTool, publishedTools } from "@/tools/registry";
 // emitted without an extension; public/_headers serves it as image/png.
 export const size = OG_SIZE;
 export const contentType = "image/png";
-export const alt = "Sprigkit tool";
+export const alt = "Ondevo tool";
 
 export function generateStaticParams() {
   return publishedTools().map((tool) => ({ tool: tool.slug }));
@@ -57,7 +57,7 @@ export default async function Image({ params }: { params: Promise<{ tool: string
           <path d="M12 13.5c3.6 0 5.8-1.9 6.5-5.2-3.6 0-5.8 1.9-6.5 5.2Z" />
           <circle cx="12" cy="5.5" r="2.25" fill={c.accent} stroke={c.accent} />
         </svg>
-        <span style={{ fontSize: 36, fontWeight: 600, letterSpacing: -0.5 }}>Sprigkit</span>
+        <span style={{ fontSize: 36, fontWeight: 600, letterSpacing: -0.5 }}>Ondevo</span>
         <span style={{ fontSize: 28, color: c["fg-muted"], marginLeft: 8 }}>
           {CATEGORIES[tool.category].name}
         </span>

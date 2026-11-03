@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "milliseconds to date",
   ],
   seo: {
-    title: "Unix Timestamp Converter (Epoch Converter) | Sprigkit",
+    title: "Unix Timestamp Converter (Epoch Converter) | Ondevo",
     description:
       "Convert Unix timestamps to dates and back in any time zone. Detects seconds, milliseconds and microseconds, and shows the current Unix time live.",
     h1: "Unix timestamp converter (epoch converter)",

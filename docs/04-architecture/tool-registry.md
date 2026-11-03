@@ -42,12 +42,12 @@ export interface ToolDefinition {
   tagline: string;                  // one sentence under the H1
   icon: string;                     // Lucide icon name or custom glyph id
 
-  /** Search inside Sprigkit (command palette, homepage) */
+  /** Search inside Ondevo (command palette, homepage) */
   keywords: string[];               // synonyms users might type: "combine pdf", "join pdf"
 
   /** SEO, used by generateMetadata, JSON-LD and the page */
   seo: {
-    title: string;                  // ≤ ~60 chars, unique, e.g. "Merge PDF Online: Private, No Upload | Sprigkit"
+    title: string;                  // ≤ ~60 chars, unique, e.g. "Merge PDF Online: Private, No Upload | Ondevo"
     description: string;            // ≤ ~155 chars, unique
     h1: string;                     // unique
     faqs: { q: string; a: string }[]; // rendered visibly on the page; feeds FAQPage JSON-LD
@@ -165,7 +165,7 @@ export const meta: ToolDefinition = {
   icon: "files",
   keywords: ["combine pdf", "join pdf", "merge pdf files", "pdf merger", "append pdf"],
   seo: {
-    title: "Merge PDF Online: Private, No Upload | Sprigkit",
+    title: "Merge PDF Online: Private, No Upload | Ondevo",
     description:
       "Combine multiple PDF files into one in seconds. Files are processed on your device and never uploaded. Free, no sign-up.",
     h1: "Merge PDF files",
@@ -202,7 +202,7 @@ export const meta: ToolDefinition = {
   icon: "key-round",
   keywords: ["jwt", "decode jwt", "json web token", "jwt verify", "jwt parser", "bearer token"],
   seo: {
-    title: "JWT Decoder & Verifier: Decode Tokens Locally | Sprigkit",
+    title: "JWT Decoder & Verifier: Decode Tokens Locally | Ondevo",
     description:
       "Decode JWT header and payload, check expiry, and verify signatures with your key, all in your browser. Tokens are never sent anywhere.",
     h1: "JWT decoder and verifier",

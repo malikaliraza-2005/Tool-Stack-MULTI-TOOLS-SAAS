@@ -1,7 +1,7 @@
 // HEIC/HEIF decoding with libheif (D-6). The decoder is the unmodified
 // libheif-js build served from /vendor/ (scripts/copy-libheif-assets.mjs) and
 // imported at run time, on intent, inside the image worker: it is never part
-// of a Sprigkit bundle, so it can be replaced with a compatible build.
+// of a Ondevo bundle, so it can be replaced with a compatible build.
 
 import type { Pixels } from "./pixels";
 

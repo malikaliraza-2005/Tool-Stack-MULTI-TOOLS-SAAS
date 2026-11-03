@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "uuid decoder",
   ],
   seo: {
-    title: "UUID Generator: v4, v7 and ULID, Bulk (GUID) | Sprigkit",
+    title: "UUID Generator: v4, v7 and ULID, Bulk (GUID) | Ondevo",
     description:
       "Generate random UUID v4, time-ordered UUID v7 and ULIDs in bulk, uppercase or without hyphens. Inspect any UUID’s version and timestamp.",
     h1: "UUID generator (GUID)",

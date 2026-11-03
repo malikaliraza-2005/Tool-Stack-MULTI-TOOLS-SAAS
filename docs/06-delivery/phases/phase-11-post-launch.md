@@ -6,7 +6,7 @@
 | **Effort** | Ongoing |
 
 ## Goal
-Improve Sprigkit with real data: fix what users hit, strengthen pages that get impressions, retire what doesn't work, add Tier 2 tools in order of evidence, and introduce monetization only when it won't harm the product.
+Improve Ondevo with real data: fix what users hit, strengthen pages that get impressions, retire what doesn't work, add Tier 2 tools in order of evidence, and introduce monetization only when it won't harm the product.
 
 ## Entry criteria
 - M7 reached (launched).

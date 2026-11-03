@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "jpeg to pdf",
   ],
   seo: {
-    title: "JPG to PDF: Combine Images into a PDF (No Upload) | Sprigkit",
+    title: "JPG to PDF: Combine Images into a PDF (No Upload) | Ondevo",
     description:
       "Convert JPG, PNG, WebP and other images to one PDF. Choose page size, orientation and margins; photos stay upright. Works in your browser.",
     h1: "JPG and other images to PDF",

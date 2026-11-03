@@ -107,7 +107,7 @@
 
 ---
 
-## 6. Implications for Sprigkit
+## 6. Implications for Ondevo
 
 | Finding | Action | Where |
 |---|---|---|

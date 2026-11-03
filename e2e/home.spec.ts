@@ -117,9 +117,9 @@ test.describe("homepage", () => {
 
   test("pasting JSON opens the formatter pre-filled", async ({ page }) => {
     await ready(page);
-    await paste(page, '{"name":"Sprigkit","tools":19}');
+    await paste(page, '{"name":"Ondevo","tools":19}');
     await expect(page).toHaveURL(/\/json-formatter$/);
-    await expect(page.getByRole("main")).toContainText('"Sprigkit"');
+    await expect(page.getByRole("main")).toContainText('"Ondevo"');
   });
 
   test("pasting a timestamp opens the converter pre-filled", async ({ page }) => {
@@ -139,10 +139,10 @@ test.describe("homepage", () => {
 
   test("pasting Base64 opens the decoder pre-filled", async ({ page }) => {
     await ready(page);
-    await paste(page, "U3ByaWdraXQgcnVucyBpbiB5b3VyIGJyb3dzZXIu");
+    await paste(page, "T25kZXZvIHJ1bnMgaW4geW91ciBicm93c2VyLg==");
     await expect(page).toHaveURL(/\/base64-encode-decode$/);
     await expect(page.getByRole("radio", { name: "Decode" })).toBeChecked();
-    await expect(page.getByRole("main")).toContainText("Sprigkit runs in your browser.");
+    await expect(page.getByRole("main")).toContainText("Ondevo runs in your browser.");
   });
 
   test("ordinary pasted text stays in the search field", async ({ page }) => {

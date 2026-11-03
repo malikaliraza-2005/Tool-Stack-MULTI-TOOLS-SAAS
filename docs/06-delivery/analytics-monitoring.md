@@ -5,13 +5,13 @@
 | **Last updated** | 2026-11-02 (P9-T19: no analytics at launch, owner decision) |
 | **Related** | [architecture.md §11](../04-architecture/architecture.md#11-security-and-privacy) · [privacy-policy.md](../07-legal/privacy-policy.md) · [deployment.md](deployment.md) · [launch-checklist.md](launch-checklist.md) |
 
-How we learn whether Sprigkit works and is found, without collecting anything about what people do with their files.
+How we learn whether Ondevo works and is found, without collecting anything about what people do with their files.
 
 ---
 
 ## 1. Decision: no analytics at launch
 
-**Owner decision (P9-T19, 2026-11-02):** Sprigkit launches with **no analytics script**: no Cloudflare Web Analytics, no third-party or self-hosted tracker, no cookies.
+**Owner decision (P9-T19, 2026-11-02):** Ondevo launches with **no analytics script**: no Cloudflare Web Analytics, no third-party or self-hosted tracker, no cookies.
 
 Why:
 - The privacy claim stays absolute and checkable: the CSP (`script-src 'self'`, `connect-src 'self' blob: data:`) and the no-network E2E test allow no request to another origin, and the product facts ("no accounts, cookies, ads or analytics") stay true on every page without exceptions.
@@ -24,7 +24,7 @@ Consequences: CSP unchanged; the Privacy page and product facts unchanged; P10-T
 | Question | Source | Script on the site? |
 |---|---|---|
 | Is the site up and deploying? | Cloudflare Pages deployments and build logs | No |
-| How much traffic, from where? | Cloudflare's server-side traffic numbers for the domain once `sprigkit.com` is on Cloudflare (requests, countries, bandwidth). Aggregate only; no per-user data | No |
+| How much traffic, from where? | Cloudflare's server-side traffic numbers for the domain once `ondevo.com` is on Cloudflare (requests, countries, bandwidth). Aggregate only; no per-user data | No |
 | Are pages indexed, which queries find them? | Google Search Console and Bing Webmaster Tools (P10-T04, P10-T05) | No (DNS or file verification) |
 | Is something broken for users? | User reports through the contact address on About and Privacy; E2E and Lighthouse CI on every change | No |
 

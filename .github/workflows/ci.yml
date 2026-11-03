@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NEXT_PUBLIC_SITE_URL: https://sprigkit.com
+  NEXT_PUBLIC_SITE_URL: https://ondevo.com
   NEXT_TELEMETRY_DISABLED: 1
 
 jobs:

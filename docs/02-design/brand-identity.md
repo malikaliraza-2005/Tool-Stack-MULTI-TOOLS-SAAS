@@ -2,17 +2,17 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 (Phase 2, P2-T01) |
-| **Status** | Approved with the visual direction (M2, 2026-10-13). Trademark search for the name is still open (D-5, R-6) |
-| **Related** | [design-system.md](design-system.md) · [content-voice-ux-copy.md](content-voice-ux-copy.md) · [risks-and-decisions.md](../06-delivery/risks-and-decisions.md) (D-5) |
+| **Last updated** | 2026-11-03 (renamed from Sprigkit, D-15) |
+| **Status** | Approved with the visual direction (M2, 2026-10-13). Trademark search for "Ondevo" is still open (D-15, R-6) |
+| **Related** | [design-system.md](design-system.md) · [content-voice-ux-copy.md](content-voice-ux-copy.md) · [risks-and-decisions.md](../06-delivery/risks-and-decisions.md) (D-5, D-15) |
 
 ## 1. Name
 
-**Sprigkit** (D-5). Always written with one capital S, as one word. Never "SprigKit", "Sprig Kit" or "sprigkit" in prose (lowercase only in the domain and code).
+**Ondevo** (D-15, replacing Sprigkit). Short for "on device": everything runs on the user's device. Always written with one capital O, as one word. Never "OnDevo", "On Devo" or "ondevo" in prose (lowercase only in the domain and code). Said "on-DEV-oh".
 
 ## 2. Personality
 
-From the art direction "precision instrument" (design-system §1): **calm, exact, confident, tactile, honest.** Sprigkit sounds like a well-made tool, not a startup. It does not shout, hype or use exclamation marks.
+From the art direction "precision instrument" (design-system §1): **calm, exact, confident, tactile, honest.** Ondevo sounds like a well-made tool, not a startup. It does not shout, hype or use exclamation marks.
 
 ## 3. Tagline and positioning line
 
@@ -36,7 +36,7 @@ A **sprig**: a vertical stem with two offset leaves and a single round bud. It i
 
 ### 4.2 Wordmark
 
-"Sprigkit" set in **Geist Sans**, weight 600, at `text-h3` with tight tracking. It is live text, not outlines, so it stays sharp, translatable and accessible. Mark and wordmark sit 8px apart (`Logo` component).
+"Ondevo" set in **Geist Sans**, weight 600, at `text-h3` with tight tracking. It is live text, not outlines, so it stays sharp, translatable and accessible. Mark and wordmark sit 8px apart (`Logo` component).
 
 ### 4.3 App icon and favicon
 
@@ -66,5 +66,5 @@ The mark, wordmark styling and icons are **own work**. The wordmark uses Geist S
 
 ## 6. Open items
 
-- [ ] Owner trademark search for "SPRIGKIT" (classes 9 and 42) before the first production deploy (D-5, R-6). If it conflicts, the mark can stay; only the wordmark changes.
+- [ ] Owner trademark search for "ONDEVO" (classes 9 and 42) before buying the domain (D-15, R-6). "Sprigkit" was dropped after its search found SPRIG (software). If Ondevo conflicts too, the mark can stay; only the wordmark changes.
 - [x] Owner approval of the mark on the preview deployment (P2-T18, 2026-10-13).

@@ -27,19 +27,19 @@ function run() {
 describe("startup check", () => {
   it("shows the notice when a site script fails to load", () => {
     const page = run();
-    page.error({ target: { src: "https://sprigkit.com/_next/static/chunks/app.js" } });
+    page.error({ target: { src: "https://ondevo.com/_next/static/chunks/app.js" } });
     expect(page.notice.hidden).toBe(false);
   });
 
   it("shows the notice when a site script throws while parsing", () => {
     const page = run();
-    page.error({ target: null, filename: "https://sprigkit.com/_next/static/chunks/main.js" });
+    page.error({ target: null, filename: "https://ondevo.com/_next/static/chunks/main.js" });
     expect(page.notice.hidden).toBe(false);
   });
 
   it("ignores errors from other sources", () => {
     const page = run();
-    page.error({ target: { src: "blob:https://sprigkit.com/x" } });
+    page.error({ target: { src: "blob:https://ondevo.com/x" } });
     expect(page.notice.hidden).toBe(true);
   });
 

@@ -29,13 +29,13 @@ type Fixtures = {
   noOverflow: void;
   /**
    * Fails the test if localStorage or sessionStorage holds a key other than
-   * the preferences Sprigkit stores (CLAUDE.md rule 4, P9-T14): theme, tool
+   * the preferences Ondevo stores (CLAUDE.md rule 4, P9-T14): theme, tool
    * options, favorites, recent tools and sign-pdf's opt-in signature.
    */
   noStoredContent: void;
 };
 
-/** Every key Sprigkit may store (architecture §9). */
+/** Every key Ondevo may store (architecture §9). */
 const STORAGE_KEYS = /^ts:v1:(theme|favorites|recent|sign-pdf:signature|opts:[a-z0-9-]+)$/;
 
 export const test = base.extend<Fixtures>({

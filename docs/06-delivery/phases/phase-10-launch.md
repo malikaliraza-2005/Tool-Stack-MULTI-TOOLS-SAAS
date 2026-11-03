@@ -7,7 +7,7 @@
 | **Milestone** | M7: Launched |
 
 ## Goal
-Make Sprigkit public, get it indexed, and introduce it to the right communities honestly and without spam.
+Make Ondevo public, get it indexed, and introduce it to the right communities honestly and without spam.
 
 ## Entry criteria
 - M6 reached: all Phase 9 release gates pass.
@@ -32,7 +32,7 @@ Make Sprigkit public, get it indexed, and introduce it to the right communities 
 - [ ] **P10-T07** Prepare launch materials: short description, screenshots/GIF of the tool in action, the privacy claim and how to verify it.
 - [ ] **P10-T08** "Show HN" post (developer tools + privacy angle); be present to answer questions.
 - [ ] **P10-T09** Relevant subreddits only where self-promotion is allowed (read rules first); dev.to/Hashnode write-up of how local processing works.
-- [ ] **P10-T10** Submit to reputable tool directories and "awesome" lists where Sprigkit genuinely fits.
+- [ ] **P10-T10** Submit to reputable tool directories and "awesome" lists where Ondevo genuinely fits.
 - [ ] **P10-T11** Open-source a useful part (e.g. a detector library or the image pipeline) if decided, with a link back.
 - [ ] **P10-T12** Add donation link (GitHub Sponsors or similar).
 

@@ -60,7 +60,7 @@ brand-identity.md · motion-design.md · accessibility.md · ui-ux-specification
 - [x] Every component in design-system §8 that is needed before P3 exists with all states. (Tool components — DropZone, FileList, ResultPanel, PrivacyMeter, CodeEditor, ComparisonSlider, PageThumbnailGrid — are built with their tools in P3–P6.)
 - [x] Contrast verified for all token pairs in both themes; doc updated (design-system §2.3, enforced by `tokens.test.ts`).
 - [x] Motion rules (design-system §7.4) pass on the running site. Rules 1–6 verified on the production build; rule 7 by the owner's device trace (P2-T19).
-- [x] No hard-coded design values in components (lint rule `sprigkit/no-hardcoded-design`).
+- [x] No hard-coded design values in components (lint rule `ondevo/no-hardcoded-design`).
 - [x] Owner approves the visual direction on the preview deployment (M2). Approved 2026-10-13.
 
 ## Risks & fallbacks

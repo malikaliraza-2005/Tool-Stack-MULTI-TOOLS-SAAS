@@ -8,7 +8,7 @@ export type GuideSource = { title: string; publisher: string; url: string };
 export interface GuideMeta {
   /** URL segment under /guides, kebab-case, permanent once indexed. */
   slug: string;
-  /** ≤ 65 chars, ends with "| Sprigkit", unique across the site. */
+  /** ≤ 65 chars, ends with "| Ondevo", unique across the site. */
   title: string;
   /** 70–160 chars, unique. */
   description: string;

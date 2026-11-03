@@ -22,7 +22,7 @@ export const meta: ToolDefinition = {
     "decode jwt locally",
   ],
   seo: {
-    title: "JWT Decoder & Verifier, Local and Private | Sprigkit",
+    title: "JWT Decoder & Verifier, Local and Private | Ondevo",
     description:
       "Decode JSON Web Tokens in your browser: header, payload, exp, iat and nbf in readable time. Verify HS, RS, PS, ES and EdDSA signatures. No upload.",
     h1: "JWT decoder and verifier",

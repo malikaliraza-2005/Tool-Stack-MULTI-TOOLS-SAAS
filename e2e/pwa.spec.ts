@@ -50,7 +50,7 @@ test("web app manifest is linked and valid", async ({ page, request }) => {
   const href = await page.locator('link[rel="manifest"]').getAttribute("href");
   expect(href).toBeTruthy();
   const manifest = await (await request.get(href!)).json();
-  expect(manifest).toMatchObject({ name: "Sprigkit", start_url: "/", display: "standalone" });
+  expect(manifest).toMatchObject({ name: "Ondevo", start_url: "/", display: "standalone" });
   expect(manifest.icons.map((icon: { sizes: string }) => icon.sizes)).toEqual([
     "192x192",
     "512x512",
@@ -142,7 +142,7 @@ test("a new version waits for the user to refresh", async ({ page }) => {
       await registration?.update();
     });
 
-    const toast = page.getByText("A new version of Sprigkit is available");
+    const toast = page.getByText("A new version of Ondevo is available");
     await expect(toast).toBeVisible();
     // Nothing reloads on its own.
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
