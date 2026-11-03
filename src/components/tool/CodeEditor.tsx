@@ -70,6 +70,11 @@ export function CodeEditor({
   const editor = useRef<EditorController | null>(null);
   // The last value the editor reported, so echoes of our own changes are skipped.
   const emitted = useRef(value);
+  // Values reported since `value` last caught up. On a slow device the sync
+  // effect can run after the next keystroke, with a `value` one keystroke old;
+  // treating that as an external change reset the text and put the cursor at
+  // the start (P9, seen in CI on Firefox).
+  const echoes = useRef<string[]>([]);
   const onChangeRef = useRef(onChange);
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -115,6 +120,8 @@ export function CodeEditor({
       describedBy,
       onChange: (next) => {
         emitted.current = next;
+        // Bounded: only the last few can still be in flight.
+        if (echoes.current.push(next) > 32) echoes.current.shift();
         onChangeRef.current?.(next);
       },
     });
@@ -130,7 +137,13 @@ export function CodeEditor({
 
   // External value changes (sample, clear, new output).
   useEffect(() => {
-    if (value === emitted.current) return;
+    if (value === emitted.current) {
+      echoes.current = [];
+      return;
+    }
+    // A stale echo: a newer value the editor reported is on its way.
+    if (echoes.current.includes(value)) return;
+    echoes.current = [];
     emitted.current = value;
     editor.current?.setValue(value);
   }, [value]);
