@@ -33,8 +33,8 @@ export default function Home() {
               className="stagger max-w-prose animate-rise-in text-body-lg text-fg-muted"
               style={enter(1)}
             >
-              Drop a file or paste text, and Sprigkit opens the right tool. Everything runs in your
-              browser. Nothing is uploaded.
+              Drop a file or paste text, and OfflineBench opens the right tool. Everything runs in
+              your browser. Nothing is uploaded.
             </p>
           </div>
           <div className="stagger mx-auto w-full max-w-content animate-rise-in" style={enter(2)}>

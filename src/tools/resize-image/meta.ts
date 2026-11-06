@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "make image smaller",
   ],
   seo: {
-    title: "Resize and Crop Images Online (No Upload) | Sprigkit",
+    title: "Resize and Crop Images Online (No Upload) | OfflineBench",
     description:
       "Resize JPG, PNG, WebP and AVIF images to exact pixels, a percentage or common post sizes, or crop them to 1:1, 4:3 or 16:9. In your browser.",
     h1: "Resize and crop images",

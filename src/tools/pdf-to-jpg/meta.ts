@@ -20,7 +20,7 @@ export const meta: ToolDefinition = {
     "extract images from pdf pages",
   ],
   seo: {
-    title: "PDF to JPG & PNG: Convert Pages to Images (No Upload) | Sprigkit",
+    title: "PDF to JPG & PNG: Convert PDF Pages (No Upload) | OfflineBench",
     description:
       "Convert PDF pages to JPG or PNG at 72, 150 or 300 DPI, all pages or a range. Your PDF stays on your device; nothing is uploaded.",
     h1: "PDF to JPG and PNG",

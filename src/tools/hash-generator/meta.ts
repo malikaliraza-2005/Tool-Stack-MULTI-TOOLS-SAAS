@@ -22,7 +22,7 @@ export const meta: ToolDefinition = {
     "verify checksum",
   ],
   seo: {
-    title: "Hash Generator: SHA-256, MD5, SHA-1, SHA-512 | Sprigkit",
+    title: "Hash Generator: SHA-256, MD5, SHA-1, SHA-512 | OfflineBench",
     description:
       "Hash text or files with SHA-256, MD5, SHA-1, SHA-384 and SHA-512, or compute an HMAC. Verify a download’s checksum. Files never leave your device.",
     h1: "Hash generator: SHA-256, MD5, SHA-1, SHA-512",

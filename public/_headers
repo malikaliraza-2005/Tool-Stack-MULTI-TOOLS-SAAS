@@ -8,10 +8,9 @@
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Never index *.pages.dev: previews (<hash|branch>.<project>.pages.dev) and the
-# production alias (<project>.pages.dev). Production is served from SITE_URL.
-https://:project.pages.dev/*
-  X-Robots-Tag: noindex
+# Never index previews (<hash|branch>.<project>.pages.dev). The production
+# alias (<project>.pages.dev) is the live site until a domain is bought (D-1);
+# when one is, add a noindex rule (or a redirect) for the alias again.
 https://:subdomain.:project.pages.dev/*
   X-Robots-Tag: noindex
 

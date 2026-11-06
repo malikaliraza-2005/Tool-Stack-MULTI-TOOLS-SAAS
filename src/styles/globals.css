@@ -4,7 +4,7 @@
 /*
  * Design tokens (design-system.md §2, §4, §5, §7, §12).
  * Components use these tokens only: no hard-coded colors, sizes, radii,
- * shadows, durations or easings (enforced by the `sprigkit/no-hardcoded-design`
+ * shadows, durations or easings (enforced by the `offlinebench/no-hardcoded-design`
  * lint rule and src/styles/tokens.test.ts, which also checks every
  * text/background pair for WCAG contrast).
  *

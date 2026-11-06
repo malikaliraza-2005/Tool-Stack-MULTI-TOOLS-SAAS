@@ -25,6 +25,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 
 ### Functional & device testing
 - [ ] **P9-T01** Full device matrix run: Chrome, Edge, Firefox, Safari (macOS), Safari (iOS, real device), Chrome (mid-range Android, real device). Every tool's main flow + one error flow. The Phase 3 pilots have never run on real Safari: give them the full Definition of Done there (deferred from P3-T24). The same for the 8 Phase 4 developer tools on real Android and Safari (deferred from P4-T10), including whether the theme switch's View Transition crashes Safari on long pages, as it does Playwright's WebKit.
+  - *Progress (2026-11-06):* owner tested the tools on real mobile devices: everything works. Still to do: Safari on macOS and a quick desktop pass in Chrome, Edge and Firefox (CI covers their engines).
 - [ ] **P9-T02** Large-file and memory testing on mobile; confirm limits and error messages. From the P8-T04 content review: registry `limits` are not enforced on pasted text in jwt-decoder (64 KB / 1 MB) and regex-tester (1 MB / 10 MB), and json-formatter and base64-encode-decode enforce 50 MB only on opened files. Enforce them or change the registry. Going over a file-count limit (e.g. 101 files in merge-pdf) shows a byte-size message (`src/lib/files/limits.ts`); give it its own message.
   - *Done (code):* `checkTextLimits` enforces the registry hard limit on pasted text in all four tools (UTF-8 bytes); `maxFiles` now has its own `tooManyFiles` message. Mobile large-file and memory testing still to do.
 - [ ] **P9-T03** Fix all P0/P1 bugs; log the rest.
@@ -54,6 +55,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 ### Security & privacy
 - [ ] **P9-T13** Security review: CSP verified on production headers; no `dangerouslySetInnerHTML` with user content; malicious file fixtures (malformed PDF, decompression bombs, huge dimensions) handled safely.
   - *Progress:* static review: `dangerouslySetInnerHTML` only for the theme and startup scripts (constants) and JSON-LD (escaped by `serializeJsonLd`). Found and fixed: jpg-to-pdf didn't apply the pixel limit, so a small PNG declaring a huge image would be decoded; it now uses `checkPixels` with `MAX_PIXELS` (moved to `src/lib/image/pipeline.ts`), with unit and E2E tests. Hostile PDFs (`src/lib/pdf/hostile.test.ts`): a self-containing page tree fails in 16 ms as damaged, a `/Count` of a billion is ignored, a 200-inch page loads (rendering limits apply), a 512 MB deflate bomb is copied without being inflated, garbage after the header is damaged. Still to do: CSP on production headers (needs the deployment).
+  - *Progress (2026-11-06):* headers checked on the live preview (`rename-offlinebench.sprigkit.pages.dev`): Content-Security-Policy, Referrer-Policy, X-Content-Type-Options, Permissions-Policy and Cross-Origin-Opener-Policy present; 404 returns 404; `/merge-pdf.html` redirects to `/merge-pdf`; `/_headers` is not served; OG images are `image/png`. Repeat on the production domain at launch.
 - [x] **P9-T14** Privacy verification: no-network E2E for all 19 tools; localStorage contains no user content; analytics sends no content.
   - *Progress:* no-network already runs on every E2E test (`noNetwork` fixture). New `noStoredContent` fixture fails any test that leaves a storage key outside the allow-list (theme, tool options, favorites, recent, opt-in signature); stored option schemas hold no content (only flags, time zone, colour). Analytics: none at launch (P9-T19), so nothing to send.
 - [x] **P9-T15** `npm audit` clean (or documented exceptions); license gate green; Licenses page current. Owner decides on `pako` (Zlib): add Zlib to the allow-list or keep the named exception ([dependencies-licenses.md §3.1](../../04-architecture/dependencies-licenses.md)).
@@ -64,6 +66,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
   - *Progress:* `e2e/crawl.spec.ts` crawls the local build from `/`: no broken internal links, canonicals match, no orphan pages. The crawl of the preview and the Rich Results Test remain.
 - [ ] **P9-T17** Verify production build will be indexable (no stray `noindex`) and previews are not.
   - *Progress:* only 404, `_not-found` and `_gallery` carry `noindex`; `*.pages.dev` gets `X-Robots-Tag: noindex`. A production build (`CF_PAGES_BRANCH=main`) without an `https://` `NEXT_PUBLIC_SITE_URL` now fails (`next.config.ts`). Check headers on production at launch.
+  - *Progress (2026-11-06):* the preview host sends `X-Robots-Tag: noindex` as intended.
 
 ### Launch preparation
 - [ ] **P9-T18** Write `06-delivery/launch-checklist.md` and do a dry run.

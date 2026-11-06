@@ -374,7 +374,7 @@ function SuggestionPanel({
     } else {
       heading = `No tool takes ${single ? "this file" : "these files together"}`;
       message = single
-        ? "Sprigkit works with PDFs, images, JSON and text files."
+        ? "OfflineBench works with PDFs, images, JSON and text files."
         : "Drop PDFs and images separately, or choose fewer files.";
       choices = [];
     }

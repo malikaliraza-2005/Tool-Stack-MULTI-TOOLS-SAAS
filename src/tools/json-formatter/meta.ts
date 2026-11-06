@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "jsonc",
   ],
   seo: {
-    title: "JSON Formatter, Validator & Viewer (No Upload) | Sprigkit",
+    title: "JSON Formatter, Validator & Viewer (No Upload) | OfflineBench",
     description:
       "Format, validate and explore JSON in your browser. Exact error line and column, tree view, minify and sort keys. Your data never leaves your device.",
     h1: "JSON formatter, validator and viewer",
@@ -44,7 +44,7 @@ export const meta: ToolDefinition = {
       },
       {
         q: "Why does it warn about large numbers?",
-        a: "JavaScript stores numbers with limited precision, so integers larger than 9,007,199,254,740,991 can silently change in many tools. Sprigkit keeps the original digits in the output and shows a note with how many such numbers there are and the path of the first one, so you know to treat them carefully in your code.",
+        a: "JavaScript stores numbers with limited precision, so integers larger than 9,007,199,254,740,991 can silently change in many tools. OfflineBench keeps the original digits in the output and shows a note with how many such numbers there are and the path of the first one, so you know to treat them carefully in your code.",
       },
     ],
   },

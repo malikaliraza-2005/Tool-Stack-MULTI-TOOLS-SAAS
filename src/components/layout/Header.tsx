@@ -12,7 +12,7 @@ export function Header() {
   return (
     <header className="site-header sticky top-0 z-40 border-b border-border bg-bg">
       <Container className="flex h-(--header-height) items-center gap-2">
-        <Link href="/" aria-label="Sprigkit home" className="-ml-1 mr-2 rounded-md px-1 py-1">
+        <Link href="/" aria-label="OfflineBench home" className="-ml-1 mr-2 rounded-md px-1 py-1">
           <Logo />
         </Link>
         <nav aria-label="Categories" className="hidden md:block">

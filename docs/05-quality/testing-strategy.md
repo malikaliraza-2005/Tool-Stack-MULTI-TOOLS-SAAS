@@ -5,7 +5,7 @@
 | **Last updated** | 2026-10-14 (Phase 3: tool platform and pilot tests) |
 | **Related** | [architecture.md §13](../04-architecture/architecture.md#13-testing) · [performance.md](performance.md) · [browser-device-support.md](browser-device-support.md) · [mvp-scope.md §6](../01-product/mvp-scope.md#6-definition-of-done-per-tool) |
 
-This document says **how** Sprigkit is tested and which command runs each layer. What each tool must pass is defined per tool in [tool-specifications.md](../04-architecture/tool-specifications.md) and in the Definition of Done.
+This document says **how** OfflineBench is tested and which command runs each layer. What each tool must pass is defined per tool in [tool-specifications.md](../04-architecture/tool-specifications.md) and in the Definition of Done.
 
 ---
 

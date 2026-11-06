@@ -19,8 +19,8 @@ The steps from a green `main` to a public, indexed site. Work top to bottom; eac
 - [ ] No known P0/P1 bugs.
 
 ### Owner actions carried from Phase 0
-- [ ] `sprigkit.com` registered (D-1).
-- [ ] Manual trademark search for "Sprigkit" done (D-5).
+- [ ] Cloudflare Pages project named `offlinebench` (free address `offlinebench.pages.dev`, D-1). Domain `offlinebench.app`: later.
+- [ ] Manual trademark search for "OfflineBench" done (D-5).
 - [ ] Google Trends check done (P0-T05).
 - [ ] Rollback tested once (P1-T18, [deployment.md §4](deployment.md#4-rollback-p1-t18)).
 
@@ -37,27 +37,27 @@ The steps from a green `main` to a public, indexed site. Work top to bottom; eac
 ## 2. Cloudflare Pages
 
 - [ ] Production branch is `main`; build command `npm run build`; output `out`; Node from `.node-version` ([deployment.md §2](deployment.md#2-cloudflare-pages-setup-p1-t15-owner-action)).
-- [ ] `NEXT_PUBLIC_SITE_URL=https://sprigkit.com` set for Production and Preview. A production build without an `https://` value fails on purpose (`next.config.ts`).
+- [ ] `NEXT_PUBLIC_SITE_URL=https://offlinebench.pages.dev` set for Production and Preview. A production build without an `https://` value fails on purpose (`next.config.ts`).
 - [ ] `NEXT_TELEMETRY_DISABLED=1` set.
-- [ ] Custom domain `sprigkit.com` attached, HTTPS active, `www` redirects to the apex. *(production only)*
-- [ ] `<project>.pages.dev` production host sends `X-Robots-Tag: noindex` (rules in `public/_headers`).
+- [ ] *(Later, when bought)* custom domain `offlinebench.app` attached; `pages.dev` alias redirected or `noindex`.
+- [ ] `offlinebench.pages.dev` (production) has no `X-Robots-Tag`; previews do.
 
 ## 3. Verify the deployment
 
-Run on the preview during the dry run, and again on `https://sprigkit.com` on launch day.
+Run on the preview during the dry run, and again on `https://offlinebench.pages.dev` on launch day.
 
 ### Headers and routing ([deployment.md §3](deployment.md#3-verifying-a-deployment-p1-t17))
 - [ ] `Content-Security-Policy`, `Referrer-Policy`, `X-Content-Type-Options`, `Permissions-Policy` and `Cross-Origin-Opener-Policy` present on `/` and on a tool page.
-- [ ] Preview hosts send `X-Robots-Tag: noindex`; `sprigkit.com` does **not**. *(production check on launch day)*
+- [ ] Preview hosts send `X-Robots-Tag: noindex`; `offlinebench.pages.dev` does **not**. *(production check on launch day)*
 - [ ] `/does-not-exist` returns 404 with the site's 404 page.
 - [ ] `/merge-pdf.html` redirects to `/merge-pdf`; `/_headers` is not served.
 - [ ] `/serwist/sw.js` has `Cache-Control: no-cache`; `/_next/static/*` is immutable.
 - [ ] `/<slug>/opengraph-image` returns `Content-Type: image/png`.
 
 ### Indexability
-- [ ] `robots.txt` allows all and names `https://sprigkit.com/sitemap.xml`.
-- [ ] `sitemap.xml` lists every page (home, 3 hubs, 19 tools, About, Privacy, Terms, Licenses, guides) with `https://sprigkit.com` URLs.
-- [ ] View source on a tool page: canonical is `https://sprigkit.com/<slug>`; no `noindex` meta.
+- [ ] `robots.txt` allows all and names `https://offlinebench.pages.dev/sitemap.xml`.
+- [ ] `sitemap.xml` lists every page (home, 3 hubs, 19 tools, About, Privacy, Terms, Licenses, guides) with `https://offlinebench.pages.dev` URLs.
+- [ ] View source on a tool page: canonical is `https://offlinebench.pages.dev/<slug>`; no `noindex` meta.
 - [ ] Rich Results Test and the Schema.org validator pass on one page of each type: home, hub, tool, site page, guide index, guide (P9-T16).
 
 ### In the browser (DevTools open)
@@ -70,7 +70,7 @@ Run on the preview during the dry run, and again on `https://sprigkit.com` on la
 ## 4. Launch day
 
 - [ ] Merge the release PR to `main`; watch the Cloudflare build to completion.
-- [ ] Section 3 on `https://sprigkit.com`.
+- [ ] Section 3 on `https://offlinebench.pages.dev`.
 - [ ] Smoke test every tool's main flow on production (P10-T02).
 - [ ] Google Search Console: verify the domain, submit the sitemap, inspect the homepage and five tool pages (P10-T04).
 - [ ] Bing Webmaster Tools: verify, submit the sitemap (P10-T05).

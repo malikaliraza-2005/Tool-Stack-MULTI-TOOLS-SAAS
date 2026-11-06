@@ -21,8 +21,8 @@ export default function GuidesIndex() {
           <header className="flex flex-col gap-3">
             <h1 className="text-h1 text-fg">Guides</h1>
             <p className="max-w-prose text-body-lg text-fg-muted">
-              Step-by-step answers to the jobs Sprigkit’s tools do, written from how the tools and
-              file formats actually work, with sources.
+              Step-by-step answers to the jobs OfflineBench’s tools do, written from how the tools
+              and file formats actually work, with sources.
             </p>
           </header>
         </div>

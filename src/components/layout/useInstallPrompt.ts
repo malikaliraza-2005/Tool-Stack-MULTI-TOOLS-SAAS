@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 // Install prompt (P7-T14). Browsers that support it (Chromium) fire
-// `beforeinstallprompt`; Sprigkit keeps the event and offers "Install" only
+// `beforeinstallprompt`; OfflineBench keeps the event and offers "Install" only
 // where the user looks for it (the command palette), never as a pop-up.
 
 type InstallPromptEvent = Event & { prompt(): Promise<void> };

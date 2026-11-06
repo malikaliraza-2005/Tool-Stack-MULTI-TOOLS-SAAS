@@ -17,7 +17,7 @@ export type HubContent = {
 export const HUBS: Record<ToolCategory, HubContent> = {
   pdf: {
     seo: {
-      title: "Free PDF Tools Online: Private, No Upload | Sprigkit",
+      title: "Free PDF Tools Online: Private, No Upload | OfflineBench",
       description:
         "Merge, split, organize, sign and convert PDF files in your browser. Files stay on your device and are never uploaded. Free, no sign-up.",
     },
@@ -56,7 +56,7 @@ export const HUBS: Record<ToolCategory, HubContent> = {
   },
   image: {
     seo: {
-      title: "Free Image Tools Online: Private, No Upload | Sprigkit",
+      title: "Free Image Tools Online: Private, No Upload | OfflineBench",
       description:
         "Compress, convert, resize and clean images in your browser, including HEIC photos from iPhones. Images stay on your device and are never uploaded.",
     },
@@ -90,7 +90,7 @@ export const HUBS: Record<ToolCategory, HubContent> = {
   },
   developer: {
     seo: {
-      title: "Free Developer Tools Online: Private, Local | Sprigkit",
+      title: "Free Developer Tools Online: Private, Local | OfflineBench",
       description:
         "Format JSON, decode JWTs, encode Base64 and URLs, compare text and test regex in your browser. Your input is never sent anywhere.",
     },

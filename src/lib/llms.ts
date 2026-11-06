@@ -11,7 +11,7 @@ export function buildLlmsTxt(tools: readonly ToolDefinition[], guides: readonly 
   const link = (name: string, path: string, note: string) =>
     `- [${name}](${absoluteUrl(path)}): ${note}`;
   const lines = [
-    "# Sprigkit",
+    "# OfflineBench",
     "",
     `> ${tools.length} free tools for PDFs, images and code that run entirely in the browser. Files and text are processed on the user's device and never uploaded; there are no accounts.`,
     "",
@@ -30,7 +30,7 @@ export function buildLlmsTxt(tools: readonly ToolDefinition[], guides: readonly 
     "",
     "## Optional",
     "",
-    link("About", "/about", "who runs Sprigkit and how it works"),
+    link("About", "/about", "who runs OfflineBench and how it works"),
     link("Privacy policy", "/privacy", "what is and isn't stored, and how to verify it"),
     link("Terms of use", "/terms", "terms, including the visual-signature notice"),
     "",

@@ -107,7 +107,7 @@
 
 ---
 
-## 6. Implications for Sprigkit
+## 6. Implications for OfflineBench
 
 | Finding | Action | Where |
 |---|---|---|

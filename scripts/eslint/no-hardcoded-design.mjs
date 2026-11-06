@@ -100,7 +100,7 @@ export const noHardcodedDesign = {
 };
 
 const plugin = {
-  meta: { name: "sprigkit" },
+  meta: { name: "offlinebench" },
   rules: { "no-hardcoded-design": noHardcodedDesign },
 };
 

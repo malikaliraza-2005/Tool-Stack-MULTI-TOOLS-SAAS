@@ -121,7 +121,7 @@ export function CommandPalette({ open, onOpenChange, onCloseAutoFocus }: Command
       ? [
           {
             id: "install",
-            label: "Install Sprigkit as an app",
+            label: "Install OfflineBench as an app",
             keywords: ["install", "app", "offline", "pwa", "desktop"],
             icon: <Download aria-hidden />,
             run: () => run(() => void promptInstall()),

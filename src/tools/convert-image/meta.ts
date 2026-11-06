@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "avif to jpg",
   ],
   seo: {
-    title: "Convert Image: HEIC, WebP, PNG to JPG (No Upload) | Sprigkit",
+    title: "Convert Image: HEIC, WebP, PNG to JPG (No Upload) | OfflineBench",
     description:
       "Convert HEIC iPhone photos, WebP, PNG, AVIF, GIF and BMP to JPG, PNG, WebP or AVIF, many at once. Private: it all runs in your browser.",
     h1: "Convert images: HEIC, WebP, PNG and more",

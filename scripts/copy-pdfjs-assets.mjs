@@ -4,7 +4,7 @@
 // the output is git-ignored.
 //
 // Not copied: the QuickJS engine (`quickjs-eval.*`), used only for JavaScript
-// inside PDFs, which Sprigkit never enables.
+// inside PDFs, which OfflineBench never enables.
 //
 // Usage: node scripts/copy-pdfjs-assets.mjs
 

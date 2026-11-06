@@ -5,7 +5,7 @@
 | **Last updated** | 2026-10-13 (Phase 1: setup steps written; Cloudflare project not yet created) |
 | **Related** | [architecture.md §11, §15](../04-architecture/architecture.md#15-cicd) · [risks-and-decisions.md](risks-and-decisions.md) (D-1, D-10) |
 
-Sprigkit is a static export (`out/`) hosted on **Cloudflare Pages** with Git integration. There is no server, so a deploy is just an upload of files.
+OfflineBench is a static export (`out/`) hosted on **Cloudflare Pages** with Git integration. There is no server, so a deploy is just an upload of files.
 
 ---
 
@@ -13,10 +13,10 @@ Sprigkit is a static export (`out/`) hosted on **Cloudflare Pages** with Git int
 
 | Environment | Trigger | URL | `NEXT_PUBLIC_SITE_URL` | Indexing |
 |---|---|---|---|---|
-| Production | Push to `main` | `https://sprigkit.com` once the domain is bought and attached (D-1); until then `https://<project>.pages.dev` | `https://sprigkit.com` | Allowed on `sprigkit.com` only |
-| Preview | Push to any other branch, or a PR | `https://<hash>.<project>.pages.dev` and `https://<branch>.<project>.pages.dev` | `https://sprigkit.com` (canonicals always point to production) | `X-Robots-Tag: noindex` |
+| Production | Push to `main` | `https://offlinebench.pages.dev` (Pages project `offlinebench`); `https://offlinebench.app` once bought and attached (D-1) | `https://offlinebench.pages.dev` (later the domain) | Allowed on the production address |
+| Preview | Push to any other branch, or a PR | `https://<hash>.<project>.pages.dev` and `https://<branch>.<project>.pages.dev` | same as production (canonicals always point to production) | `X-Robots-Tag: noindex` |
 
-Every `*.pages.dev` host, including the production alias, sends `noindex` (rules in `public/_headers`), so only the real domain can be indexed.
+Preview hosts (`<hash|branch>.<project>.pages.dev`) send `noindex` (rule in `public/_headers`). The production alias `offlinebench.pages.dev` is the live, indexable site until a domain is bought (D-1).
 
 ## 2. Cloudflare Pages setup (P1-T15, owner action)
 
@@ -28,7 +28,7 @@ Needs the Cloudflare dashboard and a pushed GitHub repository.
 
    | Setting | Value |
    |---|---|
-   | Project name | `sprigkit` (gives `sprigkit.pages.dev`) |
+   | Project name | `offlinebench` (gives `sprigkit.pages.dev`) |
    | Production branch | `main` |
    | Framework preset | None |
    | Build command | `npm run build` |
@@ -36,10 +36,10 @@ Needs the Cloudflare dashboard and a pushed GitHub repository.
    | Root directory | `/` |
    | Node.js version | from `.node-version` (24) |
 
-4. Environment variables (Settings → Variables): `NEXT_PUBLIC_SITE_URL=https://sprigkit.com` for **Production** and **Preview**, and `NEXT_TELEMETRY_DISABLED=1`.
+4. Environment variables (Settings → Variables): `NEXT_PUBLIC_SITE_URL=https://offlinebench.pages.dev` for **Production** and **Preview** (the domain once bought), and `NEXT_TELEMETRY_DISABLED=1`.
 5. Settings → Builds → **Preview branch control:** all non-production branches.
 6. Leave Cloudflare Web Analytics **off**: no analytics at launch (P9-T19, [analytics-monitoring.md](analytics-monitoring.md)).
-7. Domain (after D-1 purchase): Custom domains → add `sprigkit.com` (and redirect `www`).
+7. Domain (later, D-1): Custom domains → add `offlinebench.app`; set `NEXT_PUBLIC_SITE_URL` to it; redirect the `pages.dev` alias to the domain (or add a `noindex` rule for it in `public/_headers`).
 
 ## 3. Verifying a deployment (P1-T17)
 
