@@ -174,7 +174,7 @@ D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; th
 - **Consequences:**
   - Free CI minutes; the source can be read and audited, but not reused.
   - Open-sourcing parts later (e.g. the license gate or the no-network test helper) needs a superseding decision.
-  - The repository name still contains "Tool-Stack" (the old working name, D-5). Renaming it to `sprigkit` on GitHub is an owner action; GitHub redirects the old URL.
+  - The repository was renamed from `Tool-Stack-MULTI-TOOLS-SAAS` to **`offlinebench`** by the owner on 2026-11-06 (D-15); GitHub redirects the old URL.
 
 ### D-14: Bundler (webpack instead of Turbopack)
 
