@@ -5,7 +5,7 @@
 | **Last updated** | 2026-10-14 (Phase 3: rules as implemented by the tool platform) |
 | **Related** | [architecture.md §11](architecture.md#11-security-and-privacy) · [tool-specifications.md §2.6](tool-specifications.md#26-privacy) · [testing-strategy.md](../05-quality/testing-strategy.md) · [dependencies-licenses.md](dependencies-licenses.md) |
 
-Ondevo's promise is literal: **what you put into a tool never leaves your device.** This document says what that protects, how it is enforced, and how it is tested.
+KeptLocal's promise is literal: **what you put into a tool never leaves your device.** This document says what that protects, how it is enforced, and how it is tested.
 
 ---
 
@@ -19,7 +19,7 @@ Ondevo's promise is literal: **what you put into a tool never leaves your device
 | T4 | Resource exhaustion | A 500 MB upload on a phone, 20 MB of JSON, deeply nested JSON | Limits checked **before** reading (`checkLimits`), device-specific. Heavy work in workers with cancellation. JSON nesting > 2000 levels rejected before parsing. Large text only in the virtualized editor |
 | T5 | Script injection (XSS) | User text rendered as HTML | React escapes all text. No `dangerouslySetInnerHTML` with user content; the only uses are the theme pre-paint script and JSON-LD, both built from constants/registry data and escaped (`serializeJsonLd`). User SVG/HTML is never rendered inline |
 | T6 | Supply chain | A dependency adds tracking or a forbidden license | Exact pins + lockfile; license gate (`npm run licenses`); `npm audit --omit=dev` in CI; all libraries, fonts and WASM self-hosted (no CDN). The CSP also blocks any runtime script from another origin |
-| T7 | Clickjacking / framing | Ondevo embedded in a hostile page | `frame-ancestors 'none'`, `Cross-Origin-Opener-Policy: same-origin` |
+| T7 | Clickjacking / framing | KeptLocal embedded in a hostile page | `frame-ancestors 'none'`, `Cross-Origin-Opener-Policy: same-origin` |
 
 Out of scope for the MVP: protection against a compromised device or browser extension (they can read any page), and against the hosting provider serving modified code (mitigated only by HTTPS and the public repository).
 

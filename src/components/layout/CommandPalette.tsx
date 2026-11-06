@@ -121,7 +121,7 @@ export function CommandPalette({ open, onOpenChange, onCloseAutoFocus }: Command
       ? [
           {
             id: "install",
-            label: "Install Ondevo as an app",
+            label: "Install KeptLocal as an app",
             keywords: ["install", "app", "offline", "pwa", "desktop"],
             icon: <Download aria-hidden />,
             run: () => run(() => void promptInstall()),

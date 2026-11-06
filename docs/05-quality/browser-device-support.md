@@ -19,7 +19,7 @@ The current and previous major versions of:
 
 Not supported: Internet Explorer, browsers without ES modules in workers, and browsers without WebAssembly. Pages without JavaScript still show their content but tools need JavaScript.
 
-**Build targets [Verified 2026-10-14]:** Next.js 16 compiles for Chrome/Edge 111+, Firefox 111+ and Safari 16.4+ (iOS 16.4+), its default modern browserslist. In older browsers the page renders but no script runs. Since Phase 3 an inline, ES5-only check (`src/lib/startup-check.ts`) then shows a notice: "Ondevo's tools couldn't start in this browser…". It appears when a site script fails to load or parse, or when the app hasn't started 20 s after load. File pickers are native `<label>`s, so they open even then, but chosen files are only handled once the app runs.
+**Build targets [Verified 2026-10-14]:** Next.js 16 compiles for Chrome/Edge 111+, Firefox 111+ and Safari 16.4+ (iOS 16.4+), its default modern browserslist. In older browsers the page renders but no script runs. Since Phase 3 an inline, ES5-only check (`src/lib/startup-check.ts`) then shows a notice: "KeptLocal's tools couldn't start in this browser…". It appears when a site script fails to load or parse, or when the app hasn't started 20 s after load. File pickers are native `<label>`s, so they open even then, but chosen files are only handled once the app runs.
 
 ## 2. Platform features we rely on
 

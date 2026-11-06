@@ -35,7 +35,7 @@ test("homepage: own metadata, canonical and JSON-LD", async ({ page }) => {
   await page.goto("/");
   const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
   expect(canonical).toMatch(/^https?:\/\/[^/]+$/);
-  expect(await page.title()).toMatch(/^Ondevo: /);
+  expect(await page.title()).toMatch(/^KeptLocal: /);
   const description = await page.locator('meta[name="description"]').getAttribute("content");
   expect(description?.length).toBeGreaterThanOrEqual(70);
 
@@ -59,7 +59,7 @@ for (const tool of TOOLS) {
     expect(canonical).toMatch(new RegExp(`^https?://[^/]+/${tool.slug}$`));
     const origin = new URL(canonical!).origin;
 
-    expect(await page.title()).toMatch(/\| Ondevo$/);
+    expect(await page.title()).toMatch(/\| KeptLocal$/);
     const description = await page.locator('meta[name="description"]').getAttribute("content");
     expect(description?.length).toBeGreaterThanOrEqual(70);
     expect(await page.locator('meta[property="og:url"]').getAttribute("content")).toBe(canonical);
@@ -78,7 +78,7 @@ for (const tool of TOOLS) {
       "FAQPage",
     ]);
     const crumbs = (graph[0]!.itemListElement as { name: string }[]).map((item) => item.name);
-    expect(crumbs).toEqual(["Ondevo", tool.hub, tool.name]);
+    expect(crumbs).toEqual(["KeptLocal", tool.hub, tool.name]);
 
     // FAQPage mirrors the FAQs visible on the page.
     const questions = (graph[2]!.mainEntity as { name: string }[]).map((q) => q.name);

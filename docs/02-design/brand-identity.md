@@ -3,16 +3,16 @@
 | | |
 |---|---|
 | **Last updated** | 2026-11-03 (renamed from Sprigkit, D-15) |
-| **Status** | Approved with the visual direction (M2, 2026-10-13). Trademark search for "Ondevo" is still open (D-15, R-6) |
+| **Status** | Approved with the visual direction (M2, 2026-10-13). Trademark search for "KeptLocal" is still open (D-15, R-6) |
 | **Related** | [design-system.md](design-system.md) · [content-voice-ux-copy.md](content-voice-ux-copy.md) · [risks-and-decisions.md](../06-delivery/risks-and-decisions.md) (D-5, D-15) |
 
 ## 1. Name
 
-**Ondevo** (D-15, replacing Sprigkit). Short for "on device": everything runs on the user's device. Always written with one capital O, as one word. Never "OnDevo", "On Devo" or "ondevo" in prose (lowercase only in the domain and code). Said "on-DEV-oh".
+**KeptLocal** (D-15, replacing Sprigkit). Files are *kept local*: everything runs on the user's device. Written as one word with two capitals, K and L. Never "Keptlocal", "Kept Local" or "keptlocal" in prose (lowercase only in the domain `keptlocal.app` and in code).
 
 ## 2. Personality
 
-From the art direction "precision instrument" (design-system §1): **calm, exact, confident, tactile, honest.** Ondevo sounds like a well-made tool, not a startup. It does not shout, hype or use exclamation marks.
+From the art direction "precision instrument" (design-system §1): **calm, exact, confident, tactile, honest.** KeptLocal sounds like a well-made tool, not a startup. It does not shout, hype or use exclamation marks.
 
 ## 3. Tagline and positioning line
 
@@ -28,15 +28,15 @@ Final homepage headline is written in Phase 7 ([content-voice-ux-copy.md](conten
 
 ### 4.1 Mark
 
-**The dot that stays inside** (D-15, replacing the Sprigkit sprig): an "O" ring, the first letter of Ondevo and the user's device, holding a solid dot, their data, which sits inside it and never leaves. It is drawn on the 24px Lucide grid with the same 1.5px round-cap stroke as the interface icons, so the logo belongs to the same family as every icon on the page (design-system §6). Geometry: ring `r 8.25` at the centre; dot `r 2.4` at (14.6, 14.6), off-centre towards the lower right.
+**The K that keeps** (D-15, replacing the Sprigkit sprig): a capital K, the first letter of KeptLocal, whose two arms close around a solid dot, the user's data, holding it in place. It is drawn on the 24px Lucide grid with the same 1.5px round-cap stroke as the interface icons, so the logo belongs to the same family as every icon on the page (design-system §6). Geometry: stem `M6.5 4v16`; arms `M17.5 4.5 9.25 12l8.25 7.5`, meeting left of centre; dot `r 2.4` at (15.5, 12), between the arms. Unlike a padlock, shield or keyhole, the shape belongs to the name, not to the privacy category.
 
 - The **dot is the only accent-coloured element** (`--accent`): it echoes the "one accent" rule and the "signal" in the UI.
-- The ring uses `currentColor` (`--fg`), so the mark works in both themes.
+- The K uses `currentColor` (`--fg`), so the mark works in both themes.
 - Source: `LogoMark` in `src/components/brand/Logo.tsx`.
 
 ### 4.2 Wordmark
 
-"Ondevo" set in **Geist Sans**, weight 600, at `text-h3` with tight tracking. It is live text, not outlines, so it stays sharp, translatable and accessible. Mark and wordmark sit 8px apart (`Logo` component).
+"KeptLocal" set in **Geist Sans**, weight 600, at `text-h3` with tight tracking. It is live text, not outlines, so it stays sharp, translatable and accessible. Mark and wordmark sit 8px apart (`Logo` component).
 
 ### 4.3 App icon and favicon
 
@@ -57,7 +57,7 @@ Colours in the icon files are the hex equivalents of the tokens: ink `#1e1a15` (
 
 - Minimum size: mark 16px; mark + wordmark 96px wide.
 - Clear space: at least the dot's diameter on every side.
-- Do not recolour the ring, move the dot outside it, add gradients, outlines, shadows or animate the mark.
+- Do not recolour the K, move the dot out from between its arms, add gradients, outlines, shadows or animate the mark.
 - Do not place the mark on the accent colour (the dot disappears).
 
 ## 5. Licensing
@@ -66,5 +66,5 @@ The mark, wordmark styling and icons are **own work**. The wordmark uses Geist S
 
 ## 6. Open items
 
-- [ ] Owner trademark search for "ONDEVO" (classes 9 and 42) before buying the domain (D-15, R-6). "Sprigkit" was dropped after its search found SPRIG (software). If Ondevo conflicts too, the mark can stay; only the wordmark changes.
+- [ ] Owner trademark search for "KEPTLOCAL" (classes 9 and 42) before buying the domain (D-15, R-6). "Sprigkit" was dropped after its search found SPRIG (software). Ondevo was dropped because `ondevo.com` is an active business. If KeptLocal conflicts too, the mark can stay; only the wordmark changes.
 - [x] Owner approval of the mark on the preview deployment (P2-T18, 2026-10-13).

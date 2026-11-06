@@ -19,8 +19,8 @@ The steps from a green `main` to a public, indexed site. Work top to bottom; eac
 - [ ] No known P0/P1 bugs.
 
 ### Owner actions carried from Phase 0
-- [ ] `ondevo.com` registered (D-1).
-- [ ] Manual trademark search for "Ondevo" done (D-5).
+- [ ] `keptlocal.app` registered (D-1).
+- [ ] Manual trademark search for "KeptLocal" done (D-5).
 - [ ] Google Trends check done (P0-T05).
 - [ ] Rollback tested once (P1-T18, [deployment.md §4](deployment.md#4-rollback-p1-t18)).
 
@@ -37,27 +37,27 @@ The steps from a green `main` to a public, indexed site. Work top to bottom; eac
 ## 2. Cloudflare Pages
 
 - [ ] Production branch is `main`; build command `npm run build`; output `out`; Node from `.node-version` ([deployment.md §2](deployment.md#2-cloudflare-pages-setup-p1-t15-owner-action)).
-- [ ] `NEXT_PUBLIC_SITE_URL=https://ondevo.com` set for Production and Preview. A production build without an `https://` value fails on purpose (`next.config.ts`).
+- [ ] `NEXT_PUBLIC_SITE_URL=https://keptlocal.app` set for Production and Preview. A production build without an `https://` value fails on purpose (`next.config.ts`).
 - [ ] `NEXT_TELEMETRY_DISABLED=1` set.
-- [ ] Custom domain `ondevo.com` attached, HTTPS active, `www` redirects to the apex. *(production only)*
+- [ ] Custom domain `keptlocal.app` attached, HTTPS active, `www` redirects to the apex. *(production only)*
 - [ ] `<project>.pages.dev` production host sends `X-Robots-Tag: noindex` (rules in `public/_headers`).
 
 ## 3. Verify the deployment
 
-Run on the preview during the dry run, and again on `https://ondevo.com` on launch day.
+Run on the preview during the dry run, and again on `https://keptlocal.app` on launch day.
 
 ### Headers and routing ([deployment.md §3](deployment.md#3-verifying-a-deployment-p1-t17))
 - [ ] `Content-Security-Policy`, `Referrer-Policy`, `X-Content-Type-Options`, `Permissions-Policy` and `Cross-Origin-Opener-Policy` present on `/` and on a tool page.
-- [ ] Preview hosts send `X-Robots-Tag: noindex`; `ondevo.com` does **not**. *(production check on launch day)*
+- [ ] Preview hosts send `X-Robots-Tag: noindex`; `keptlocal.app` does **not**. *(production check on launch day)*
 - [ ] `/does-not-exist` returns 404 with the site's 404 page.
 - [ ] `/merge-pdf.html` redirects to `/merge-pdf`; `/_headers` is not served.
 - [ ] `/serwist/sw.js` has `Cache-Control: no-cache`; `/_next/static/*` is immutable.
 - [ ] `/<slug>/opengraph-image` returns `Content-Type: image/png`.
 
 ### Indexability
-- [ ] `robots.txt` allows all and names `https://ondevo.com/sitemap.xml`.
-- [ ] `sitemap.xml` lists every page (home, 3 hubs, 19 tools, About, Privacy, Terms, Licenses, guides) with `https://ondevo.com` URLs.
-- [ ] View source on a tool page: canonical is `https://ondevo.com/<slug>`; no `noindex` meta.
+- [ ] `robots.txt` allows all and names `https://keptlocal.app/sitemap.xml`.
+- [ ] `sitemap.xml` lists every page (home, 3 hubs, 19 tools, About, Privacy, Terms, Licenses, guides) with `https://keptlocal.app` URLs.
+- [ ] View source on a tool page: canonical is `https://keptlocal.app/<slug>`; no `noindex` meta.
 - [ ] Rich Results Test and the Schema.org validator pass on one page of each type: home, hub, tool, site page, guide index, guide (P9-T16).
 
 ### In the browser (DevTools open)
@@ -70,7 +70,7 @@ Run on the preview during the dry run, and again on `https://ondevo.com` on laun
 ## 4. Launch day
 
 - [ ] Merge the release PR to `main`; watch the Cloudflare build to completion.
-- [ ] Section 3 on `https://ondevo.com`.
+- [ ] Section 3 on `https://keptlocal.app`.
 - [ ] Smoke test every tool's main flow on production (P10-T02).
 - [ ] Google Search Console: verify the domain, submit the sitemap, inspect the homepage and five tool pages (P10-T04).
 - [ ] Bing Webmaster Tools: verify, submit the sitemap (P10-T05).

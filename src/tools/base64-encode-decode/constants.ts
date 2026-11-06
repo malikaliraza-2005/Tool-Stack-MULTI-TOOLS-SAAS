@@ -10,8 +10,8 @@ export const WORKER_THRESHOLD = 1024 * 1024;
  */
 export const LONG_LINE_LIMIT = 1024 * 1024;
 
-export const SAMPLE_TEXT = "Hello, Ondevo! 👋 Grüße aus Köln · こんにちは · مرحبا";
+export const SAMPLE_TEXT = "Hello, KeptLocal! 👋 Grüße aus Köln · こんにちは · مرحبا";
 
 /** SAMPLE_TEXT encoded, for the Decode sample. */
 export const SAMPLE_BASE64 =
-  "SGVsbG8sIE9uZGV2byEg8J+RiyBHcsO8w59lIGF1cyBLw7ZsbiDCtyDjgZPjgpPjgavjgaHjga8gwrcg2YXYsdit2KjYpw==";
+  "SGVsbG8sIEtlcHRMb2NhbCEg8J+RiyBHcsO8w59lIGF1cyBLw7ZsbiDCtyDjgZPjgpPjgavjgaHjga8gwrcg2YXYsdit2KjYpw==";

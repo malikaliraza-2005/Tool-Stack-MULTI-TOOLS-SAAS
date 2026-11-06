@@ -107,7 +107,7 @@
 
 ---
 
-## 6. Implications for Ondevo
+## 6. Implications for KeptLocal
 
 | Finding | Action | Where |
 |---|---|---|

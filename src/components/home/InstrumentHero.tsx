@@ -374,7 +374,7 @@ function SuggestionPanel({
     } else {
       heading = `No tool takes ${single ? "this file" : "these files together"}`;
       message = single
-        ? "Ondevo works with PDFs, images, JSON and text files."
+        ? "KeptLocal works with PDFs, images, JSON and text files."
         : "Drop PDFs and images separately, or choose fewer files.";
       choices = [];
     }

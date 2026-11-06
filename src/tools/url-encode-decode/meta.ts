@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "encodeuricomponent",
   ],
   seo: {
-    title: "URL Encode & Decode, plus URL Parser (No Upload) | Ondevo",
+    title: "URL Encode & Decode, plus URL Parser (No Upload) | KeptLocal",
     description:
       "Percent-encode or decode text and URLs, with %20 or + for spaces. Parse any URL into host, path and query parameters. Runs in your browser.",
     h1: "URL encode and decode",

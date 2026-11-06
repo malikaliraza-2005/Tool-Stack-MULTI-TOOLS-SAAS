@@ -43,7 +43,7 @@ describe("toolMetadata", () => {
       type: "website",
       url: `${ORIGIN}/merge-pdf`,
       title: merge.seo.title,
-      siteName: "Ondevo",
+      siteName: "KeptLocal",
     });
     expect(metadata.twitter).toMatchObject({ card: "summary_large_image" });
   });
@@ -54,7 +54,7 @@ describe("JSON-LD", () => {
     expect(breadcrumbJsonLd(merge)).toEqual({
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Ondevo", item: ORIGIN },
+        { "@type": "ListItem", position: 1, name: "KeptLocal", item: ORIGIN },
         { "@type": "ListItem", position: 2, name: "PDF tools", item: `${ORIGIN}/pdf-tools` },
         { "@type": "ListItem", position: 3, name: "Merge PDF", item: `${ORIGIN}/merge-pdf` },
       ],
@@ -128,8 +128,8 @@ describe("homepage", () => {
 describe("site pages", () => {
   const privacy = {
     path: "/privacy",
-    title: "Privacy policy · Ondevo",
-    description: "How Ondevo handles your data.",
+    title: "Privacy policy · KeptLocal",
+    description: "How KeptLocal handles your data.",
     name: "Privacy policy",
     type: "WebPage" as const,
     updated: "2026-11-02",
@@ -137,14 +137,14 @@ describe("site pages", () => {
 
   it("metadata uses the full title and an absolute canonical", () => {
     const meta = sitePageMetadata(privacy);
-    expect(meta.title).toEqual({ absolute: "Privacy policy · Ondevo" });
+    expect(meta.title).toEqual({ absolute: "Privacy policy · KeptLocal" });
     expect(meta.alternates?.canonical).toBe(absoluteUrl("/privacy"));
   });
 
-  it("JSON-LD: Ondevo › page, with dateModified only when dated", () => {
+  it("JSON-LD: KeptLocal › page, with dateModified only when dated", () => {
     const graph = sitePageJsonLd(privacy)["@graph"] as Record<string, unknown>[];
     const crumbs = (graph[0]!.itemListElement as { name: string }[]).map((item) => item.name);
-    expect(crumbs).toEqual(["Ondevo", "Privacy policy"]);
+    expect(crumbs).toEqual(["KeptLocal", "Privacy policy"]);
     expect(graph[1]).toMatchObject({ "@type": "WebPage", dateModified: "2026-11-02" });
     const undated = { ...privacy, type: "AboutPage" as const, updated: undefined };
     expect(sitePageJsonLd(undated)["@graph"]).not.toContainEqual(
@@ -166,10 +166,10 @@ describe("guides", () => {
     });
   });
 
-  it("JSON-LD: Ondevo › Guides › guide, and an Article matching the byline", () => {
+  it("JSON-LD: KeptLocal › Guides › guide, and an Article matching the byline", () => {
     const graph = guideJsonLd(guide)["@graph"] as Record<string, unknown>[];
     const crumbs = (graph[0]!.itemListElement as { name: string }[]).map((item) => item.name);
-    expect(crumbs).toEqual(["Ondevo", "Guides", guide.h1]);
+    expect(crumbs).toEqual(["KeptLocal", "Guides", guide.h1]);
     expect(graph[1]).toMatchObject({
       "@type": "Article",
       headline: guide.h1,

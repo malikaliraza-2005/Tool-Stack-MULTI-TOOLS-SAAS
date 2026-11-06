@@ -6,13 +6,13 @@
 | **Status** | v0.2 (Phase 2). Tokens implemented in `src/styles/globals.css`; color values adjusted for contrast (§2.3). Visual direction approved by the owner (M2, 2026-10-13) |
 | **Related** | [product.md](../01-product/product.md) · [architecture.md](../04-architecture/architecture.md) |
 
-This document defines Ondevo's visual identity and the rules every screen follows. **Never hard-code a color, size, radius, shadow, duration, or easing in a component; always use a token.**
+This document defines KeptLocal's visual identity and the rules every screen follows. **Never hard-code a color, size, radius, shadow, duration, or easing in a component; always use a token.**
 
 ---
 
 ## 1. Art direction: "Precision instrument"
 
-Ondevo should feel like well-made audio gear or a fine camera: **calm, exact, confident, and tactile.** It is a professional instrument, not a marketing page.
+KeptLocal should feel like well-made audio gear or a fine camera: **calm, exact, confident, and tactile.** It is a professional instrument, not a marketing page.
 
 | Principle | Means | Avoid |
 |---|---|---|
@@ -239,7 +239,7 @@ Choreography per interaction: [motion-design.md](motion-design.md).
 
 ## 8. Components
 
-Built on Radix primitives via shadcn/ui where suitable, **restyled entirely** with Ondevo tokens. Each component must define all states below.
+Built on Radix primitives via shadcn/ui where suitable, **restyled entirely** with KeptLocal tokens. Each component must define all states below.
 
 **Standard states:** default · hover · active (pressed) · focus-visible · disabled · loading (where relevant) · error (where relevant) · selected (where relevant).
 
@@ -327,7 +327,7 @@ ComparisonSlider centre stage; options in a side panel; batch list below when mu
 
 Tokens are defined as CSS variables and exposed to Tailwind with `@theme inline`, so utilities like `bg-surface` and `text-fg-muted` resolve to the tokens. The Tailwind defaults for colors, type sizes, radii, shadows, easings, containers and animations are reset (`--color-*: initial`, …), so only token utilities exist. Shadows are plain utilities (`shadow-1..3`) because they change per theme.
 
-**Enforcement** (Phase 2 exit criterion "no hard-coded design values"): the ESLint rule `ondevo/no-hardcoded-design` (`scripts/eslint/no-hardcoded-design.mjs`) fails on arbitrary values with literal colors/lengths/times (`w-[37px]`, `bg-[#fff]`), numeric `duration-*`/`delay-*`, Tailwind palette colors, and literal colors or lengths in `style` objects. Token references (`max-h-(--sheet-max-height)`) are allowed.
+**Enforcement** (Phase 2 exit criterion "no hard-coded design values"): the ESLint rule `keptlocal/no-hardcoded-design` (`scripts/eslint/no-hardcoded-design.mjs`) fails on arbitrary values with literal colors/lengths/times (`w-[37px]`, `bg-[#fff]`), numeric `duration-*`/`delay-*`, Tailwind palette colors, and literal colors or lengths in `style` objects. Token references (`max-h-(--sheet-max-height)`) are allowed.
 
 The snippet below shows the shape; `src/styles/globals.css` is the source of truth.
 

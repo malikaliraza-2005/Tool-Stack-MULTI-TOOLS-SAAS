@@ -29,7 +29,7 @@ Measured 2026-10-13 with Lighthouse CI (mobile emulation, 3 runs, local server w
 | **Webpack (current, D-14)** | 97–98 | 100 | 100 | 100 | 2.14–2.21 s | 81–139 ms | 0 | **141 KB** |
 | Turbopack (before D-14) | 95 | 100 | 100 | 100 | 2.65–2.76 s | ~123 ms | 0 | 145 KB |
 
-**Finding (R-14):** Next.js + React alone ship about 141 KB of gzipped JS, which is above the 100 KB homepage budget before any Ondevo code exists. The budget cannot be met as written. The owner needs to decide by Phase 9 whether to raise it (baseline + headroom) or accept the overrun. Until then the assertion warns.
+**Finding (R-14):** Next.js + React alone ship about 141 KB of gzipped JS, which is above the 100 KB homepage budget before any KeptLocal code exists. The budget cannot be met as written. The owner needs to decide by Phase 9 whether to raise it (baseline + headroom) or accept the overrun. Until then the assertion warns.
 
 Fonts: 2 `.woff2` files (Geist Sans + Mono variable), preloaded.
 

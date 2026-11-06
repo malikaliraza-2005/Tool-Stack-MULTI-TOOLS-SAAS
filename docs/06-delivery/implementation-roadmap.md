@@ -7,7 +7,7 @@
 | **Phase details** | [phases/](phases/README.md) |
 | **Related** | [mvp-scope.md](../01-product/mvp-scope.md) · [architecture.md](../04-architecture/architecture.md) · [design-system.md](../02-design/design-system.md) |
 
-This is the master plan for building and launching the Ondevo MVP (19 tools). Each phase has its own file with a task checklist, exit criteria, and risks. **Quality gates, not dates, decide when a phase is finished.**
+This is the master plan for building and launching the KeptLocal MVP (19 tools). Each phase has its own file with a task checklist, exit criteria, and risks. **Quality gates, not dates, decide when a phase is finished.**
 
 ---
 

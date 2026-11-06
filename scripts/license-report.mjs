@@ -39,7 +39,7 @@ for (const pkg of report) {
 }
 const rule = "=".repeat(78);
 const notices = [
-  "Third-party software notices for Ondevo",
+  "Third-party software notices for KeptLocal",
   "",
   "Each license text below is headed by its license and the packages it covers. Generated at",
   "build time from the production dependencies; the list is also on /licenses.",

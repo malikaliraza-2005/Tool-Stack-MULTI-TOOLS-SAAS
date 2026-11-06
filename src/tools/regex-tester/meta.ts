@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "regex debugger",
   ],
   seo: {
-    title: "Regex Tester for JavaScript, with Explanation | Ondevo",
+    title: "Regex Tester for JavaScript, with Explanation | KeptLocal",
     description:
       "Test JavaScript regular expressions live: highlighted matches, numbered and named groups, replace preview and a plain-language explanation. No upload.",
     h1: "Regex tester (JavaScript)",

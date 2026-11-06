@@ -100,7 +100,7 @@ export const noHardcodedDesign = {
 };
 
 const plugin = {
-  meta: { name: "ondevo" },
+  meta: { name: "keptlocal" },
   rules: { "no-hardcoded-design": noHardcodedDesign },
 };
 

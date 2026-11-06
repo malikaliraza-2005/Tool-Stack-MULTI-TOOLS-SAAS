@@ -5,7 +5,7 @@
 | **Last updated** | 2026-10-13 |
 | **Related** | [product.md](../01-product/product.md) · [mvp-scope.md](../01-product/mvp-scope.md) · [implementation-roadmap.md](implementation-roadmap.md) |
 
-This file is the **decision log** and **risk register** for Ondevo (named Sprigkit until D-15). It replaces the decisions table formerly in [product.md §13](../01-product/product.md#13-decisions) and the risks table formerly in product.md §12.
+This file is the **decision log** and **risk register** for KeptLocal (named Sprigkit until D-15). It replaces the decisions table formerly in [product.md §13](../01-product/product.md#13-decisions) and the risks table formerly in product.md §12.
 
 **Rules**
 - A decision is recorded here when it is made or changed. Update the affected documents **in the same change**.
@@ -18,7 +18,7 @@ This file is the **decision log** and **risk register** for Ondevo (named Sprigk
 
 | # | Decision | Status | Outcome | Date |
 |---|---|---|---|---|
-| D-1 | Domain vs free `*.pages.dev` | **[Decision]** | Buy the `.com` before launch (see record); now **`ondevo.com`** (D-15) | 2026-10-13 |
+| D-1 | Domain vs free `*.pages.dev` | **[Decision]** | Buy a domain before launch (see record); now **`keptlocal.app`** (D-15) | 2026-10-13 |
 | D-2 | Framework | **[Decision]** | Next.js static export (see [architecture.md](../04-architecture/architecture.md)) | 2026-10-13 |
 | D-3 | Weekly hours available | **[Decision]** | No limit: full-time pace (see [implementation-roadmap.md](implementation-roadmap.md)) | 2026-10-13 |
 | D-4 | Launch order | **[Decision]** | All tools together; file tools lead | 2026-10-13 |
@@ -32,7 +32,7 @@ This file is the **decision log** and **risk register** for Ondevo (named Sprigk
 | D-12 | `requirements.md` | **[Decision]** | Not written; requirements live in product.md, mvp-scope.md, tool-specifications.md and architecture.md | 2026-10-13 |
 | D-13 | Repository visibility and license (P1-T01) | **[Decision]** (proposed, owner to confirm) | Public GitHub repo, **all rights reserved** (no open-source license) (see record) | 2026-10-13 |
 | D-14 | Bundler for dev and production builds | **[Decision]** | **Webpack** (`--webpack`), not Turbopack: Turbopack workers fail in WebKit (see record) | 2026-10-13 |
-| D-15 | Product name after trademark search | **[Decision]** | **Ondevo** replaces Sprigkit: "SPRIG" is a registered software trademark (see record) | 2026-11-03 |
+| D-15 | Product name after trademark search | **[Decision]** | **KeptLocal** (`keptlocal.app`) replaces Sprigkit: "SPRIG" is a registered software trademark; Ondevo was dropped because `ondevo.com` is an active business (see record) | 2026-11-06 |
 
 D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; their reasoning lives in the linked documents.
 
@@ -190,16 +190,19 @@ D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; th
   - Dev and production use the same bundler, so worker behaviour matches in every browser.
   - **Revisit** when a Next.js release changes the Turbopack worker bootstrap, or if real Safari (Phase 9 device tests) turns out to keep the fragment. Switching back means removing `--webpack` and re-running the spike tests on the `spikes` branch.
 
-### D-15: Rename to Ondevo
+### D-15: Rename to KeptLocal
 
 - **Context:** the owner's WIPO Global Brand Database search (D-5 checklist, 2026-11-03) found no "Sprigkit" mark, but found **SPRIG**, an international registration of Sprig Technologies Inc., a software company (in-product surveys). "Sprigkit" contains that whole mark plus a generic word, in the same field (software, classes 9 and 42): a real conflict risk. Renaming before launch costs little; after launch it would cost rankings and links.
-- **Options considered:** plant-themed names (Tendril, Mossbench), descriptive names (ZeroUpload, KeepLocal), catchy names (Hushkit, Byteless: already used by websites), and coined words. Web searches on 2026-11-03 found no product named **Ondevo**, **Hushora** or **Lokavo**; most other candidates were taken or close to existing brands.
-- **Decision:** **Ondevo** ("on device"), chosen by the owner on 2026-11-03. It states the product's promise: everything runs on your device. Domain `ondevo.com`; `NEXT_PUBLIC_SITE_URL=https://ondevo.com`.
+- **Options considered (2026-11-03 to 2026-11-06):**
+  - **Ondevo** ("on device") was chosen first, but `ondevo.com` belongs to an active business (ONDEVO, car rental in Senegal, registered 2011), found by an RDAP lookup; web searches had missed it. `hushora.com` and `lokavo.com` were taken too.
+  - Coined names with a free `.com` (Uplessa, Hushvio, Locuva, Stayveil): rejected by the owner because they don't say what the product does.
+  - Meaningful names: almost every short `.com` is registered (RDAP checks of about 90 names). Free on `.app`: KeptLocal, QuietBench, SafeLocal, PrivateBench, FilesStay. Rejected for clashes: NoUploads (competitors NoFileUpload, NoMoreUploads, "Zero Uploads"), StayPut (two apps), Unsentkit (Unsent email API), FileSafeKit ("File Safe" apps).
+- **Decision:** **KeptLocal**, chosen by the owner on 2026-11-06: files are *kept local*, on the user's device. Written as one word with two capitals. Domain **`keptlocal.app`** (free in the registry on 2026-11-06; `.app` requires HTTPS, which Cloudflare provides); `NEXT_PUBLIC_SITE_URL=https://keptlocal.app`. Web search found no product of that name (only unrelated "Keep It Local" shopping apps).
 - **Consequences:**
-  - Name, metadata, structured data, `llms.txt`, legal pages and docs renamed in one change. The sprig mark was replaced by a new mark for the name: an "O" ring holding the accent dot, "the dot that stays inside" ([brand-identity.md §4.1](../02-design/brand-identity.md)).
+  - Name, metadata, structured data, `llms.txt`, legal pages and docs renamed in one change. The sprig mark is replaced by a mark for the name: a **K whose arms hold the accent dot** ([brand-identity.md §4.1](../02-design/brand-identity.md)).
   - The Cloudflare Pages project keeps its name (`sprigkit.pages.dev` hosts in the docs are real); it can be renamed in the dashboard later.
-  - The JWT decoder's sample token was re-signed with the new sample secret.
-  - Owner, before buying the domain: confirm `ondevo.com` is free and search "Ondevo" in WIPO, USPTO and TMview (classes 9 and 42). Fallbacks: Hushora, Lokavo.
+  - The JWT decoder's sample token is re-signed with the new sample secret, and the Base64 samples re-encoded.
+  - Owner: search "KeptLocal" in WIPO, USPTO and TMview (classes 9 and 42), then register `keptlocal.app` promptly. Fallback: QuietBench (`quietbench.app`).
 
 ---
 
@@ -214,8 +217,8 @@ Likelihood and impact are qualitative judgements **[Estimate]**. Review at every
 | R-3 | Browser memory limits on mobile | Medium | Medium | Per-tool limits, Web Workers, device testing, honest error messages | Phase 9 device tests |
 | R-4 | License violations | Medium | High | Policy in [dependencies-licenses.md](../04-architecture/dependencies-licenses.md); CI license gate; LGPL allowed only for `libheif-js` (D-6) | Every new dependency |
 | R-5 | Solo maintenance load | Medium | Medium | Shared workbench, registry-driven pages, strict scope, remove weak tools | Phase 11 |
-| R-6 | Trademark conflict for the product name. "Sprigkit" conflicted with SPRIG (software) and was replaced by **Ondevo** (D-15); "Ondevo" still needs the owner's register search | Unknown | High | Manual USPTO/WIPO/EUIPO search (D-5 checklist); shortlist alternatives ready. Phase 2 brand work went ahead without it; the logo mark is name-independent, only the wordmark would change ([brand-identity.md](../02-design/brand-identity.md)) | Before first production deploy |
-| R-7 | Domain `ondevo.com` registered by someone else before purchase (was `sprigkit.com`, D-15) | Low–Medium | Medium | Register promptly (D-1) | Now |
+| R-6 | Trademark conflict for the product name. "Sprigkit" conflicted with SPRIG (software) and was replaced by **KeptLocal** (D-15); "KeptLocal" still needs the owner's register search | Unknown | High | Manual USPTO/WIPO/EUIPO search (D-5 checklist); shortlist alternatives ready. Phase 2 brand work went ahead without it; the logo mark is name-independent, only the wordmark would change ([brand-identity.md](../02-design/brand-identity.md)) | Before first production deploy |
+| R-7 | Domain `keptlocal.app` registered by someone else before purchase (was `sprigkit.com`, D-15) | Low–Medium | Medium | Register promptly (D-1) | Now |
 | R-8 | Slugs chosen without Trends data are not the best phrasing | Low–Medium | Low | Manual Trends check before first production deploy; one page targets all phrasings in title/H1/keywords | Before first deploy |
 | R-9 | HEVC patent claims related to distributing a HEIC (HEVC) software decoder | Unknown | Medium | Decoder is unmodified open-source libheif/libde265, offered free. Re-assess before monetization; fallback is removing HEIC input | Before monetization (P11-T10) |
 | R-10 | AI assistants reduce demand for simple tools | Medium | Medium | Focus on file and sensitive-data tools; prioritize by data | Phase 11 |

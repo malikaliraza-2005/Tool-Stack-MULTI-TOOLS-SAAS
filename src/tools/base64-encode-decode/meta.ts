@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "base64url",
   ],
   seo: {
-    title: "Base64 Encode & Decode: Text and Files (No Upload) | Ondevo",
+    title: "Base64 Encode & Decode: Text and Files (No Upload) | KeptLocal",
     description:
       "Encode and decode Base64 in your browser: text with emoji, URL-safe Base64, data URLs and files. Errors show the exact position. Nothing is uploaded.",
     h1: "Base64 encode and decode",

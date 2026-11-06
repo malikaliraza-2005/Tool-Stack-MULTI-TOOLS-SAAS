@@ -8,7 +8,7 @@ import { HUBS } from "@/tools/hubs";
 import { CATEGORIES } from "@/tools/registry";
 import type { ToolCategory, ToolDefinition, ToolFaq } from "@/tools/types";
 
-/** `absoluteUrl("/merge-pdf")` → "https://ondevo.com/merge-pdf". */
+/** `absoluteUrl("/merge-pdf")` → "https://keptlocal.app/merge-pdf". */
 export function absoluteUrl(path: string): string {
   const origin = SITE_URL.replace(/\/+$/, "");
   if (path === "/" || path === "") return origin;
@@ -24,7 +24,7 @@ export function toolMetadata(tool: ToolDefinition): Metadata {
   const url = absoluteUrl(toolPath(tool));
   const { title, description } = tool.seo;
   return {
-    // The registry title already ends with "| Ondevo".
+    // The registry title already ends with "| KeptLocal".
     title: { absolute: title },
     description,
     keywords: tool.keywords,
@@ -139,7 +139,7 @@ export function homeJsonLd(faqs: readonly ToolFaq[]): JsonLdNode {
 /** A site page such as About or Privacy (page-seo-specs §4.3). */
 export type SitePageSeo = {
   path: string;
-  /** Full title; site pages other than About end with "· Ondevo". */
+  /** Full title; site pages other than About end with "· KeptLocal". */
   title: string;
   description: string;
   /** Breadcrumb and JSON-LD name. */
@@ -161,7 +161,7 @@ export function sitePageMetadata(page: SitePageSeo): Metadata {
   };
 }
 
-/** BreadcrumbList (Ondevo › page) and the page itself. */
+/** BreadcrumbList (KeptLocal › page) and the page itself. */
 export function sitePageJsonLd(page: SitePageSeo): JsonLdNode {
   const url = absoluteUrl(page.path);
   const breadcrumb = {
@@ -184,9 +184,9 @@ export function sitePageJsonLd(page: SitePageSeo): JsonLdNode {
 
 export const GUIDES_INDEX = {
   path: "/guides",
-  title: "Guides: PDFs, Images and Code, Done Privately | Ondevo",
+  title: "Guides: PDFs, Images and Code, Done Privately | KeptLocal",
   description:
-    "Practical guides to the jobs Ondevo’s tools do: removing location data from photos, reading JWTs, converting HEIC and more, with sources.",
+    "Practical guides to the jobs KeptLocal’s tools do: removing location data from photos, reading JWTs, converting HEIC and more, with sources.",
   name: "Guides",
 };
 
@@ -218,7 +218,7 @@ export function guideMetadata(guide: GuideMeta): Metadata {
   };
 }
 
-/** BreadcrumbList (Ondevo › Guides › guide) and an Article matching the visible byline. */
+/** BreadcrumbList (KeptLocal › Guides › guide) and an Article matching the visible byline. */
 export function guideJsonLd(guide: GuideMeta): JsonLdNode {
   const url = absoluteUrl(guidePath(guide));
   const breadcrumb = {

@@ -2,7 +2,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import prettier from "eslint-config-prettier/flat";
-import ondevo from "./scripts/eslint/no-hardcoded-design.mjs";
+import keptlocal from "./scripts/eslint/no-hardcoded-design.mjs";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -12,8 +12,8 @@ const eslintConfig = defineConfig([
     // Design tokens only (CLAUDE.md rule 5).
     files: ["src/**/*.{ts,tsx}"],
     ignores: ["**/*.test.{ts,tsx}"],
-    plugins: { ondevo },
-    rules: { "ondevo/no-hardcoded-design": "error" },
+    plugins: { keptlocal },
+    rules: { "keptlocal/no-hardcoded-design": "error" },
   },
   globalIgnores([
     ".next/**",
