@@ -25,6 +25,7 @@ Make OfflineBench public, get it indexed, and introduce it to the right communit
 
 ### Search engines
 - [ ] **P10-T04** Google Search Console: verify property, submit sitemap, URL-inspect homepage + 5 key tool pages, request indexing.
+  - *Progress:* URL-prefix property for `https://offlinebench.pages.dev/`, verified by `public/google4624aa71a897255e.html`. Keep that file: removing it can undo the verification. When a domain is bought, add a new property and use Change of Address.
 - [ ] **P10-T05** Bing Webmaster Tools: verify, submit sitemap.
 - [ ] **P10-T06** Check rendered HTML in URL Inspection matches expectations (content present without JS interaction).
 
