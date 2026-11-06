@@ -12,7 +12,7 @@ describe("llms.txt", () => {
 
   it("starts with the llmstxt.org title and summary", () => {
     const [title, , summary] = text.split("\n");
-    expect(title).toBe("# QuietBench");
+    expect(title).toBe("# OfflineBench");
     expect(summary).toMatch(/^> 19 free tools/);
   });
 

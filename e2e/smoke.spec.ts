@@ -59,5 +59,5 @@ test("the startup notice appears when the app's scripts can't run", async ({ pag
   // What an outdated phone browser experiences: the scripts fail.
   await page.route("**/_next/static/chunks/**", (route) => route.abort());
   await page.goto("/merge-pdf");
-  await expect(page.getByText("QuietBench’s tools couldn’t start in this browser")).toBeVisible();
+  await expect(page.getByText("OfflineBench’s tools couldn’t start in this browser")).toBeVisible();
 });

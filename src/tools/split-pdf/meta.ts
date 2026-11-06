@@ -20,7 +20,7 @@ export const meta: ToolDefinition = {
     "cut pdf",
   ],
   seo: {
-    title: "Split PDF & Extract Pages (No Upload) | QuietBench",
+    title: "Split PDF & Extract Pages (No Upload) | OfflineBench",
     description:
       "Extract pages from a PDF or split it every N pages or into single pages, in your browser. Files never leave your device. Free, no sign-up.",
     h1: "Split PDF and extract pages",

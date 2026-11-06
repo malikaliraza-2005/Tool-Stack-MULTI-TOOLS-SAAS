@@ -44,7 +44,7 @@ export function MobileNav() {
             ))}
           </div>
           <div className="flex flex-col gap-1">
-            <p className="px-3 text-micro text-fg-muted uppercase">QuietBench</p>
+            <p className="px-3 text-micro text-fg-muted uppercase">OfflineBench</p>
             {SITE_LINKS.map((link) => (
               <Link
                 key={link.href}

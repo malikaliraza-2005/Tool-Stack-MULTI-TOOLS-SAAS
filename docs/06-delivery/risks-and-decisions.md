@@ -5,7 +5,7 @@
 | **Last updated** | 2026-10-13 |
 | **Related** | [product.md](../01-product/product.md) · [mvp-scope.md](../01-product/mvp-scope.md) · [implementation-roadmap.md](implementation-roadmap.md) |
 
-This file is the **decision log** and **risk register** for QuietBench (named Sprigkit until D-15). It replaces the decisions table formerly in [product.md §13](../01-product/product.md#13-decisions) and the risks table formerly in product.md §12.
+This file is the **decision log** and **risk register** for OfflineBench (named Sprigkit until D-15). It replaces the decisions table formerly in [product.md §13](../01-product/product.md#13-decisions) and the risks table formerly in product.md §12.
 
 **Rules**
 - A decision is recorded here when it is made or changed. Update the affected documents **in the same change**.
@@ -18,7 +18,7 @@ This file is the **decision log** and **risk register** for QuietBench (named Sp
 
 | # | Decision | Status | Outcome | Date |
 |---|---|---|---|---|
-| D-1 | Domain vs free `*.pages.dev` | **[Decision]** | Launch free on **`quietbench.pages.dev`**; buy `quietbench.app` later (see record, revised 2026-11-06) | 2026-11-06 |
+| D-1 | Domain vs free `*.pages.dev` | **[Decision]** | Launch free on **`offlinebench.pages.dev`**; buy `offlinebench.app` later (see record, revised 2026-11-06) | 2026-11-06 |
 | D-2 | Framework | **[Decision]** | Next.js static export (see [architecture.md](../04-architecture/architecture.md)) | 2026-10-13 |
 | D-3 | Weekly hours available | **[Decision]** | No limit: full-time pace (see [implementation-roadmap.md](implementation-roadmap.md)) | 2026-10-13 |
 | D-4 | Launch order | **[Decision]** | All tools together; file tools lead | 2026-10-13 |
@@ -32,7 +32,7 @@ This file is the **decision log** and **risk register** for QuietBench (named Sp
 | D-12 | `requirements.md` | **[Decision]** | Not written; requirements live in product.md, mvp-scope.md, tool-specifications.md and architecture.md | 2026-10-13 |
 | D-13 | Repository visibility and license (P1-T01) | **[Decision]** (proposed, owner to confirm) | Public GitHub repo, **all rights reserved** (no open-source license) (see record) | 2026-10-13 |
 | D-14 | Bundler for dev and production builds | **[Decision]** | **Webpack** (`--webpack`), not Turbopack: Turbopack workers fail in WebKit (see record) | 2026-10-13 |
-| D-15 | Product name after trademark search | **[Decision]** | **QuietBench** (`quietbench.app`) replaces Sprigkit: "SPRIG" is a registered software trademark; Ondevo and KeptLocal were dropped because their `.com` sites are an active business and a direct competitor (see record) | 2026-11-06 |
+| D-15 | Product name after trademark search | **[Decision]** | **OfflineBench** replaces Sprigkit: "SPRIG" is a registered software trademark; Ondevo, KeptLocal and QuietBench were dropped because an active business or a direct competitor already uses them (see record) | 2026-11-06 |
 
 D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; their reasoning lives in the linked documents.
 
@@ -59,7 +59,7 @@ D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; th
   - Set `NEXT_PUBLIC_SITE_URL=https://sprigkit.com`.
   - **Action (owner):** register the domain soon; availability can change at any time. A shortlisted alternative `.com` was registered by someone else in July 2026.
   - Optional: also register `sprigkit.app` to protect the name.
-- **Revised 2026-11-06 (owner):** after the rename (D-15), a domain is over budget for now. Launch on the free Cloudflare address **`https://quietbench.pages.dev`** (Pages project `quietbench`), and buy `quietbench.app` (about $14/year at Cloudflare Registrar) later, for example from donations. `public/_headers` no longer marks the production alias `noindex`; previews still are. When the domain is bought: attach it, set `NEXT_PUBLIC_SITE_URL`, and redirect or `noindex` the `pages.dev` alias so search engines see one address.
+- **Revised 2026-11-06 (owner):** after the rename (D-15), a domain is over budget for now. Launch on the free Cloudflare address **`https://offlinebench.pages.dev`** (Pages project `quietbench`), and buy `offlinebench.app` (about $14/year at Cloudflare Registrar) later, for example from donations. `public/_headers` no longer marks the production alias `noindex`; previews still are. When the domain is bought: attach it, set `NEXT_PUBLIC_SITE_URL`, and redirect or `noindex` the `pages.dev` alias so search engines see one address.
 
 | Purchase record | |
 |---|---|
@@ -191,7 +191,7 @@ D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; th
   - Dev and production use the same bundler, so worker behaviour matches in every browser.
   - **Revisit** when a Next.js release changes the Turbopack worker bootstrap, or if real Safari (Phase 9 device tests) turns out to keep the fragment. Switching back means removing `--webpack` and re-running the spike tests on the `spikes` branch.
 
-### D-15: Rename to QuietBench
+### D-15: Rename to OfflineBench
 
 - **Context:** the owner's WIPO Global Brand Database search (D-5 checklist, 2026-11-03) found no "Sprigkit" mark, but found **SPRIG**, an international registration of Sprig Technologies Inc., a software company (in-product surveys). "Sprigkit" contains that whole mark plus a generic word, in the same field (software, classes 9 and 42): a real conflict risk. Renaming before launch costs little; after launch it would cost rankings and links.
 - **Options considered (2026-11-03 to 2026-11-06):**
@@ -200,12 +200,14 @@ D-2 to D-4 and D-7 to D-10 were made before Phase 0 and are summarized above; th
   - Meaningful names: almost every short `.com` is registered (RDAP checks of about 90 names). Free on `.app`: KeptLocal, QuietBench, SafeLocal, PrivateBench, FilesStay. Rejected for clashes: NoUploads (competitors NoFileUpload, NoMoreUploads, "Zero Uploads"), StayPut (two apps), Unsentkit (Unsent email API), FileSafeKit ("File Safe" apps).
   - **KeptLocal** (`keptlocal.app` free) was chosen next, but **`keptlocal.com` is a direct competitor**: "keptlocal: Private PDF & Image Tools in Your Browser", tagline "Your files. Kept local.", registered 2026-05-26. **`filesstay.com`** is another (registered 2026-09-02). Web searches had found neither: new sites are not indexed yet.
   - **Rule from this search:** a free `.app` is not enough. Check what the `.com` hosts (RDAP registration date, then the page itself), and treat a same-category site as disqualifying. The private, in-browser tools category is crowded (also NoFileUpload, NoMoreUploads, ToolLance "Zero Uploads", OpenTools).
-- **Decision:** **QuietBench**, accepted by the owner on 2026-11-06: a workbench of tools that works quietly, nothing goes online. Written as one word with two capitals. Launch address **`quietbench.pages.dev`** (free, D-1); domain **`quietbench.app`** later (free in the registry on 2026-11-06; `.app` requires HTTPS, which Cloudflare provides). `quietbench.com` has been registered since 2011 with no website (it does not resolve); web search found no product of that name.
+  - **QuietBench** (`.app` free, `.com` unused since 2011) was accepted next, but **`quietbench.pages.dev` is a direct competitor**: "Quietbench: Free Developer Utilities", browser-based developer tools. Since the site launches on the free Pages address (D-1), the `pages.dev` name must be free too. Same-category sites also found in this round: OnDeviceKit (`ondevicekit.com`, private image and PDF tools) and Vibe Toolbelt (`privatetoolkit.com`).
+  - **Checks every candidate must pass, in this order:** (1) `name.pages.dev` doesn't resolve (an unused name returns no response); (2) `name.app` is free (RDAP 404); (3) the `.com` is free, or its site is not in the same category; (4) a web search finds no product of that name.
+- **Decision:** **OfflineBench**, chosen by the owner on 2026-11-06: a workbench of tools that works offline. True to the product (pages work offline after the first visit, and nothing is ever sent), and it makes the privacy promise easy to grasp. On 2026-11-06 **all addresses were free**: `offlinebench.pages.dev`, `offlinebench.app` and `offlinebench.com`. Web search found no product; "offline bench" appears only as a benchmark script name in two AI inference projects (vLLM, JetStream). Written as one word with two capitals. Caveat: "offline" can suggest a downloadable app, so copy says "in your browser, even offline".
 - **Consequences:**
   - Name, metadata, structured data, `llms.txt`, legal pages and docs renamed in one change. The sprig mark is replaced by a mark for the name: **a bench holding the accent dot** ([brand-identity.md §4.1](../02-design/brand-identity.md)).
   - The Cloudflare Pages project keeps its name (`sprigkit.pages.dev` hosts in the docs are real); it can be renamed in the dashboard later.
   - The JWT decoder's sample token is re-signed with the new sample secret, and the Base64 samples re-encoded.
-  - Owner: search "QuietBench" in WIPO, USPTO and TMview (classes 9 and 42), then register `quietbench.app` when the budget allows (launch is on `quietbench.pages.dev`, D-1). Fallbacks: PrivateBench (`privatebench.app`, `.com` parked) and HereOnly (`hereonly.app`, `.com` unused).
+  - Owner: create the Cloudflare Pages project `offlinebench` right away (free; reserves `offlinebench.pages.dev`), search "OfflineBench" in WIPO, USPTO and TMview (classes 9 and 42), then register `offlinebench.app` when the budget allows (launch is on `offlinebench.pages.dev`, D-1). Fallbacks (all four checks passed on 2026-11-06 except a parked `.com`): PrivateBench, HereOnly.
 
 ---
 
@@ -220,8 +222,8 @@ Likelihood and impact are qualitative judgements **[Estimate]**. Review at every
 | R-3 | Browser memory limits on mobile | Medium | Medium | Per-tool limits, Web Workers, device testing, honest error messages | Phase 9 device tests |
 | R-4 | License violations | Medium | High | Policy in [dependencies-licenses.md](../04-architecture/dependencies-licenses.md); CI license gate; LGPL allowed only for `libheif-js` (D-6) | Every new dependency |
 | R-5 | Solo maintenance load | Medium | Medium | Shared workbench, registry-driven pages, strict scope, remove weak tools | Phase 11 |
-| R-6 | Trademark conflict for the product name. "Sprigkit" conflicted with SPRIG (software) and was replaced by **QuietBench** (D-15); "QuietBench" still needs the owner's register search | Unknown | High | Manual USPTO/WIPO/EUIPO search (D-5 checklist); shortlist alternatives ready. Phase 2 brand work went ahead without it; the logo mark is name-independent, only the wordmark would change ([brand-identity.md](../02-design/brand-identity.md)) | Before first production deploy |
-| R-7 | Domain `quietbench.app` registered by someone else before purchase (was `sprigkit.com`, D-15); the launch on `quietbench.pages.dev` doesn't depend on it | Low–Medium | Medium | Register promptly (D-1) | Now |
+| R-6 | Trademark conflict for the product name. "Sprigkit" conflicted with SPRIG (software) and was replaced by **OfflineBench** (D-15); "OfflineBench" still needs the owner's register search | Unknown | High | Manual USPTO/WIPO/EUIPO search (D-5 checklist); shortlist alternatives ready. Phase 2 brand work went ahead without it; the logo mark is name-independent, only the wordmark would change ([brand-identity.md](../02-design/brand-identity.md)) | Before first production deploy |
+| R-7 | Domain `offlinebench.app` registered by someone else before purchase (was `sprigkit.com`, D-15); the launch on `offlinebench.pages.dev` doesn't depend on it | Low–Medium | Medium | Register promptly (D-1) | Now |
 | R-8 | Slugs chosen without Trends data are not the best phrasing | Low–Medium | Low | Manual Trends check before first production deploy; one page targets all phrasings in title/H1/keywords | Before first deploy |
 | R-9 | HEVC patent claims related to distributing a HEIC (HEVC) software decoder | Unknown | Medium | Decoder is unmodified open-source libheif/libde265, offered free. Re-assess before monetization; fallback is removing HEIC input | Before monetization (P11-T10) |
 | R-10 | AI assistants reduce demand for simple tools | Medium | Medium | Focus on file and sensitive-data tools; prioritize by data | Phase 11 |

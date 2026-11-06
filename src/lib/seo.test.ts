@@ -43,7 +43,7 @@ describe("toolMetadata", () => {
       type: "website",
       url: `${ORIGIN}/merge-pdf`,
       title: merge.seo.title,
-      siteName: "QuietBench",
+      siteName: "OfflineBench",
     });
     expect(metadata.twitter).toMatchObject({ card: "summary_large_image" });
   });
@@ -54,7 +54,7 @@ describe("JSON-LD", () => {
     expect(breadcrumbJsonLd(merge)).toEqual({
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "QuietBench", item: ORIGIN },
+        { "@type": "ListItem", position: 1, name: "OfflineBench", item: ORIGIN },
         { "@type": "ListItem", position: 2, name: "PDF tools", item: `${ORIGIN}/pdf-tools` },
         { "@type": "ListItem", position: 3, name: "Merge PDF", item: `${ORIGIN}/merge-pdf` },
       ],
@@ -128,8 +128,8 @@ describe("homepage", () => {
 describe("site pages", () => {
   const privacy = {
     path: "/privacy",
-    title: "Privacy policy · QuietBench",
-    description: "How QuietBench handles your data.",
+    title: "Privacy policy · OfflineBench",
+    description: "How OfflineBench handles your data.",
     name: "Privacy policy",
     type: "WebPage" as const,
     updated: "2026-11-02",
@@ -137,14 +137,14 @@ describe("site pages", () => {
 
   it("metadata uses the full title and an absolute canonical", () => {
     const meta = sitePageMetadata(privacy);
-    expect(meta.title).toEqual({ absolute: "Privacy policy · QuietBench" });
+    expect(meta.title).toEqual({ absolute: "Privacy policy · OfflineBench" });
     expect(meta.alternates?.canonical).toBe(absoluteUrl("/privacy"));
   });
 
-  it("JSON-LD: QuietBench › page, with dateModified only when dated", () => {
+  it("JSON-LD: OfflineBench › page, with dateModified only when dated", () => {
     const graph = sitePageJsonLd(privacy)["@graph"] as Record<string, unknown>[];
     const crumbs = (graph[0]!.itemListElement as { name: string }[]).map((item) => item.name);
-    expect(crumbs).toEqual(["QuietBench", "Privacy policy"]);
+    expect(crumbs).toEqual(["OfflineBench", "Privacy policy"]);
     expect(graph[1]).toMatchObject({ "@type": "WebPage", dateModified: "2026-11-02" });
     const undated = { ...privacy, type: "AboutPage" as const, updated: undefined };
     expect(sitePageJsonLd(undated)["@graph"]).not.toContainEqual(
@@ -166,10 +166,10 @@ describe("guides", () => {
     });
   });
 
-  it("JSON-LD: QuietBench › Guides › guide, and an Article matching the byline", () => {
+  it("JSON-LD: OfflineBench › Guides › guide, and an Article matching the byline", () => {
     const graph = guideJsonLd(guide)["@graph"] as Record<string, unknown>[];
     const crumbs = (graph[0]!.itemListElement as { name: string }[]).map((item) => item.name);
-    expect(crumbs).toEqual(["QuietBench", "Guides", guide.h1]);
+    expect(crumbs).toEqual(["OfflineBench", "Guides", guide.h1]);
     expect(graph[1]).toMatchObject({
       "@type": "Article",
       headline: guide.h1,

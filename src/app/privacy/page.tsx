@@ -18,9 +18,9 @@ import { sitePageMetadata, type SitePageSeo } from "@/lib/seo";
 
 const PAGE: SitePageSeo = {
   path: "/privacy",
-  title: "Privacy policy · QuietBench",
+  title: "Privacy policy · OfflineBench",
   description:
-    "How QuietBench handles your data: files and text are processed in your browser and never uploaded. No accounts, cookies, ads or analytics.",
+    "How OfflineBench handles your data: files and text are processed in your browser and never uploaded. No accounts, cookies, ads or analytics.",
   name: "Privacy policy",
   type: "WebPage",
   updated: "2026-11-02",
@@ -33,14 +33,14 @@ export default function PrivacyPage() {
     <SitePage
       page={PAGE}
       h1="Privacy policy"
-      intro="QuietBench’s tools run in your browser, so the files and text you use them with never reach us. This page explains what that means, the little that does reach a server, and how to check it yourself."
+      intro="OfflineBench’s tools run in your browser, so the files and text you use them with never reach us. This page explains what that means, the little that does reach a server, and how to check it yourself."
     >
       <ContentSection id="summary" title="Summary">
         <List
           items={[
             <>
               <Strong>Your files and text stay on your device.</Strong> Your browser processes them;
-              they are never sent to QuietBench or anyone else.
+              they are never sent to OfflineBench or anyone else.
             </>,
             <>
               <Strong>No accounts, cookies, ads or analytics.</Strong>
@@ -59,27 +59,27 @@ export default function PrivacyPage() {
 
       <ContentSection id="your-files" title="What happens to your files and text">
         <Paragraph>
-          When you open a tool, your browser downloads its code from QuietBench and runs it on your
-          device. Files you add and text you paste are read into your browser’s memory, processed
-          there, and the result is created there too. Downloading a result saves it from your
-          browser’s memory to your device; nothing is uploaded on the way.
+          When you open a tool, your browser downloads its code from OfflineBench and runs it on
+          your device. Files you add and text you paste are read into your browser’s memory,
+          processed there, and the result is created there too. Downloading a result saves it from
+          your browser’s memory to your device; nothing is uploaded on the way.
         </Paragraph>
         <Paragraph>
-          Your content is never put in the address bar and never saved by QuietBench. It is gone
+          Your content is never put in the address bar and never saved by OfflineBench. It is gone
           when you close or reload the page, or remove it from the tool.
         </Paragraph>
         <Paragraph>
           This is enforced, not just promised: the site’s security policy (
           <Code>connect-src &apos;self&apos;</Code>) tells your browser to block any attempt by the
-          page to send data to another server. QuietBench has no server that accepts files, and no
+          page to send data to another server. OfflineBench has no server that accepts files, and no
           accounts.
         </Paragraph>
       </ContentSection>
 
       <ContentSection id="storage" title="What is stored in your browser">
         <Paragraph>
-          QuietBench saves a few small items in your browser’s local storage, under keys that start
-          with <Code>ts:v1:</Code>. They stay on your device and are never sent anywhere.
+          OfflineBench saves a few small items in your browser’s local storage, under keys that
+          start with <Code>ts:v1:</Code>. They stay on your device and are never sent anywhere.
         </Paragraph>
         <Facts
           items={[
@@ -107,8 +107,9 @@ export default function PrivacyPage() {
           ]}
         />
         <Paragraph>
-          To work offline, QuietBench also keeps a copy of its own files (pages, code, fonts and the
-          PDF and image engines) in your browser’s cache. That copy contains no content of yours.
+          To work offline, OfflineBench also keeps a copy of its own files (pages, code, fonts and
+          the PDF and image engines) in your browser’s cache. That copy contains no content of
+          yours.
         </Paragraph>
         <Paragraph>
           You can remove all of this at any time by clearing this site’s data in your browser’s
@@ -118,10 +119,10 @@ export default function PrivacyPage() {
 
       <ContentSection id="hosting" title="Hosting">
         <Paragraph>
-          QuietBench is a set of static files served by Cloudflare Pages. When your browser requests
-          a page or file, Cloudflare receives what any web server receives: your IP address, the
-          address requested, your browser’s user agent and the time. Cloudflare uses this to deliver
-          the site and protect it from abuse, as described in{" "}
+          OfflineBench is a set of static files served by Cloudflare Pages. When your browser
+          requests a page or file, Cloudflare receives what any web server receives: your IP
+          address, the address requested, your browser’s user agent and the time. Cloudflare uses
+          this to deliver the site and protect it from abuse, as described in{" "}
           <TextLink href="https://www.cloudflare.com/privacypolicy/" rel="noopener">
             Cloudflare’s privacy policy
           </TextLink>
@@ -130,13 +131,13 @@ export default function PrivacyPage() {
         <Paragraph>
           This means Cloudflare can see which pages and files your browser loads, for example the
           PDF engine when you use a PDF tool, but never the files or text you use them with.
-          QuietBench runs no server of its own and does not use this data to identify you.
+          OfflineBench runs no server of its own and does not use this data to identify you.
         </Paragraph>
       </ContentSection>
 
       <ContentSection id="analytics" title="Analytics, cookies and ads">
         <Paragraph>
-          QuietBench uses no analytics, sets no cookies and shows no ads. If privacy-friendly
+          OfflineBench uses no analytics, sets no cookies and shows no ads. If privacy-friendly
           analytics is added later, this section will name the provider and say exactly what it
           receives before it is switched on. It will never receive your files, text or results.
         </Paragraph>
@@ -153,8 +154,8 @@ export default function PrivacyPage() {
               Select the <Strong>Network</Strong> tab and keep it open.
             </>,
             <>
-              Use the tool with a file or some text. Every request goes to QuietBench’s own address
-              and fetches the site’s files; none carries your content.
+              Use the tool with a file or some text. Every request goes to OfflineBench’s own
+              address and fetches the site’s files; none carries your content.
             </>,
             <>
               For a stronger test, disconnect from the internet after the tool has loaded, or choose{" "}
@@ -179,7 +180,7 @@ export default function PrivacyPage() {
 
       <ContentSection id="contact" title="Contact">
         <Paragraph>
-          QuietBench is run by Ali Raza. For questions about this policy, email{" "}
+          OfflineBench is run by Ali Raza. For questions about this policy, email{" "}
           <TextLink href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</TextLink>.
         </Paragraph>
       </ContentSection>

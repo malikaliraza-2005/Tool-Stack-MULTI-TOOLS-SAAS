@@ -21,7 +21,7 @@ export const meta: ToolDefinition = {
     "optimize images",
   ],
   seo: {
-    title: "Compress Image: Reduce JPG, PNG, WebP (No Upload) | QuietBench",
+    title: "Compress Image: Reduce JPG, PNG, WebP (No Upload) | OfflineBench",
     description:
       "Reduce JPG, PNG, WebP and AVIF file size with a quality slider and a before/after view, many images at once. Nothing is uploaded.",
     h1: "Compress images",

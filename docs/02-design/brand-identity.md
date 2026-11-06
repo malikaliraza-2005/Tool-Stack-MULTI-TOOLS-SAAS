@@ -3,16 +3,16 @@
 | | |
 |---|---|
 | **Last updated** | 2026-11-03 (renamed from Sprigkit, D-15) |
-| **Status** | Approved with the visual direction (M2, 2026-10-13). Trademark search for "QuietBench" is still open (D-15, R-6) |
+| **Status** | Approved with the visual direction (M2, 2026-10-13). Trademark search for "OfflineBench" is still open (D-15, R-6) |
 | **Related** | [design-system.md](design-system.md) · [content-voice-ux-copy.md](content-voice-ux-copy.md) · [risks-and-decisions.md](../06-delivery/risks-and-decisions.md) (D-5, D-15) |
 
 ## 1. Name
 
-**QuietBench** (D-15, replacing Sprigkit). A workbench of tools that works *quietly*: nothing goes online, nothing is sent. Written as one word with two capitals, Q and B. Never "Quietbench", "Quiet Bench" or "quietbench" in prose (lowercase only in the address `quietbench.pages.dev`, later `quietbench.app`, and in code).
+**OfflineBench** (D-15, replacing Sprigkit). A workbench of tools that works *offline*: nothing you open is sent anywhere, and pages keep working without a connection after the first visit. Written as one word with two capitals, O and B. Never "Offlinebench", "Offline Bench" or "offlinebench" in prose (lowercase only in the address `offlinebench.pages.dev`, later `offlinebench.app`, and in code).
 
 ## 2. Personality
 
-From the art direction "precision instrument" (design-system §1): **calm, exact, confident, tactile, honest.** QuietBench sounds like a well-made tool, not a startup. It does not shout, hype or use exclamation marks.
+From the art direction "precision instrument" (design-system §1): **calm, exact, confident, tactile, honest.** OfflineBench sounds like a well-made tool, not a startup. It does not shout, hype or use exclamation marks.
 
 ## 3. Tagline and positioning line
 
@@ -28,7 +28,7 @@ Final homepage headline is written in Phase 7 ([content-voice-ux-copy.md](conten
 
 ### 4.1 Mark
 
-**The quiet bench** (D-15, replacing the Sprigkit sprig): a small workbench, a top and two legs, with a solid dot resting on it: the user's data, staying where it is put. It is drawn on the 24px Lucide grid with the same 1.5px round-cap stroke as the interface icons, so the logo belongs to the same family as every icon on the page (design-system §6). Geometry: top `M3.75 13.25h16.5`; legs `M6.5 13.25v6` and `M17.5 13.25v6`; dot `r 2.6` at (12, 9.25), just above the top. Unlike a padlock, shield or keyhole, the shape belongs to the name, not to the privacy category.
+**The bench** (D-15, replacing the Sprigkit sprig): a small workbench, a top and two legs, with a solid dot resting on it: the user's data, staying where it is put: on this device, offline. It is drawn on the 24px Lucide grid with the same 1.5px round-cap stroke as the interface icons, so the logo belongs to the same family as every icon on the page (design-system §6). Geometry: top `M3.75 13.25h16.5`; legs `M6.5 13.25v6` and `M17.5 13.25v6`; dot `r 2.6` at (12, 9.25), just above the top. Unlike a padlock, shield or keyhole, the shape belongs to the name, not to the privacy category.
 
 - The **dot is the only accent-coloured element** (`--accent`): it echoes the "one accent" rule and the "signal" in the UI.
 - The bench uses `currentColor` (`--fg`), so the mark works in both themes.
@@ -36,7 +36,7 @@ Final homepage headline is written in Phase 7 ([content-voice-ux-copy.md](conten
 
 ### 4.2 Wordmark
 
-"QuietBench" set in **Geist Sans**, weight 600, at `text-h3` with tight tracking. It is live text, not outlines, so it stays sharp, translatable and accessible. Mark and wordmark sit 8px apart (`Logo` component).
+"OfflineBench" set in **Geist Sans**, weight 600, at `text-h3` with tight tracking. It is live text, not outlines, so it stays sharp, translatable and accessible. Mark and wordmark sit 8px apart (`Logo` component).
 
 ### 4.3 App icon and favicon
 
@@ -66,5 +66,5 @@ The mark, wordmark styling and icons are **own work**. The wordmark uses Geist S
 
 ## 6. Open items
 
-- [ ] Owner trademark search for "QUIETBENCH" (classes 9 and 42) before buying the domain (D-15, R-6). "Sprigkit" was dropped after its search found SPRIG (software). Ondevo and KeptLocal were dropped because their `.com` sites are an active business and a direct competitor. If QuietBench conflicts too, the mark can stay; only the wordmark changes.
+- [ ] Owner trademark search for "OFFLINEBENCH" (classes 9 and 42) before buying the domain (D-15, R-6). "Sprigkit" was dropped after its search found SPRIG (software). Ondevo, KeptLocal and QuietBench were dropped because an active business or a direct competitor already uses them. If OfflineBench conflicts too, the mark can stay; only the wordmark changes.
 - [x] Owner approval of the mark on the preview deployment (P2-T18, 2026-10-13).

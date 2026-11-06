@@ -20,7 +20,7 @@ export const meta: ToolDefinition = {
     "pdf page organizer",
   ],
   seo: {
-    title: "Organize PDF: Reorder, Rotate, Delete Pages | QuietBench",
+    title: "Organize PDF: Reorder, Rotate, Delete Pages | OfflineBench",
     description:
       "Rearrange, rotate and delete PDF pages with drag-and-drop thumbnails, undo and redo. Works in your browser; your file is never uploaded.",
     h1: "Organize PDF pages",

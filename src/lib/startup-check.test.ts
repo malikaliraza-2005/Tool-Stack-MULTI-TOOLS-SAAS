@@ -27,7 +27,7 @@ function run() {
 describe("startup check", () => {
   it("shows the notice when a site script fails to load", () => {
     const page = run();
-    page.error({ target: { src: "https://quietbench.pages.dev/_next/static/chunks/app.js" } });
+    page.error({ target: { src: "https://offlinebench.pages.dev/_next/static/chunks/app.js" } });
     expect(page.notice.hidden).toBe(false);
   });
 
@@ -35,14 +35,14 @@ describe("startup check", () => {
     const page = run();
     page.error({
       target: null,
-      filename: "https://quietbench.pages.dev/_next/static/chunks/main.js",
+      filename: "https://offlinebench.pages.dev/_next/static/chunks/main.js",
     });
     expect(page.notice.hidden).toBe(false);
   });
 
   it("ignores errors from other sources", () => {
     const page = run();
-    page.error({ target: { src: "blob:https://quietbench.pages.dev/x" } });
+    page.error({ target: { src: "blob:https://offlinebench.pages.dev/x" } });
     expect(page.notice.hidden).toBe(true);
   });
 

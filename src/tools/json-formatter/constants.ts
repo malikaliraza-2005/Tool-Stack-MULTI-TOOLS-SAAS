@@ -12,7 +12,7 @@ export const LONG_LINE_LIMIT = 1024 * 1024;
 
 export const SAMPLE_JSON = `{
   "id": 4815162342,
-  "name": "QuietBench sample order",
+  "name": "OfflineBench sample order",
   "createdAt": "2026-10-14T09:30:00Z",
   "paid": true,
   "coupon": null,

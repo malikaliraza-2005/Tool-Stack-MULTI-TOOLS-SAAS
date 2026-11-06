@@ -10,8 +10,8 @@ export const WORKER_THRESHOLD = 1024 * 1024;
  */
 export const LONG_LINE_LIMIT = 1024 * 1024;
 
-export const SAMPLE_TEXT = "Hello, QuietBench! 👋 Grüße aus Köln · こんにちは · مرحبا";
+export const SAMPLE_TEXT = "Hello, OfflineBench! 👋 Grüße aus Köln · こんにちは · مرحبا";
 
 /** SAMPLE_TEXT encoded, for the Decode sample. */
 export const SAMPLE_BASE64 =
-  "SGVsbG8sIFF1aWV0QmVuY2ghIPCfkYsgR3LDvMOfZSBhdXMgS8O2bG4gwrcg44GT44KT44Gr44Gh44GvIMK3INmF2LHYrdio2Kc=";
+  "SGVsbG8sIE9mZmxpbmVCZW5jaCEg8J+RiyBHcsO8w59lIGF1cyBLw7ZsbiDCtyDjgZPjgpPjgavjgaHjga8gwrcg2YXYsdit2KjYpw==";

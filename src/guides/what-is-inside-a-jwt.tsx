@@ -12,7 +12,7 @@ import type { GuideMeta } from "./types";
 
 export const meta: GuideMeta = {
   slug: "what-is-inside-a-jwt",
-  title: "What’s Inside a JWT, and Is It Safe to Decode? | QuietBench",
+  title: "What’s Inside a JWT, and Is It Safe to Decode? | OfflineBench",
   description:
     "A JSON Web Token is readable by anyone who has it. What its header, claims and signature mean, decoding versus verifying, and how to inspect a token safely.",
   h1: "What’s inside a JWT, and is it safe to decode one?",

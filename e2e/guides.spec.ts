@@ -29,7 +29,7 @@ for (const guide of GUIDES) {
 
     const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
     expect(canonical).toMatch(new RegExp(`^https?://[^/]+/guides/${guide.slug}$`));
-    expect(await page.title()).toMatch(/\| QuietBench$/);
+    expect(await page.title()).toMatch(/\| OfflineBench$/);
     expect(await page.locator('meta[property="og:type"]').getAttribute("content")).toBe("article");
 
     const graph = JSON.parse(

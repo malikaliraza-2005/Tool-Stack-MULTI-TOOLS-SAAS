@@ -1,6 +1,6 @@
 # Corresponding source for the HEIC decoder
 
-QuietBench serves `libheif-js` 1.23.5 (LGPL-3.0) as a separate, unmodified file for HEIC decoding. Under decision D-6 ([risks-and-decisions.md](../docs/06-delivery/risks-and-decisions.md#d-6-heic-support)) the exact source is self-hosted: `scripts/copy-libheif-assets.mjs` copies these tarballs to `/vendor/libheif-js-1.23.5/source/` at build time, and the `/licenses` page links to them.
+OfflineBench serves `libheif-js` 1.23.5 (LGPL-3.0) as a separate, unmodified file for HEIC decoding. Under decision D-6 ([risks-and-decisions.md](../docs/06-delivery/risks-and-decisions.md#d-6-heic-support)) the exact source is self-hosted: `scripts/copy-libheif-assets.mjs` copies these tarballs to `/vendor/libheif-js-1.23.5/source/` at build time, and the `/licenses` page links to them.
 
 | File                               | What                                                                                           | Upstream                                                              |
 | ---------------------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |

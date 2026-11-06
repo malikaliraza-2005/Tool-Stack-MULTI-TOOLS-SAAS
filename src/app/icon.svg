@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <!-- QuietBench app icon (brand-identity.md). Ink tile = --fg, paper = --bg, dot = dark-theme --accent. -->
+  <!-- OfflineBench app icon (brand-identity.md). Ink tile = --fg, paper = --bg, dot = dark-theme --accent. -->
   <rect width="24" height="24" rx="5.5" fill="#1e1a15"/>
   <g transform="translate(2.4 2.4) scale(0.8)" fill="none" stroke="#fbfaf7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M3.75 13.25h16.5"/>

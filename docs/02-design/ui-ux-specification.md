@@ -11,14 +11,14 @@ Screen-level layouts. Component behaviour and tokens are in [design-system.md](d
 
 ```
 ┌ header (sticky, 64px, --bg, bottom border) ───────────────────────────────┐
-│ [mark] QuietBench   PDF  Image  Developer         [⌕ Search tools…  Ctrl K] [◐] │
+│ [mark] OfflineBench   PDF  Image  Developer         [⌕ Search tools…  Ctrl K] [◐] │
 └───────────────────────────────────────────────────────────────────────────┘
   <main id="main">  page content (template.tsx: page transition)
 ┌ footer (top border) ──────────────────────────────────────────────────────┐
-│ [mark] QuietBench                          TOOLS            QUIETBENCH         │
+│ [mark] OfflineBench                          TOOLS            OFFLINEBENCH         │
 │ Private tools that run in your browser…  PDF tools        About            │
 │                                          Image tools      Privacy …        │
-│ © 2026 QuietBench                                                            │
+│ © 2026 OfflineBench                                                            │
 └───────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -44,7 +44,7 @@ Per design-system §10.1, top to bottom:
 ```
             [static dot grid behind the hero, fading out]
               Private tools for PDFs, images and code          (text-display, LCP)
-     Drop a file or paste text, and QuietBench opens the right tool. …
+     Drop a file or paste text, and OfflineBench opens the right tool. …
    ┌──────────────────────── hero surface (--radius-xl) ────────────────────────┐
    │ ⌕  Search 19 tools, or paste text…                                          │
    │ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ │
@@ -72,12 +72,12 @@ Privacy strip · All tools (3 columns) · Popular tools (4 cards) · FAQ · foot
 ## 3b. Offline and updates (built, Phase 7)
 
 - No offline banner or install pop-up. Pages open offline after the first visit; the homepage FAQ explains what works offline and how to install.
-- **Install:** the command palette lists "Install QuietBench as an app" under Actions while the browser offers installation (Chromium).
-- **Update available:** a persistent info toast, "A new version of QuietBench is available · Refresh to update. Finish what you’re doing first: refreshing clears the page." with a **Refresh** button and a close button. It never refreshes by itself.
+- **Install:** the command palette lists "Install OfflineBench as an app" under Actions while the browser offers installation (Chromium).
+- **Update available:** a persistent info toast, "A new version of OfflineBench is available · Refresh to update. Finish what you’re doing first: refreshing clears the page." with a **Refresh** button and a close button. It never refreshes by itself.
 
 ## 3a. Category hubs (built, Phase 7)
 
-`/pdf-tools`, `/image-tools`, `/developer-tools`: breadcrumbs (QuietBench › PDF tools), H1 and intro with the PrivacyMeter, "6 PDF tools" as cards (icon, name, full tagline; 3 columns on `lg`), then **Guides** (4 links to tools' "How to use" sections) and **More tools** (the other hubs) side by side on `lg`.
+`/pdf-tools`, `/image-tools`, `/developer-tools`: breadcrumbs (OfflineBench › PDF tools), H1 and intro with the PrivacyMeter, "6 PDF tools" as cards (icon, name, full tagline; 3 columns on `lg`), then **Guides** (4 links to tools' "How to use" sections) and **More tools** (the other hubs) side by side on `lg`.
 
 ## 4. Tool page (built, Phase 3)
 

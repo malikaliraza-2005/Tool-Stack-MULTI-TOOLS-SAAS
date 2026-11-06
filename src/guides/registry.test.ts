@@ -11,7 +11,7 @@ describe.each(GUIDES.map((guide) => [guide.meta.slug, guide.meta] as const))(
   (_, meta) => {
     it("has SEO text within the site limits", () => {
       expect(meta.title.length).toBeLessThanOrEqual(65);
-      expect(meta.title).toMatch(/ \| QuietBench$/);
+      expect(meta.title).toMatch(/ \| OfflineBench$/);
       expect(meta.description.length).toBeGreaterThanOrEqual(70);
       expect(meta.description.length).toBeLessThanOrEqual(160);
       expect(meta.slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);

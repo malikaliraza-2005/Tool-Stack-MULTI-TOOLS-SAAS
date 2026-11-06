@@ -27,8 +27,8 @@ Close the open decisions and check the tool list and URLs against free demand da
 
 ### Decisions
 - [x] **P0-T01** Name check for "ToolStack": search existing products and companies, trademark databases (USPTO TESS/WIPO Global Brand Database, free), app stores, GitHub; record findings. → Collision found: toolstack.tools is the same product under the same name. Trademark registers could not be queried automatically (owner to check manually). See [risks-and-decisions.md](../risks-and-decisions.md) D-5.
-- [x] **P0-T02** If the name collides, shortlist 3–5 alternatives and check each the same way; choose one. → Shortlist of 5 checked; **QuietBench** chosen (D-5).
-- [x] **P0-T03** Domain decision (D-1): check availability of preferred domains; decide domain vs free `*.pages.dev`. Record cost if buying. → `sprigkit.com` unregistered on 2026-10-13 (RDAP); decision: buy it (D-1). *Revised 2026-11-06:* renamed to QuietBench (D-15); launch free on `quietbench.pages.dev`, buy `quietbench.app` later (D-1).
+- [x] **P0-T02** If the name collides, shortlist 3–5 alternatives and check each the same way; choose one. → Shortlist of 5 checked; **OfflineBench** chosen (D-5).
+- [x] **P0-T03** Domain decision (D-1): check availability of preferred domains; decide domain vs free `*.pages.dev`. Record cost if buying. → `sprigkit.com` unregistered on 2026-10-13 (RDAP); decision: buy it (D-1). *Revised 2026-11-06:* renamed to OfflineBench (D-15); launch free on `offlinebench.pages.dev`, buy `offlinebench.app` later (D-1).
 - [x] **P0-T04** HEIC decision (D-6): read the libheif/`heic-to` LICENSE files; decide ship-with-LGPL-compliance or launch without HEIC. → LICENSE files read; ship HEIC via `libheif-js` under LGPL-3.0 conditions (D-6).
 
 ### Demand validation (free sources only)

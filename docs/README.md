@@ -1,6 +1,6 @@
-# QuietBench Documentation
+# OfflineBench Documentation
 
-This folder is the single source of truth for what QuietBench is, how it looks, and how it is built.
+This folder is the single source of truth for what OfflineBench is, how it looks, and how it is built.
 Code must follow these documents. When a decision changes, update the relevant document in the same change.
 
 ## Reading order

@@ -8,7 +8,7 @@ import { HUBS } from "@/tools/hubs";
 import { CATEGORIES } from "@/tools/registry";
 import type { ToolCategory, ToolDefinition, ToolFaq } from "@/tools/types";
 
-/** `absoluteUrl("/merge-pdf")` → "https://quietbench.pages.dev/merge-pdf". */
+/** `absoluteUrl("/merge-pdf")` → "https://offlinebench.pages.dev/merge-pdf". */
 export function absoluteUrl(path: string): string {
   const origin = SITE_URL.replace(/\/+$/, "");
   if (path === "/" || path === "") return origin;
@@ -24,7 +24,7 @@ export function toolMetadata(tool: ToolDefinition): Metadata {
   const url = absoluteUrl(toolPath(tool));
   const { title, description } = tool.seo;
   return {
-    // The registry title already ends with "| QuietBench".
+    // The registry title already ends with "| OfflineBench".
     title: { absolute: title },
     description,
     keywords: tool.keywords,
@@ -139,7 +139,7 @@ export function homeJsonLd(faqs: readonly ToolFaq[]): JsonLdNode {
 /** A site page such as About or Privacy (page-seo-specs §4.3). */
 export type SitePageSeo = {
   path: string;
-  /** Full title; site pages other than About end with "· QuietBench". */
+  /** Full title; site pages other than About end with "· OfflineBench". */
   title: string;
   description: string;
   /** Breadcrumb and JSON-LD name. */
@@ -161,7 +161,7 @@ export function sitePageMetadata(page: SitePageSeo): Metadata {
   };
 }
 
-/** BreadcrumbList (QuietBench › page) and the page itself. */
+/** BreadcrumbList (OfflineBench › page) and the page itself. */
 export function sitePageJsonLd(page: SitePageSeo): JsonLdNode {
   const url = absoluteUrl(page.path);
   const breadcrumb = {
@@ -184,9 +184,9 @@ export function sitePageJsonLd(page: SitePageSeo): JsonLdNode {
 
 export const GUIDES_INDEX = {
   path: "/guides",
-  title: "Guides: PDFs, Images and Code, Done Privately | QuietBench",
+  title: "Guides: PDFs, Images and Code, Done Privately | OfflineBench",
   description:
-    "Practical guides to the jobs QuietBench’s tools do: removing location data from photos, reading JWTs, converting HEIC and more, with sources.",
+    "Practical guides to the jobs OfflineBench’s tools do: removing location data from photos, reading JWTs, converting HEIC and more, with sources.",
   name: "Guides",
 };
 
@@ -218,7 +218,7 @@ export function guideMetadata(guide: GuideMeta): Metadata {
   };
 }
 
-/** BreadcrumbList (QuietBench › Guides › guide) and an Article matching the visible byline. */
+/** BreadcrumbList (OfflineBench › Guides › guide) and an Article matching the visible byline. */
 export function guideJsonLd(guide: GuideMeta): JsonLdNode {
   const url = absoluteUrl(guidePath(guide));
   const breadcrumb = {

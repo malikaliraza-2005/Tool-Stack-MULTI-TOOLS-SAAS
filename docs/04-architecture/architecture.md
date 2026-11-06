@@ -74,7 +74,7 @@ const nextConfig = {
 
 ## 4. Site URL configuration
 
-A single setting controls the canonical origin. Production is `https://quietbench.pages.dev` until a domain is bought, then `https://quietbench.app` (D-1 in [risks-and-decisions.md](../06-delivery/risks-and-decisions.md)):
+A single setting controls the canonical origin. Production is `https://offlinebench.pages.dev` until a domain is bought, then `https://offlinebench.app` (D-1 in [risks-and-decisions.md](../06-delivery/risks-and-decisions.md)):
 
 ```ts
 // src/config/site.ts
@@ -203,7 +203,7 @@ Workers are created per job for regex (so a runaway pattern can be killed) and r
 - WASM files are served from our own origin (no CDNs) and cached by the service worker.
 - Every deployed file < 25 MiB (Cloudflare Pages limit).
 - jSquash WASM loading and pdf.js worker bundling were proven in Phase 1 with webpack builds (§8.4).
-- **HEIC decoder (Phase 6, D-6):** `scripts/copy-libheif-assets.mjs` (run by `predev`/`prebuild` after the pdf.js copy) copies the unmodified `libheif-js` WASM build, its license texts and the committed source tarballs (`vendor-src/`) to `public/vendor/libheif-js-<version>/` (git-ignored). `src/lib/image/heic.ts` imports `libheif-bundle.mjs` from there at run time with `/* webpackIgnore: true */`, so it never enters a QuietBench chunk; a unit test keeps `LIBHEIF_VERSION` equal to the installed package.
+- **HEIC decoder (Phase 6, D-6):** `scripts/copy-libheif-assets.mjs` (run by `predev`/`prebuild` after the pdf.js copy) copies the unmodified `libheif-js` WASM build, its license texts and the committed source tarballs (`vendor-src/`) to `public/vendor/libheif-js-<version>/` (git-ignored). `src/lib/image/heic.ts` imports `libheif-bundle.mjs` from there at run time with `/* webpackIgnore: true */`, so it never enters a OfflineBench chunk; a unit test keeps `LIBHEIF_VERSION` equal to the installed package.
 - pdf.js 6 loads optional WASM decoders (JPX/ICC), CMaps and standard fonts by URL. **Implemented in Phase 3:** `scripts/copy-pdfjs-assets.mjs` (run by `predev`/`prebuild`) copies `wasm/` (without the unused QuickJS engine), `cmaps/`, `standard_fonts/` and `iccs/` to `public/vendor/pdfjs-<version>/` (git-ignored); `src/lib/pdf/render.ts` (thumbnails and page previews, since Phase 5) passes `wasmUrl`, `cMapUrl`, `standardFontDataUrl` and `iccUrl`, and a unit test keeps its version equal to the installed package. Never use CDN defaults.
 
 ### 8.3 Memory hygiene
@@ -232,7 +232,7 @@ Spikes ran as throwaway pages on the local `spikes` branch (commit `P1-T19..T25`
 Build-tool notes:
 - **Segment prefetch files (Phase 7):** Next.js 16's static export writes per-segment prefetch payloads as folders (`merge-pdf/__next.$d$tool/__PAGE__.txt`) while the client requests dotted names (`merge-pdf/__next.$d$tool.__PAGE__.txt`), so every `<Link>` prefetch of a tool or hub was a 404 (navigation still worked). `scripts/flatten-segment-prefetch.mjs` (`postbuild`) writes the dotted copies.
 - Tailwind 4 runs through `@tailwindcss/postcss` (`postcss.config.mjs`), which both bundlers support. The `@tailwindcss/turbopack` loader from the `create-next-app` template was removed with D-14.
-- Bundle baseline (webpack, near-empty homepage): **141 KB gzipped JS** from Next.js + React alone, above the 100 KB homepage budget (§14) before any QuietBench code. See R-14.
+- Bundle baseline (webpack, near-empty homepage): **141 KB gzipped JS** from Next.js + React alone, above the 100 KB homepage budget (§14) before any OfflineBench code. See R-14.
 
 ---
 
@@ -258,8 +258,8 @@ Build-tool notes:
   - **Runtime caching:** navigations `NetworkFirst` (4 s timeout, then the cache); `/_next/static/` and `/vendor/` `CacheFirst` (hashed or versioned names); other same-origin GETs `StaleWhileRevalidate`.
   - **What works offline:** after the first visit, every page opens and the developer tools run (their code is precached). PDF and image tools run offline once they have been used online, because pdf.js, pdf-lib and the codecs are cached on first use (G-5; registry `processing.offline: true` for every tool).
   - **Registration** (`components/layout/ServiceWorker.tsx`): production only, after the `load` event, with `@serwist/window` loaded on demand. `clientsClaim` makes the first visit controlled at once.
-  - **Updates (P7-T16):** `skipWaiting: false`. When a new worker is waiting, a persistent toast says "A new version of QuietBench is available" with **Refresh**; the page posts `SKIP_WAITING` and reloads when the new worker takes control. Nothing reloads on its own, and the page doesn't reload when the connection comes back.
-  - **Manifest and install (P7-T14):** `app/manifest.ts` → `/manifest.webmanifest` (standalone, sRGB colors, 192/512 icons). `beforeinstallprompt` is kept (`components/layout/useInstallPrompt.ts`), so the browser shows no banner; the command palette offers "Install QuietBench as an app" while it is available. No pop-ups, no reminders.
+  - **Updates (P7-T16):** `skipWaiting: false`. When a new worker is waiting, a persistent toast says "A new version of OfflineBench is available" with **Refresh**; the page posts `SKIP_WAITING` and reloads when the new worker takes control. Nothing reloads on its own, and the page doesn't reload when the connection comes back.
+  - **Manifest and install (P7-T14):** `app/manifest.ts` → `/manifest.webmanifest` (standalone, sRGB colors, 192/512 icons). `beforeinstallprompt` is kept (`components/layout/useInstallPrompt.ts`), so the browser shows no banner; the command palette offers "Install OfflineBench as an app" while it is available. No pop-ups, no reminders.
 - Web app manifest with icons and `display: standalone`.
 - **Verified in Phase 1 (P1-T22)** with `@serwist/turbopack`. Despite the name, its route-handler integration builds the SW with esbuild and works with webpack builds. Required settings found by the spike:
   - `globIgnores: ["public/_headers", "public/_redirects"]`. Serwist's default glob precaches all of `public/`, but Cloudflare does not serve these config files, so SW install would fail.

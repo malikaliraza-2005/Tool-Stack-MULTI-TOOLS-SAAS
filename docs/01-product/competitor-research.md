@@ -107,7 +107,7 @@
 
 ---
 
-## 6. Implications for QuietBench
+## 6. Implications for OfflineBench
 
 | Finding | Action | Where |
 |---|---|---|

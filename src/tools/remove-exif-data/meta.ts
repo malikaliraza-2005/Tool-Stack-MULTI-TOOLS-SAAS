@@ -22,7 +22,7 @@ export const meta: ToolDefinition = {
     "photo metadata",
   ],
   seo: {
-    title: "Remove EXIF Data and GPS Location from Photos | QuietBench",
+    title: "Remove EXIF Data and GPS Location from Photos | OfflineBench",
     description:
       "See what your photos reveal (GPS location, camera, dates) and remove it without changing a pixel. JPG, PNG and WebP, in your browser.",
     h1: "Remove EXIF data and location from photos",

@@ -33,7 +33,7 @@ export default function Home() {
               className="stagger max-w-prose animate-rise-in text-body-lg text-fg-muted"
               style={enter(1)}
             >
-              Drop a file or paste text, and QuietBench opens the right tool. Everything runs in
+              Drop a file or paste text, and OfflineBench opens the right tool. Everything runs in
               your browser. Nothing is uploaded.
             </p>
           </div>

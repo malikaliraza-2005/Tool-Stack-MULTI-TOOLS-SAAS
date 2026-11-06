@@ -6,7 +6,7 @@ const rules = parseHeaders(readFileSync(new URL("../../public/_headers", import.
 
 describe("public/_headers", () => {
   it("sends a CSP on every page that blocks cross-origin connections", () => {
-    const csp = headersFor(rules, "quietbench.pages.dev", "/merge-pdf").get(
+    const csp = headersFor(rules, "offlinebench.pages.dev", "/merge-pdf").get(
       "content-security-policy",
     );
     expect(csp).toContain("connect-src 'self' blob: data:");
@@ -15,16 +15,16 @@ describe("public/_headers", () => {
   });
 
   it("marks preview hosts noindex, but not the production pages.dev alias", () => {
-    expect(headersFor(rules, "abc123.quietbench.pages.dev", "/").get("x-robots-tag")).toBe(
+    expect(headersFor(rules, "abc123.offlinebench.pages.dev", "/").get("x-robots-tag")).toBe(
       "noindex",
     );
-    expect(headersFor(rules, "quietbench.pages.dev", "/").has("x-robots-tag")).toBe(false);
+    expect(headersFor(rules, "offlinebench.pages.dev", "/").has("x-robots-tag")).toBe(false);
   });
 
   it("caches hashed build assets immutably", () => {
     expect(
-      headersFor(rules, "quietbench.pages.dev", "/_next/static/chunks/a.js").get("cache-control"),
+      headersFor(rules, "offlinebench.pages.dev", "/_next/static/chunks/a.js").get("cache-control"),
     ).toContain("immutable");
-    expect(headersFor(rules, "quietbench.pages.dev", "/").has("cache-control")).toBe(false);
+    expect(headersFor(rules, "offlinebench.pages.dev", "/").has("cache-control")).toBe(false);
   });
 });

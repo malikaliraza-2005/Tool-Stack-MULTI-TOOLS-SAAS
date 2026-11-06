@@ -9,9 +9,9 @@ import { sitePageMetadata, type SitePageSeo } from "@/lib/seo";
 
 const PAGE: SitePageSeo = {
   path: "/terms",
-  title: "Terms of use · QuietBench",
+  title: "Terms of use · OfflineBench",
   description:
-    "The terms for using QuietBench: free tools provided as is, a visual signature that is not a certified digital signature, and your responsibilities.",
+    "The terms for using OfflineBench: free tools provided as is, a visual signature that is not a certified digital signature, and your responsibilities.",
   name: "Terms of use",
   type: "WebPage",
   updated: "2026-11-02",
@@ -24,15 +24,15 @@ export default function TermsPage() {
     <SitePage
       page={PAGE}
       h1="Terms of use"
-      intro="These terms apply when you use QuietBench. They are short because the service is simple: free tools that run in your browser, with no account."
+      intro="These terms apply when you use OfflineBench. They are short because the service is simple: free tools that run in your browser, with no account."
     >
-      <ContentSection id="using" title="Using QuietBench">
+      <ContentSection id="using" title="Using OfflineBench">
         <Paragraph>
-          QuietBench is run by Ali Raza. By using the site you agree to these terms; if you don’t
+          OfflineBench is run by Ali Raza. By using the site you agree to these terms; if you don’t
           agree, don’t use it. The tools are free and need no account. Tools may be added, changed
           or removed at any time.
         </Paragraph>
-        <Paragraph>Don’t use QuietBench:</Paragraph>
+        <Paragraph>Don’t use OfflineBench:</Paragraph>
         <List
           items={[
             "for anything unlawful, such as processing files you have no right to use or altering documents to deceive someone;",
@@ -77,7 +77,7 @@ export default function TermsPage() {
 
       <ContentSection id="open-source" title="Open-source software">
         <Paragraph>
-          QuietBench includes open-source software under its own licenses, listed on the{" "}
+          OfflineBench includes open-source software under its own licenses, listed on the{" "}
           <TextLink href="/licenses">licenses page</TextLink>. Nothing in these terms limits your
           rights under those licenses.
         </Paragraph>
@@ -85,9 +85,9 @@ export default function TermsPage() {
 
       <ContentSection id="no-warranty" title="No warranty">
         <Paragraph>
-          QuietBench is provided “as is” and “as available”, without warranties of any kind, express
-          or implied, including that it is fit for a particular purpose, accurate, uninterrupted or
-          free of errors, to the extent the law allows.
+          OfflineBench is provided “as is” and “as available”, without warranties of any kind,
+          express or implied, including that it is fit for a particular purpose, accurate,
+          uninterrupted or free of errors, to the extent the law allows.
         </Paragraph>
       </ContentSection>
 
@@ -95,16 +95,16 @@ export default function TermsPage() {
         <Paragraph>
           To the extent the law allows, Ali Raza is not liable for any indirect, incidental or
           consequential loss, or for loss of data, profits or business, that comes from using or
-          being unable to use QuietBench. Because QuietBench is free, total liability for any claim
-          is limited to the amount you paid to use it, which is nothing. Nothing in these terms
-          limits liability that cannot be limited by law.
+          being unable to use OfflineBench. Because OfflineBench is free, total liability for any
+          claim is limited to the amount you paid to use it, which is nothing. Nothing in these
+          terms limits liability that cannot be limited by law.
         </Paragraph>
       </ContentSection>
 
       <ContentSection id="changes" title="Changes to these terms">
         <Paragraph>
           These terms may change. The new version is posted here with a new date at the top, and
-          applies from then on. Using QuietBench after a change means you accept the new terms.
+          applies from then on. Using OfflineBench after a change means you accept the new terms.
         </Paragraph>
       </ContentSection>
 

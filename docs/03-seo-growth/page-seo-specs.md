@@ -16,7 +16,7 @@ What each page targets, what it is called, what it must answer, and which struct
 
 | Element | Rule | Enforced by |
 |---|---|---|
-| Title | ≤ 65 characters, unique across the site, primary query first, ends with "\| QuietBench" (tools, hubs, home, guides) or "· QuietBench" (site pages; About is "About QuietBench") | `src/tools/validate.ts`, `hubs.test.ts` |
+| Title | ≤ 65 characters, unique across the site, primary query first, ends with "\| OfflineBench" (tools, hubs, home, guides) or "· OfflineBench" (site pages; About is "About OfflineBench") | `src/tools/validate.ts`, `hubs.test.ts` |
 | Meta description | 70–160 characters, unique, says what the page does and that nothing is uploaded where that applies | same |
 | H1 | One per page, unique, sentence case | same (tools) |
 | Canonical | `SITE_URL` + path, no trailing slash | `toolMetadata`, `hubMetadata`, per-page `alternates` |
@@ -43,10 +43,10 @@ Keyword research §2 found privacy, cost and offline questions for every tool. E
 | `/` | Home | see §4.1 | WebSite · Organization · FAQPage | P7, metadata P8-T02 |
 | `/pdf-tools`, `/image-tools`, `/developer-tools` | Hub | see §4.2 | BreadcrumbList · CollectionPage + ItemList | P7, content P8-T05 |
 | `/<slug>` × 19 | Tool | see §5 | BreadcrumbList · WebApplication · FAQPage | P3–P6 |
-| `/about` | Site page | About QuietBench | BreadcrumbList · AboutPage | P8-T06 |
-| `/privacy` | Site page | Privacy policy · QuietBench | BreadcrumbList · WebPage | P8-T07 |
-| `/terms` | Site page | Terms of use · QuietBench | BreadcrumbList · WebPage | P8-T08 |
-| `/licenses` | Site page | Open-source licenses · QuietBench | BreadcrumbList · WebPage | P6 (early), P8-T09 |
+| `/about` | Site page | About OfflineBench | BreadcrumbList · AboutPage | P8-T06 |
+| `/privacy` | Site page | Privacy policy · OfflineBench | BreadcrumbList · WebPage | P8-T07 |
+| `/terms` | Site page | Terms of use · OfflineBench | BreadcrumbList · WebPage | P8-T08 |
+| `/licenses` | Site page | Open-source licenses · OfflineBench | BreadcrumbList · WebPage | P6 (early), P8-T09 |
 | `/llms.txt` | Text | (none) | none | P8-T15 |
 | `/guides` | Guide index | see §4.4 | BreadcrumbList · CollectionPage + ItemList | P8-T11 |
 | `/guides/<slug>` | Guide | see §4.4 | BreadcrumbList · Article | P8-T12 |
@@ -58,8 +58,8 @@ Keyword research §2 found privacy, cost and offline questions for every tool. E
 
 | Field | Spec |
 |---|---|
-| Primary query | Brand ("quietbench"), then "private pdf tools", "online tools without uploading" (keyword-research §2.1) |
-| Title (61) | QuietBench: Private PDF, Image and Developer Tools, No Upload |
+| Primary query | Brand ("offlinebench"), then "private pdf tools", "online tools without uploading" (keyword-research §2.1) |
+| Title (63) | OfflineBench: Private PDF, Image and Developer Tools, No Upload |
 | Description (137) | Free online PDF, image and developer tools that run in your browser. Files and text never leave your device. No sign-up, no daily limits. |
 | H1 | Private tools for PDFs, images and code (as built) |
 | H2 outline | Privacy proof strip · Popular tools · All tools (the index, by category) · Frequently asked questions (as built, ui-ux-specification §3) |
@@ -67,7 +67,7 @@ Keyword research §2 found privacy, cost and offline questions for every tool. E
 | Schema | `WebSite` (name, url) · `Organization` (name, url, logo, contact email from `src/config/site.ts`) · `FAQPage` mirroring the visible FAQs |
 | Related | Every published tool (the index), the three hubs |
 
-**Changed (P8-T02):** the homepage inherited the layout's default title ("QuietBench") and description, and had no JSON-LD although it shows FAQs. Added: page metadata (title as `absolute`, description, canonical, Open Graph) and the JSON-LD above. No `SearchAction`: the site has no search results URL.
+**Changed (P8-T02):** the homepage inherited the layout's default title ("OfflineBench") and description, and had no JSON-LD although it shows FAQs. Added: page metadata (title as `absolute`, description, canonical, Open Graph) and the JSON-LD above. No `SearchAction`: the site has no search results URL.
 
 ### 4.2 Category hubs
 
@@ -75,9 +75,9 @@ Copy in `src/tools/hubs.ts`; tool lists from the registry.
 
 | URL | Primary query | Title | Description | H1 |
 |---|---|---|---|---|
-| `/pdf-tools` | pdf tools (not researched in P0) | Free PDF Tools Online: Private, No Upload \| QuietBench (52) | Merge, split, organize, sign and convert PDF files in your browser. Files stay on your device and are never uploaded. Free, no sign-up. (135) | PDF tools |
-| `/image-tools` | image tools (not researched in P0) | Free Image Tools Online: Private, No Upload \| QuietBench (54) | Compress, convert, resize and clean images in your browser, including HEIC photos from iPhones. Images stay on your device and are never uploaded. (146) | Image tools |
-| `/developer-tools` | developer tools (not researched in P0) | Free Developer Tools Online: Private, Local \| QuietBench (54) | Format JSON, decode JWTs, encode Base64 and URLs, compare text and test regex in your browser. Your input is never sent anywhere. (129) | Developer tools |
+| `/pdf-tools` | pdf tools (not researched in P0) | Free PDF Tools Online: Private, No Upload \| OfflineBench (52) | Merge, split, organize, sign and convert PDF files in your browser. Files stay on your device and are never uploaded. Free, no sign-up. (135) | PDF tools |
+| `/image-tools` | image tools (not researched in P0) | Free Image Tools Online: Private, No Upload \| OfflineBench (54) | Compress, convert, resize and clean images in your browser, including HEIC photos from iPhones. Images stay on your device and are never uploaded. (146) | Image tools |
+| `/developer-tools` | developer tools (not researched in P0) | Free Developer Tools Online: Private, Local \| OfflineBench (54) | Format JSON, decode JWTs, encode Base64 and URLs, compare text and test regex in your browser. Your input is never sent anywhere. (129) | Developer tools |
 
 - H2 outline (as built): "<n> PDF tools" (the tool list) · Which tool do I need? · Guides (guides whose main tool is in the category, then short links to tools' "How to use" sections) · More tools (the other categories).
 - Schema: BreadcrumbList · CollectionPage with an ItemList of the hub's tools.
@@ -87,9 +87,9 @@ Copy in `src/tools/hubs.ts`; tool lists from the registry.
 
 | URL | Title | Description | H1 | H2 outline |
 |---|---|---|---|---|
-| `/about` | About QuietBench (no suffix: the name is in it) | Who builds QuietBench, how its PDF, image and developer tools run in your browser without uploading anything, and how to get in touch. | About QuietBench | What QuietBench is (tools by category) · How it works · Who runs it · Contact |
-| `/privacy` | Privacy policy · QuietBench | How QuietBench handles your data: files and text are processed in your browser and never uploaded. No accounts, cookies, ads or analytics. | Privacy policy | Summary · What happens to your files and text · What is stored in your browser · Hosting · Analytics, cookies and ads · How to verify it yourself (`#verify`) · Changes to this policy · Contact |
-| `/terms` | Terms of use · QuietBench | The terms for using QuietBench: free tools provided as is, a visual signature that is not a certified digital signature, and your responsibilities. | Terms of use | Using QuietBench · Your files · Signatures · Results and accuracy · Open-source software · No warranty · Limitation of liability · Changes to these terms · Governing law · Contact |
+| `/about` | About OfflineBench (no suffix: the name is in it) | Who builds OfflineBench, how its PDF, image and developer tools run in your browser without uploading anything, and how to get in touch. | About OfflineBench | What OfflineBench is (tools by category) · How it works · Who runs it · Contact |
+| `/privacy` | Privacy policy · OfflineBench | How OfflineBench handles your data: files and text are processed in your browser and never uploaded. No accounts, cookies, ads or analytics. | Privacy policy | Summary · What happens to your files and text · What is stored in your browser · Hosting · Analytics, cookies and ads · How to verify it yourself (`#verify`) · Changes to this policy · Contact |
+| `/terms` | Terms of use · OfflineBench | The terms for using OfflineBench: free tools provided as is, a visual signature that is not a certified digital signature, and your responsibilities. | Terms of use | Using OfflineBench · Your files · Signatures · Results and accuracy · Open-source software · No warranty · Limitation of liability · Changes to these terms · Governing law · Contact |
 | `/licenses` | Open-source licenses (as built) | as built | Open-source licenses | as built; generated from the license report in P8-T09 |
 
 Facts these pages must state consistently (product facts, product.md §10): 19 tools; processing in the browser; no accounts; no cookies or ads at launch; no analytics at launch (P9-T19; if that changes, the Privacy page names the provider first); hosting on Cloudflare Pages; contact officialaliraza2005@gmail.com.
@@ -100,14 +100,14 @@ Topics, format and review process: [content-strategy.md](content-strategy.md). C
 
 | URL | Primary query (keyword-research) | Title | Main tool |
 |---|---|---|---|
-| `/guides` | | Guides: PDFs, Images and Code, Done Privately \| QuietBench | |
-| `/guides/remove-location-from-photos` | remove location from photo (iPhone, Android) | How to Remove Location Data from Photos \| QuietBench | `remove-exif-data` |
-| `/guides/what-is-inside-a-jwt` | decode jwt locally, is jwt decode safe | What’s Inside a JWT, and Is It Safe to Decode? \| QuietBench | `jwt-decoder` |
-| `/guides/heic-vs-jpg` | heic to jpg, safest heic to jpg converter | HEIC vs JPG: What’s the Difference, How to Convert \| QuietBench | `convert-image` |
+| `/guides` | | Guides: PDFs, Images and Code, Done Privately \| OfflineBench | |
+| `/guides/remove-location-from-photos` | remove location from photo (iPhone, Android) | How to Remove Location Data from Photos \| OfflineBench | `remove-exif-data` |
+| `/guides/what-is-inside-a-jwt` | decode jwt locally, is jwt decode safe | What’s Inside a JWT, and Is It Safe to Decode? \| OfflineBench | `jwt-decoder` |
+| `/guides/heic-vs-jpg` | heic to jpg, safest heic to jpg converter | HEIC vs JPG: What’s the Difference, How to Convert \| OfflineBench | `convert-image` |
 
 - H1 = the question or task; byline with author (linked to /about), published and updated dates; then the article, "Tools used in this guide" and "Sources".
-- Schema: BreadcrumbList (QuietBench › Guides › guide) · `Article` (headline, author, datePublished, dateModified, publisher, `citation` = sources) matching the visible byline. The index: BreadcrumbList · CollectionPage + ItemList.
-- Next in the backlog: web image formats compared, with QuietBench's own measurements (content-strategy §2).
+- Schema: BreadcrumbList (OfflineBench › Guides › guide) · `Article` (headline, author, datePublished, dateModified, publisher, `citation` = sources) matching the visible byline. The index: BreadcrumbList · CollectionPage + ItemList.
+- Next in the backlog: web image formats compared, with OfflineBench's own measurements (content-strategy §2).
 
 ## 5. Tool pages
 
@@ -121,7 +121,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | merge pdf |
 | Secondary | combine pdf (G1 B1) |
-| Title (49) | Merge PDF Online: Private, No Upload \| QuietBench |
+| Title (51) | Merge PDF Online: Private, No Upload \| OfflineBench |
 | Description (120) | Combine multiple PDF files into one in seconds. Files are processed on your device and never uploaded. Free, no sign-up. |
 | H1 | Merge PDF files |
 | H2 outline | How to merge PDF files · Formats and limits · What is kept in the merged file · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -142,7 +142,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | split pdf |
 | Secondary | extract pages from pdf (G1 B1) |
-| Title (50) | Split PDF & Extract Pages (No Upload) \| QuietBench |
+| Title (52) | Split PDF & Extract Pages (No Upload) \| OfflineBench |
 | Description (138) | Extract pages from a PDF or split it every N pages or into single pages, in your browser. Files never leave your device. Free, no sign-up. |
 | H1 | Split PDF and extract pages |
 | H2 outline | How to split a PDF · Page ranges · What is kept · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -163,7 +163,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | organize pdf |
 | Secondary | rearrange / reorder pdf pages, delete pages from pdf, rotate pdf |
-| Title (56) | Organize PDF: Reorder, Rotate, Delete Pages \| QuietBench |
+| Title (58) | Organize PDF: Reorder, Rotate, Delete Pages \| OfflineBench |
 | Description (136) | Rearrange, rotate and delete PDF pages with drag-and-drop thumbnails, undo and redo. Works in your browser; your file is never uploaded. |
 | H1 | Organize PDF pages |
 | H2 outline | How to organize PDF pages · Keyboard shortcuts · What happens to your pages · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -184,7 +184,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | jpg to pdf |
 | Secondary | image to pdf, png to pdf, photo to pdf |
-| Title (62) | JPG to PDF: Combine Images into a PDF (No Upload) \| QuietBench |
+| Title (64) | JPG to PDF: Combine Images into a PDF (No Upload) \| OfflineBench |
 | Description (138) | Convert JPG, PNG, WebP and other images to one PDF. Choose page size, orientation and margins; photos stay upright. Works in your browser. |
 | H1 | JPG and other images to PDF |
 | H2 outline | How to convert images to PDF · Options · Image quality · Formats and limits · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -205,7 +205,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | pdf to jpg |
 | Secondary | pdf to image, pdf to png |
-| Title (60) | PDF to JPG & PNG: Convert PDF Pages (No Upload) \| QuietBench |
+| Title (62) | PDF to JPG & PNG: Convert PDF Pages (No Upload) \| OfflineBench |
 | Description (128) | Convert PDF pages to JPG or PNG at 72, 150 or 300 DPI, all pages or a range. Your PDF stays on your device; nothing is uploaded. |
 | H1 | PDF to JPG and PNG |
 | H2 outline | How to convert PDF pages to images · Resolution and format · How it works · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -226,7 +226,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | sign pdf |
 | Secondary | fill and sign pdf, add signature to pdf |
-| Title (61) | Fill & Sign PDF: Sign and Fill Forms (No Upload) \| QuietBench |
+| Title (63) | Fill & Sign PDF: Sign and Fill Forms (No Upload) \| OfflineBench |
 | Description (143) | Fill in PDF forms and add a drawn, typed or uploaded signature, text, dates and checkmarks. Your PDF stays on your device; nothing is uploaded. |
 | H1 | Fill and sign a PDF |
 | H2 outline | How to fill and sign a PDF · About the signature · How it works · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -249,7 +249,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | remove exif data |
 | Secondary | remove metadata from photo, exif remover, remove location from photo |
-| Title (58) | Remove EXIF Data and GPS Location from Photos \| QuietBench |
+| Title (60) | Remove EXIF Data and GPS Location from Photos \| OfflineBench |
 | Description (133) | See what your photos reveal (GPS location, camera, dates) and remove it without changing a pixel. JPG, PNG and WebP, in your browser. |
 | H1 | Remove EXIF data and location from photos |
 | H2 outline | How to remove EXIF data from photos · What gets removed · Formats and limits · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -270,7 +270,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | compress image |
 | Secondary | reduce image size, image compressor; size targets (compress image to 100kb) |
-| Title (62) | Compress Image: Reduce JPG, PNG, WebP (No Upload) \| QuietBench |
+| Title (64) | Compress Image: Reduce JPG, PNG, WebP (No Upload) \| OfflineBench |
 | Description (129) | Reduce JPG, PNG, WebP and AVIF file size with a quality slider and a before/after view, many images at once. Nothing is uploaded. |
 | H1 | Compress images |
 | H2 outline | How to compress images · Options · Smaller files, same look · Formats and limits · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -291,7 +291,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | resize image |
 | Secondary | image resizer, crop image |
-| Title (54) | Resize and Crop Images Online (No Upload) \| QuietBench |
+| Title (56) | Resize and Crop Images Online (No Upload) \| OfflineBench |
 | Description (140) | Resize JPG, PNG, WebP and AVIF images to exact pixels, a percentage or common post sizes, or crop them to 1:1, 4:3 or 16:9. In your browser. |
 | H1 | Resize and crop images |
 | H2 outline | How to resize or crop images · Options · Sharp results · Formats and limits · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -312,7 +312,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | heic to jpg / convert image |
 | Secondary | webp to png, webp to jpg, image converter |
-| Title (62) | Convert Image: HEIC, WebP, PNG to JPG (No Upload) \| QuietBench |
+| Title (64) | Convert Image: HEIC, WebP, PNG to JPG (No Upload) \| OfflineBench |
 | Description (135) | Convert HEIC iPhone photos, WebP, PNG, AVIF, GIF and BMP to JPG, PNG, WebP or AVIF, many at once. Private: it all runs in your browser. |
 | H1 | Convert images: HEIC, WebP, PNG and more |
 | H2 outline | How to convert images · Options · What changes when you convert · Formats and limits · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -335,7 +335,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | json formatter |
 | Secondary | json validator, json viewer, json beautifier |
-| Title (59) | JSON Formatter, Validator & Viewer (No Upload) \| QuietBench |
+| Title (61) | JSON Formatter, Validator & Viewer (No Upload) \| OfflineBench |
 | Description (148) | Format, validate and explore JSON in your browser. Exact error line and column, tree view, minify and sort keys. Your data never leaves your device. |
 | H1 | JSON formatter, validator and viewer |
 | H2 outline | How to format and validate JSON · Options · Exact values, including large numbers · Formats and limits · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -356,7 +356,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | unix timestamp converter |
 | Secondary | epoch converter, timestamp converter |
-| Title (55) | Unix Timestamp Converter (Epoch Converter) \| QuietBench |
+| Title (57) | Unix Timestamp Converter (Epoch Converter) \| OfflineBench |
 | Description (145) | Convert Unix timestamps to dates and back in any time zone. Detects seconds, milliseconds and microseconds, and shows the current Unix time live. |
 | H1 | Unix timestamp converter (epoch converter) |
 | H2 outline | How to convert a Unix timestamp · What a Unix timestamp is · Formats and units · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -378,7 +378,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | base64 decode / encode |
 | Secondary | base64 encode decode, base64 to image |
-| Title (63) | Base64 Encode & Decode: Text and Files (No Upload) \| QuietBench |
+| Title (65) | Base64 Encode & Decode: Text and Files (No Upload) \| OfflineBench |
 | Description (149) | Encode and decode Base64 in your browser: text with emoji, URL-safe Base64, data URLs and files. Errors show the exact position. Nothing is uploaded. |
 | H1 | Base64 encode and decode |
 | H2 outline | How to encode or decode Base64 · Options · What Base64 is · Formats and limits · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -400,7 +400,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | url decoder / encoder |
 | Secondary | url encode decode, url parser |
-| Title (61) | URL Encode & Decode, plus URL Parser (No Upload) \| QuietBench |
+| Title (63) | URL Encode & Decode, plus URL Parser (No Upload) \| OfflineBench |
 | Description (139) | Percent-encode or decode text and URLs, with %20 or + for spaces. Parse any URL into host, path and query parameters. Runs in your browser. |
 | H1 | URL encode and decode |
 | H2 outline | How to encode, decode or parse a URL · Options · How percent-encoding works · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -422,7 +422,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | uuid generator |
 | Secondary | guid generator, uuid v4, uuid v7 |
-| Title (57) | UUID Generator: v4, v7 and ULID, Bulk (GUID) \| QuietBench |
+| Title (59) | UUID Generator: v4, v7 and ULID, Bulk (GUID) \| OfflineBench |
 | Description (136) | Generate random UUID v4, time-ordered UUID v7 and ULIDs in bulk, uppercase or without hyphens. Inspect any UUID’s version and timestamp. |
 | H1 | UUID generator (GUID) |
 | H2 outline | How to generate UUIDs · UUID v4, v7 and ULID · How the values are made · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -444,7 +444,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | hash generator |
 | Secondary | sha256 hash, md5 hash, checksum calculator |
-| Title (57) | Hash Generator: SHA-256, MD5, SHA-1, SHA-512 \| QuietBench |
+| Title (59) | Hash Generator: SHA-256, MD5, SHA-1, SHA-512 \| OfflineBench |
 | Description (146) | Hash text or files with SHA-256, MD5, SHA-1, SHA-384 and SHA-512, or compute an HMAC. Verify a download’s checksum. Files never leave your device. |
 | H1 | Hash generator: SHA-256, MD5, SHA-1, SHA-512 |
 | H2 outline | How to hash text or a file · Algorithms · How hashing works · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -465,7 +465,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | jwt decoder / decode jwt |
 | Secondary | jwt decode, decode jwt locally, jwt decode offline |
-| Title (54) | JWT Decoder & Verifier, Local and Private \| QuietBench |
+| Title (56) | JWT Decoder & Verifier, Local and Private \| OfflineBench |
 | Description (146) | Decode JSON Web Tokens in your browser: header, payload, exp, iat and nbf in readable time. Verify HS, RS, PS, ES and EdDSA signatures. No upload. |
 | H1 | JWT decoder and verifier |
 | H2 outline | How to decode and verify a JWT · What’s inside a JWT · Supported algorithms and keys · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -486,7 +486,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | diff checker |
 | Secondary | text compare, compare text |
-| Title (61) | Diff Checker: Compare Text and Files (No Upload) \| QuietBench |
+| Title (63) | Diff Checker: Compare Text and Files (No Upload) \| OfflineBench |
 | Description (150) | Compare two texts or files side by side with line, word and character highlights. Ignore whitespace or case, copy a unified diff. Nothing is uploaded. |
 | H1 | Diff checker: compare text and files |
 | H2 outline | How to compare two texts · Options · How the comparison works · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
@@ -507,7 +507,7 @@ Generated from the registry. Character counts in brackets. H2 outline is the pag
 |---|---|
 | Primary query | regex tester |
 | Secondary | regular expression tester; language modifiers (javascript) |
-| Title (58) | Regex Tester for JavaScript, with Explanation \| QuietBench |
+| Title (60) | Regex Tester for JavaScript, with Explanation \| OfflineBench |
 | Description (150) | Test JavaScript regular expressions live: highlighted matches, numbered and named groups, replace preview and a plain-language explanation. No upload. |
 | H1 | Regex tester (JavaScript) |
 | H2 outline | How to test a regular expression · Replacement patterns · Safe by design · Troubleshooting · How your data stays private · Frequently asked questions · Related tools |
