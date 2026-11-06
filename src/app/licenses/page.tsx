@@ -16,9 +16,9 @@ import { sitePageMetadata, type SitePageSeo } from "@/lib/seo";
 
 const PAGE: SitePageSeo = {
   path: "/licenses",
-  title: "Open-source licenses · KeptLocal",
+  title: "Open-source licenses · QuietBench",
   description:
-    "The open-source software KeptLocal is built with, its licenses and notices, and the source code of the LGPL-licensed HEIC decoder.",
+    "The open-source software QuietBench is built with, its licenses and notices, and the source code of the LGPL-licensed HEIC decoder.",
   name: "Open-source licenses",
   type: "WebPage",
 };
@@ -98,7 +98,7 @@ export default function LicensesPage() {
     <SitePage
       page={PAGE}
       h1="Open-source licenses"
-      intro="KeptLocal is built with open-source software. This page lists it with its licenses and the notices those licenses ask us to show."
+      intro="QuietBench is built with open-source software. This page lists it with its licenses and the notices those licenses ask us to show."
     >
       <section aria-labelledby="libheif" className="flex flex-col gap-4">
         <Heading id="libheif">HEIC decoder: libheif (LGPL-3.0)</Heading>
@@ -115,7 +115,7 @@ export default function LicensesPage() {
           <li>libheif-js: packaging by Kiril Vatev (LGPL-3.0).</li>
         </ul>
         <p className="text-body text-fg">
-          The decoder is not part of KeptLocal’s code: it is served unmodified as a separate file,{" "}
+          The decoder is not part of QuietBench’s code: it is served unmodified as a separate file,{" "}
           <TextLink href={`${vendor}/libheif-wasm/libheif-bundle.mjs`} prefetch={false}>
             libheif-bundle.mjs
           </TextLink>
@@ -189,8 +189,8 @@ export default function LicensesPage() {
       <section aria-labelledby="packages" className="flex flex-col gap-4">
         <Heading id="packages">All packages</Heading>
         <p className="text-body text-fg">
-          Every package in KeptLocal’s production dependencies, {all.length} in total. Some are used
-          only to build the site. Their license texts and copyright notices are in one file:{" "}
+          Every package in QuietBench’s production dependencies, {all.length} in total. Some are
+          used only to build the site. Their license texts and copyright notices are in one file:{" "}
           <TextLink href="/third-party-notices.txt" prefetch={false}>
             third-party-notices.txt
           </TextLink>{" "}

@@ -1,8 +1,8 @@
-# KeptLocal: Product Requirements
+# QuietBench: Product Requirements
 
 | | |
 |---|---|
-| **Product** | KeptLocal: private, browser-based tools for files and developers |
+| **Product** | QuietBench: private, browser-based tools for files and developers |
 | **Version** | 0.3 (Draft) |
 | **Last updated** | 2026-10-13 |
 | **Owner** | Saraan |
@@ -14,14 +14,14 @@
 
 ## 1. Summary
 
-KeptLocal is a collection of high-quality online tools that run **entirely in the user's browser**. Files and text are never uploaded.
+QuietBench is a collection of high-quality online tools that run **entirely in the user's browser**. Files and text are never uploaded.
 
 The MVP has two pillars:
 
 1. **Private file tools (PDF and image)** for the general public. This is the primary organic-search engine.
 2. **A focused developer workbench.** This drives community launch, word of mouth, and backlinks.
 
-KeptLocal competes on **verifiable privacy** ("0 bytes uploaded"), **exceptional design and motion**, and **speed**, not on the number of tools. It is built and operated at zero cost on static hosting, with no database, backend, or accounts.
+QuietBench competes on **verifiable privacy** ("0 bytes uploaded"), **exceptional design and motion**, and **speed**, not on the number of tools. It is built and operated at zero cost on static hosting, with no database, backend, or accounts.
 
 The exact MVP tool list is in [mvp-scope.md](mvp-scope.md).
 
@@ -52,7 +52,7 @@ The exact MVP tool list is in [mvp-scope.md](mvp-scope.md).
 | Verifiable privacy | All processing local; Content-Security-Policy blocks outbound connections from tools; live "0 bytes uploaded" indicator; works offline once loaded |
 | Premium design and motion | Distinctive art direction, purposeful motion system, tool-specific layouts |
 | Speed and focus | Static pages, minimal JavaScript, no sign-up, no intrusive ads, keyboard-first |
-| Smart entry points | Drop any file or paste any text on the homepage and KeptLocal suggests the right tool |
+| Smart entry points | Drop any file or paste any text on the homepage and QuietBench suggests the right tool |
 
 ---
 
@@ -95,7 +95,7 @@ The exact MVP tool list is in [mvp-scope.md](mvp-scope.md).
 ## 7. Constraints
 
 ### 7.1 Zero budget
-No paid hosting, APIs, databases, subscriptions, or trial-dependent services. The only cost is a domain, about $10–12/year **[Estimate]** (D-1: buy `keptlocal.app`).
+No paid hosting, APIs, databases, subscriptions, or trial-dependent services. The site launches at $0 on `quietbench.pages.dev`; the only later cost is a domain, about $14/year for `quietbench.app` **[Estimate]** (D-1).
 
 Every dependency or service is classified as one of:
 *Free & open source* · *Free for commercial use* · *Free within an allowance* · *Trial only* · *May create future cost*.
@@ -188,8 +188,8 @@ The risk register now lives in [risks-and-decisions.md §3](../06-delivery/risks
 
 The decision log now lives in [risks-and-decisions.md](../06-delivery/risks-and-decisions.md). Key Phase 0 outcomes (2026-10-13):
 
-- **D-1:** buy `keptlocal.app`.
-- **D-5:** the product is named **KeptLocal**, replacing the working name "ToolStack", which collided with an existing product.
+- **D-1:** launch free on `quietbench.pages.dev`; buy `quietbench.app` later.
+- **D-5:** the product is named **QuietBench**, replacing the working name "ToolStack", which collided with an existing product.
 - **D-6:** HEIC ships, using `libheif-js` under LGPL-3.0 conditions.
 - **D-11:** final slugs.
 

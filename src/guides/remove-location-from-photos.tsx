@@ -10,7 +10,7 @@ import type { GuideMeta } from "./types";
 
 export const meta: GuideMeta = {
   slug: "remove-location-from-photos",
-  title: "How to Remove Location Data from Photos | KeptLocal",
+  title: "How to Remove Location Data from Photos | QuietBench",
   description:
     "Photos can record exactly where they were taken. How to check a photo for location data and remove it on iPhone, Android or a computer before you share it.",
   h1: "How to remove location data from photos",

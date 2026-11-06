@@ -107,7 +107,7 @@
 
 ---
 
-## 6. Implications for KeptLocal
+## 6. Implications for QuietBench
 
 | Finding | Action | Where |
 |---|---|---|

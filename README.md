@@ -1,4 +1,4 @@
-# KeptLocal
+# QuietBench
 
 Private, browser-based PDF, image and developer tools. All processing happens in the browser; nothing is uploaded.
 

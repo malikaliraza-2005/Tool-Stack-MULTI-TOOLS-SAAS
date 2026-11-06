@@ -117,9 +117,9 @@ test.describe("homepage", () => {
 
   test("pasting JSON opens the formatter pre-filled", async ({ page }) => {
     await ready(page);
-    await paste(page, '{"name":"KeptLocal","tools":19}');
+    await paste(page, '{"name":"QuietBench","tools":19}');
     await expect(page).toHaveURL(/\/json-formatter$/);
-    await expect(page.getByRole("main")).toContainText('"KeptLocal"');
+    await expect(page.getByRole("main")).toContainText('"QuietBench"');
   });
 
   test("pasting a timestamp opens the converter pre-filled", async ({ page }) => {
@@ -139,10 +139,10 @@ test.describe("homepage", () => {
 
   test("pasting Base64 opens the decoder pre-filled", async ({ page }) => {
     await ready(page);
-    await paste(page, "S2VwdExvY2FsIHJ1bnMgaW4geW91ciBicm93c2VyLg==");
+    await paste(page, "UXVpZXRCZW5jaCBydW5zIGluIHlvdXIgYnJvd3Nlci4=");
     await expect(page).toHaveURL(/\/base64-encode-decode$/);
     await expect(page.getByRole("radio", { name: "Decode" })).toBeChecked();
-    await expect(page.getByRole("main")).toContainText("KeptLocal runs in your browser.");
+    await expect(page.getByRole("main")).toContainText("QuietBench runs in your browser.");
   });
 
   test("ordinary pasted text stays in the search field", async ({ page }) => {

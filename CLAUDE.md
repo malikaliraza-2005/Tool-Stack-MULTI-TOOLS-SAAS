@@ -1,8 +1,8 @@
-# CLAUDE.md: KeptLocal
+# CLAUDE.md: QuietBench
 
 Instructions for AI coding sessions in this repository. Read this first, every session.
 
-## What KeptLocal is
+## What QuietBench is
 
 A collection of private, browser-based tools (PDF, image, developer). **All processing happens in the user's browser; nothing is uploaded.** Premium design and motion are core requirements, not polish. Zero budget: no paid services.
 
@@ -24,7 +24,7 @@ Phase 4 (developer tools) is done: 8 tools in `src/tools/`, all smart-paste dete
 
 Phase 3 (tool platform + pilots) is done: registry in `src/tools/`, shared tool UI in `src/components/tool/`, pilots `json-formatter` and `merge-pdf`. Its deferrals (performance budget R-14, real Safari, screen reader, content review, `pako` licence) are tracked in Phases 8–9. Still open from Phase 1: P1-T18 rollback test (owner).
 
-Carried over from Phase 0 (owner actions, see [risks-and-decisions.md](docs/06-delivery/risks-and-decisions.md)): register `keptlocal.app` (D-1); manual trademark search for "KeptLocal" (D-15: renamed from Sprigkit, whose search found the SPRIG software trademark); manual Google Trends check before the first production deploy (P0-T05).
+Carried over from Phase 0 (owner actions, see [risks-and-decisions.md](docs/06-delivery/risks-and-decisions.md)): launch on the free `quietbench.pages.dev` and buy `quietbench.app` later (D-1); manual trademark search for "QuietBench" (D-15: renamed from Sprigkit, whose search found the SPRIG software trademark); manual Google Trends check before the first production deploy (P0-T05).
 
 Work from the current phase's task checklist. Tick tasks when done and reference task IDs in commits (e.g. `P3-T07: …`). When a phase's exit criteria all pass, update the status in [docs/06-delivery/phases/README.md](docs/06-delivery/phases/README.md) and this section. Master plan: [implementation-roadmap.md](docs/06-delivery/implementation-roadmap.md).
 

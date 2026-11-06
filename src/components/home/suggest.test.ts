@@ -76,11 +76,11 @@ describe("smart paste (G-3)", () => {
 
   it.each([
     [jwt, "jwt-decoder", "jwt"],
-    ['{"name": "KeptLocal", "tools": 19}', "json-formatter", "json"],
+    ['{"name": "QuietBench", "tools": 19}', "json-formatter", "json"],
     ["1700000000", "unix-timestamp-converter", "unix-timestamp"],
     ["https://example.com/search?q=private%20tools", "url-encode-decode", "url"],
-    ["name%3DKeptLocal%26tools%3D19", "url-encode-decode", "url-encoded"],
-    ["S2VwdExvY2FsIHJ1bnMgaW4geW91ciBicm93c2VyLg==", "base64-encode-decode", "base64"],
+    ["name%3DQuietBench%26tools%3D19", "url-encode-decode", "url-encoded"],
+    ["UXVpZXRCZW5jaCBydW5zIGluIHlvdXIgYnJvd3Nlci4=", "base64-encode-decode", "base64"],
     ["0190b3a2-7c1e-7b4a-9d2f-3e8a1b6c5d4f", "uuid-generator", "uuid"],
   ])("opens the right tool for %s", (text, slug, detector) => {
     const result = suggestForText(tools, text);

@@ -4,7 +4,7 @@
 // the output is git-ignored.
 //
 // Not copied: the QuickJS engine (`quickjs-eval.*`), used only for JavaScript
-// inside PDFs, which KeptLocal never enables.
+// inside PDFs, which QuietBench never enables.
 //
 // Usage: node scripts/copy-pdfjs-assets.mjs
 

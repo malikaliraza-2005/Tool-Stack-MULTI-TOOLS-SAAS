@@ -100,7 +100,7 @@ export const noHardcodedDesign = {
 };
 
 const plugin = {
-  meta: { name: "keptlocal" },
+  meta: { name: "quietbench" },
   rules: { "no-hardcoded-design": noHardcodedDesign },
 };
 

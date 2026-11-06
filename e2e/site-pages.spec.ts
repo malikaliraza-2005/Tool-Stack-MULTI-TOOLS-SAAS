@@ -4,7 +4,7 @@ import { expect, expectNoA11yViolations, test } from "./fixtures";
 // the facts other pages link to.
 
 const PAGES = [
-  { path: "/about", h1: "About KeptLocal", name: "About", type: "AboutPage", contact: true },
+  { path: "/about", h1: "About QuietBench", name: "About", type: "AboutPage", contact: true },
   {
     path: "/privacy",
     h1: "Privacy policy",

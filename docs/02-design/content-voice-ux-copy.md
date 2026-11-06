@@ -5,7 +5,7 @@
 | **Last updated** | 2026-10-13 (Phase 2) |
 | **Related** | [brand-identity.md](brand-identity.md) · [design-system.md §13](design-system.md#13-do-and-dont) · [tool-specifications.md §2.4](../04-architecture/tool-specifications.md) (error codes) |
 
-KeptLocal's words follow the same direction as its design: **calm, exact, honest.** Phase 8 extends this guide for long-form content (guides, FAQs, legal pages).
+QuietBench's words follow the same direction as its design: **calm, exact, honest.** Phase 8 extends this guide for long-form content (guides, FAQs, legal pages).
 
 ## 1. Voice
 
@@ -20,7 +20,7 @@ Second person ("your files"), active voice, present tense. British or American s
 
 ## 2. Mechanics
 
-- **Sentence case** everywhere: headings, buttons, menu items, labels ("Download merged PDF", not "Download Merged PDF"). Product and tool names keep their casing ("JSON Formatter", "KeptLocal").
+- **Sentence case** everywhere: headings, buttons, menu items, labels ("Download merged PDF", not "Download Merged PDF"). Product and tool names keep their casing ("JSON Formatter", "QuietBench").
 - **Buttons** start with a verb and name the object: "Choose files", "Remove files", "Copy token". The primary action of a tool names its result: "Download merged PDF".
 - **Numbers:** numerals always; units with a space ("4.2 MB", "380 ms"); `tabular-nums` for changing numbers; "→" for before/after ("1.2 MB → 340 KB").
 - **Keyboard keys:** shown in `Kbd`; written as "Ctrl+K" in prose and "⌘K" for Apple. Write "Ctrl+C (⌘C)" when both matter.
@@ -71,17 +71,17 @@ Placeholders show an example of the expected format ("merged.pdf", `{ "paste": "
 | Palette input | Search tools and actions… |
 | Palette empty | Nothing matches “x”. Try “PDF”, “compress”, “HEIC” or “JSON”. |
 | Homepage headline (Phase 7) | Private tools for PDFs, images and code |
-| Homepage subline | Drop a file or paste text, and KeptLocal opens the right tool. Everything runs in your browser. Nothing is uploaded. |
+| Homepage subline | Drop a file or paste text, and QuietBench opens the right tool. Everything runs in your browser. Nothing is uploaded. |
 | Homepage search | Search 19 tools, or paste text… |
 | Drop hint | Or drop files anywhere on this page · Drop to see which tools can open your files (while dragging) |
 | Drop suggestions | Open contract.pdf in · Open 3 files in · No tool here converts this type of file. You can still check its hash or encode it. |
 | Paste choice | Open the pasted text in · Looks like JSON |
 | Favorite toast | JSON Formatter added to favorites · Favorites are listed first in search (Ctrl K or ⌘K). |
-| Update toast | A new version of KeptLocal is available · Refresh to update. Finish what you’re doing first: refreshing clears the page. · Refresh |
-| Install action (palette) | Install KeptLocal as an app |
+| Update toast | A new version of QuietBench is available · Refresh to update. Finish what you’re doing first: refreshing clears the page. · Refresh |
+| Install action (palette) | Install QuietBench as an app |
 | Palette footer | ↑ ↓ to move · ↵ to select · Esc to close |
 | Theme menu | Theme: Light / Dark / System |
-| Mobile menu | Menu · Tools · KeptLocal |
+| Mobile menu | Menu · Tools · QuietBench |
 | Footer tagline | Private tools that run in your browser. Your files never leave your device. |
 | 404 | Page not found · This page doesn’t exist. It may have moved, or the address has a typo. Check it, or start from the homepage. · Go to the homepage |
 | Copy button | Copy → Copied (announced) |

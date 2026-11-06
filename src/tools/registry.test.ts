@@ -23,7 +23,7 @@ function tool(patch: Partial<ToolDefinition> = {}, n = 1): ToolDefinition {
     icon: "braces",
     keywords: ["thing"],
     seo: {
-      title: `Tool ${n}: does a thing | KeptLocal`,
+      title: `Tool ${n}: does a thing | QuietBench`,
       description: `Tool ${n} does a thing in your browser, privately, with nothing uploaded. Free, no sign-up, works on any device.`,
       h1: `Tool ${n}`,
       faqs: [

@@ -3,16 +3,16 @@
 | | |
 |---|---|
 | **Last updated** | 2026-11-03 (renamed from Sprigkit, D-15) |
-| **Status** | Approved with the visual direction (M2, 2026-10-13). Trademark search for "KeptLocal" is still open (D-15, R-6) |
+| **Status** | Approved with the visual direction (M2, 2026-10-13). Trademark search for "QuietBench" is still open (D-15, R-6) |
 | **Related** | [design-system.md](design-system.md) · [content-voice-ux-copy.md](content-voice-ux-copy.md) · [risks-and-decisions.md](../06-delivery/risks-and-decisions.md) (D-5, D-15) |
 
 ## 1. Name
 
-**KeptLocal** (D-15, replacing Sprigkit). Files are *kept local*: everything runs on the user's device. Written as one word with two capitals, K and L. Never "Keptlocal", "Kept Local" or "keptlocal" in prose (lowercase only in the domain `keptlocal.app` and in code).
+**QuietBench** (D-15, replacing Sprigkit). A workbench of tools that works *quietly*: nothing goes online, nothing is sent. Written as one word with two capitals, Q and B. Never "Quietbench", "Quiet Bench" or "quietbench" in prose (lowercase only in the address `quietbench.pages.dev`, later `quietbench.app`, and in code).
 
 ## 2. Personality
 
-From the art direction "precision instrument" (design-system §1): **calm, exact, confident, tactile, honest.** KeptLocal sounds like a well-made tool, not a startup. It does not shout, hype or use exclamation marks.
+From the art direction "precision instrument" (design-system §1): **calm, exact, confident, tactile, honest.** QuietBench sounds like a well-made tool, not a startup. It does not shout, hype or use exclamation marks.
 
 ## 3. Tagline and positioning line
 
@@ -28,15 +28,15 @@ Final homepage headline is written in Phase 7 ([content-voice-ux-copy.md](conten
 
 ### 4.1 Mark
 
-**The K that keeps** (D-15, replacing the Sprigkit sprig): a capital K, the first letter of KeptLocal, whose two arms close around a solid dot, the user's data, holding it in place. It is drawn on the 24px Lucide grid with the same 1.5px round-cap stroke as the interface icons, so the logo belongs to the same family as every icon on the page (design-system §6). Geometry: stem `M6.5 4v16`; arms `M17.5 4.5 9.25 12l8.25 7.5`, meeting left of centre; dot `r 2.4` at (15.5, 12), between the arms. Unlike a padlock, shield or keyhole, the shape belongs to the name, not to the privacy category.
+**The quiet bench** (D-15, replacing the Sprigkit sprig): a small workbench, a top and two legs, with a solid dot resting on it: the user's data, staying where it is put. It is drawn on the 24px Lucide grid with the same 1.5px round-cap stroke as the interface icons, so the logo belongs to the same family as every icon on the page (design-system §6). Geometry: top `M3.75 13.25h16.5`; legs `M6.5 13.25v6` and `M17.5 13.25v6`; dot `r 2.6` at (12, 9.25), just above the top. Unlike a padlock, shield or keyhole, the shape belongs to the name, not to the privacy category.
 
 - The **dot is the only accent-coloured element** (`--accent`): it echoes the "one accent" rule and the "signal" in the UI.
-- The K uses `currentColor` (`--fg`), so the mark works in both themes.
+- The bench uses `currentColor` (`--fg`), so the mark works in both themes.
 - Source: `LogoMark` in `src/components/brand/Logo.tsx`.
 
 ### 4.2 Wordmark
 
-"KeptLocal" set in **Geist Sans**, weight 600, at `text-h3` with tight tracking. It is live text, not outlines, so it stays sharp, translatable and accessible. Mark and wordmark sit 8px apart (`Logo` component).
+"QuietBench" set in **Geist Sans**, weight 600, at `text-h3` with tight tracking. It is live text, not outlines, so it stays sharp, translatable and accessible. Mark and wordmark sit 8px apart (`Logo` component).
 
 ### 4.3 App icon and favicon
 
@@ -57,7 +57,7 @@ Colours in the icon files are the hex equivalents of the tokens: ink `#1e1a15` (
 
 - Minimum size: mark 16px; mark + wordmark 96px wide.
 - Clear space: at least the dot's diameter on every side.
-- Do not recolour the K, move the dot out from between its arms, add gradients, outlines, shadows or animate the mark.
+- Do not recolour the bench, move the dot off it, add gradients, outlines, shadows or animate the mark.
 - Do not place the mark on the accent colour (the dot disappears).
 
 ## 5. Licensing
@@ -66,5 +66,5 @@ The mark, wordmark styling and icons are **own work**. The wordmark uses Geist S
 
 ## 6. Open items
 
-- [ ] Owner trademark search for "KEPTLOCAL" (classes 9 and 42) before buying the domain (D-15, R-6). "Sprigkit" was dropped after its search found SPRIG (software). Ondevo was dropped because `ondevo.com` is an active business. If KeptLocal conflicts too, the mark can stay; only the wordmark changes.
+- [ ] Owner trademark search for "QUIETBENCH" (classes 9 and 42) before buying the domain (D-15, R-6). "Sprigkit" was dropped after its search found SPRIG (software). Ondevo and KeptLocal were dropped because their `.com` sites are an active business and a direct competitor. If QuietBench conflicts too, the mark can stay; only the wordmark changes.
 - [x] Owner approval of the mark on the preview deployment (P2-T18, 2026-10-13).

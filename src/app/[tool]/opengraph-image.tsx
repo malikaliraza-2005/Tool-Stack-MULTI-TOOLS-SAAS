@@ -8,7 +8,7 @@ import { CATEGORIES, getTool, publishedTools } from "@/tools/registry";
 // emitted without an extension; public/_headers serves it as image/png.
 export const size = OG_SIZE;
 export const contentType = "image/png";
-export const alt = "KeptLocal tool";
+export const alt = "QuietBench tool";
 
 export function generateStaticParams() {
   return publishedTools().map((tool) => ({ tool: tool.slug }));
@@ -52,11 +52,12 @@ export default async function Image({ params }: { params: Promise<{ tool: string
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <path d="M6.5 4v16" />
-          <path d="M17.5 4.5 9.25 12l8.25 7.5" />
-          <circle cx="15.5" cy="12" r="2.4" fill={c.accent} stroke={c.accent} />
+          <path d="M3.75 13.25h16.5" />
+          <path d="M6.5 13.25v6" />
+          <path d="M17.5 13.25v6" />
+          <circle cx="12" cy="9.25" r="2.6" fill={c.accent} stroke={c.accent} />
         </svg>
-        <span style={{ fontSize: 36, fontWeight: 600, letterSpacing: -0.5 }}>KeptLocal</span>
+        <span style={{ fontSize: 36, fontWeight: 600, letterSpacing: -0.5 }}>QuietBench</span>
         <span style={{ fontSize: 28, color: c["fg-muted"], marginLeft: 8 }}>
           {CATEGORIES[tool.category].name}
         </span>

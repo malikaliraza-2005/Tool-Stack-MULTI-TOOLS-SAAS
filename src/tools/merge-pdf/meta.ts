@@ -11,14 +11,14 @@ export const meta: ToolDefinition = {
   icon: "files",
   keywords: ["combine pdf", "join pdf", "merge pdf files", "pdf merger", "append pdf", "pdf"],
   seo: {
-    title: "Merge PDF Online: Private, No Upload | KeptLocal",
+    title: "Merge PDF Online: Private, No Upload | QuietBench",
     description:
       "Combine multiple PDF files into one in seconds. Files are processed on your device and never uploaded. Free, no sign-up.",
     h1: "Merge PDF files",
     faqs: [
       {
         q: "Are my PDF files uploaded to a server?",
-        a: "No. KeptLocal merges your PDFs inside your browser, on your device. The files are never sent anywhere, and the site’s security policy blocks the page from sending data to other servers. You can check this in your browser’s developer tools: open the Network tab and merge your files.",
+        a: "No. QuietBench merges your PDFs inside your browser, on your device. The files are never sent anywhere, and the site’s security policy blocks the page from sending data to other servers. You can check this in your browser’s developer tools: open the Network tab and merge your files.",
       },
       {
         q: "Can I merge password-protected PDFs?",

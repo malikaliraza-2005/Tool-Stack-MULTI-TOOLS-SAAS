@@ -50,7 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           hidden
           className="border-b border-warning bg-warning-soft px-4 py-3 text-center text-small text-fg"
         >
-          KeptLocal’s tools couldn’t start in this browser, so buttons won’t respond. Update your
+          QuietBench’s tools couldn’t start in this browser, so buttons won’t respond. Update your
           browser, or open this page in a current version of Chrome, Safari, Firefox or Edge.
         </div>
         <Providers>

@@ -148,7 +148,7 @@ export async function textImage(text: string, size: number): Promise<Blob> {
 }
 
 // Saved signature: stored only after the user opts in (spec §3.6), as a PNG
-// data URL in localStorage. It is the one piece of user content KeptLocal
+// data URL in localStorage. It is the one piece of user content QuietBench
 // stores, so it bypasses the options-only storage helper on purpose.
 
 const SAVED_KEY = storageKey("sign-pdf:signature");

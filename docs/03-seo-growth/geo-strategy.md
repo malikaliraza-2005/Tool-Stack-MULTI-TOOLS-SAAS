@@ -22,7 +22,7 @@
 1. **SEO fundamentals** (seo-strategy.md): one intent per page, the tool server-rendered in the HTML, unique titles and descriptions, canonical URLs, sitemap, fast pages.
 2. **Answer-first, factual writing.** Tool pages and guides say plainly what happens, with real numbers and names (content-voice-ux-copy §1). Each tool page answers the questions people ask about it (keyword-research §2), including "is it uploaded" and "does it work offline".
 3. **Consistent product facts** everywhere a model might read them: 19 tools, processing in the browser, no accounts, cookies, ads or analytics, offline after the first visit, visual (not certified) signatures. The same facts are on the homepage, About, Privacy, Terms, every tool page's privacy section and `llms.txt`. Changing one means changing all (privacy-policy.md §2).
-4. **Original information.** Facts only KeptLocal can state (our limits, behaviour, verified by the code) and, next, our own measurements (content-strategy §2, web formats guide).
+4. **Original information.** Facts only QuietBench can state (our limits, behaviour, verified by the code) and, next, our own measurements (content-strategy §2, web formats guide).
 5. **Cited sources** in guides, visible on the page and in `Article.citation`.
 6. **Structured data that mirrors the page**: BreadcrumbList everywhere; WebApplication, FAQPage, CollectionPage, Article, WebSite and Organization where they fit. Checked on every page by `e2e/structured-data.spec.ts` (P8-T14).
 7. **Crawlers allowed** (D-7): `robots.txt` allows all user agents, including AI crawlers; previews are `noindex`.

@@ -35,7 +35,7 @@ Make every page genuinely useful and search-ready: final supporting content and 
 - [x] **P8-T05** Hub page content (`/pdf-tools`, `/image-tools`, `/developer-tools`).
 
 ### Trust & legal
-- [x] **P8-T06** About page (G-10): what KeptLocal is, how it works, who runs it, contact method; consistent product facts.
+- [x] **P8-T06** About page (G-10): what QuietBench is, how it works, who runs it, contact method; consistent product facts.
 - [x] **P8-T07** Write `07-legal/privacy-policy.md` → Privacy page (G-9): local processing, analytics used (exact provider), no cookies/ads at launch, how to verify with DevTools.
 - [x] **P8-T08** Write `07-legal/terms-of-use.md` → Terms page (incl. "visual signature, not certified" and "provided as is").
 - [x] **P8-T09** Licenses page generated from the license report (dependencies-licenses §7).
@@ -43,7 +43,7 @@ Make every page genuinely useful and search-ready: final supporting content and 
 ### Guides
 - [x] **P8-T10** Write `03-seo-growth/content-strategy.md` (topics, mapping to tools, review process, cadence).
 - [x] **P8-T11** Build `/guides` index and guide template (Article JSON-LD, author, date, sources).
-- [x] **P8-T12** Write 3–5 guides (e.g. removing location data from photos; what's inside a JWT; HEIC vs JPG; web image formats compared using KeptLocal's own measurements). Each cites sources and is reviewed for accuracy.
+- [x] **P8-T12** Write 3–5 guides (e.g. removing location data from photos; what's inside a JWT; HEIC vs JPG; web image formats compared using QuietBench's own measurements). Each cites sources and is reviewed for accuracy.
 
 ### GEO & structured data
 - [x] **P8-T13** Write `03-seo-growth/geo-strategy.md` (what we do and what we don't claim works).

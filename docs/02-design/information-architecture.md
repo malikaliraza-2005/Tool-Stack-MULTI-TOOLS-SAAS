@@ -42,7 +42,7 @@
 | Header (< `md`) | Logo, search icon, theme menu, **Menu** button opening a side sheet with the category links (with one-line descriptions) and the site links | `MobileNav` |
 | Command palette | Empty query: Favorites, Recent, one group per category, Go to (Home, hubs), Actions (theme). With a query: matching tools (Fuse.js over name, synonyms and accepted file types), then matching Go to and Actions | `CommandPalette`, `/search-index.json` |
 | Category hubs | Breadcrumbs, intro, every tool of the category, "Which tool do I need?", guides (real guides first, then links to tools' "How to use" sections), the other hubs | `CategoryHub` |
-| Footer | Tagline; **Tools:** PDF tools, Image tools, Developer tools; **KeptLocal:** Guides, About, Privacy, Terms, Licenses; © year | `Footer` |
+| Footer | Tagline; **Tools:** PDF tools, Image tools, Developer tools; **QuietBench:** Guides, About, Privacy, Terms, Licenses; © year | `Footer` |
 | Breadcrumbs | Home › Category hub › Tool, on tool and hub pages | `Breadcrumbs` (JSON-LD added with SEO in Phase 3/8) |
 
 The current section is marked with `aria-current="page"` and the accent underline (the accent's "active navigation" role).

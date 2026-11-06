@@ -11,7 +11,7 @@ import type { GuideMeta } from "./types";
 
 export const meta: GuideMeta = {
   slug: "heic-vs-jpg",
-  title: "HEIC vs JPG: What’s the Difference, How to Convert | KeptLocal",
+  title: "HEIC vs JPG: What’s the Difference, How to Convert | QuietBench",
   description:
     "Why iPhones save photos as HEIC, where HEIC files don’t open, how to make an iPhone save JPG instead, and how to convert HEIC to JPG without uploading.",
   h1: "HEIC vs JPG: what’s the difference, and how do you convert?",

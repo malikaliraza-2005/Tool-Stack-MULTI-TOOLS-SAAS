@@ -1,9 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <!-- KeptLocal app icon (brand-identity.md). Ink tile = --fg, paper = --bg, dot = dark-theme --accent. -->
+  <!-- QuietBench app icon (brand-identity.md). Ink tile = --fg, paper = --bg, dot = dark-theme --accent. -->
   <rect width="24" height="24" rx="5.5" fill="#1e1a15"/>
   <g transform="translate(2.4 2.4) scale(0.8)" fill="none" stroke="#fbfaf7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M6.5 4v16"/>
-    <path d="M17.5 4.5 9.25 12l8.25 7.5"/>
-    <circle cx="15.5" cy="12" r="2.4" fill="#f77e35" stroke="#f77e35"/>
+    <path d="M3.75 13.25h16.5"/>
+    <path d="M6.5 13.25v6"/>
+    <path d="M17.5 13.25v6"/>
+    <circle cx="12" cy="9.25" r="2.6" fill="#f77e35" stroke="#f77e35"/>
   </g>
 </svg>

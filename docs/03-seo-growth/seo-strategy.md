@@ -6,7 +6,7 @@
 | **Status** | Technical SEO as built. Per-page targets, titles, outlines and FAQs: [page-seo-specs.md](page-seo-specs.md) (Phase 8) |
 | **Related** | [page-seo-specs.md](page-seo-specs.md) · [keyword-research.md](keyword-research.md) · [tool-registry.md](../04-architecture/tool-registry.md) · [architecture.md §12](../04-architecture/architecture.md#12-seo-generation) · [information-architecture.md](../02-design/information-architecture.md) |
 
-KeptLocal wins search by being the best page for one task: a fast tool above the fold, honest privacy, and clear supporting content. Everything technical is generated from the tool registry, so every tool page gets the same correct treatment.
+QuietBench wins search by being the best page for one task: a fast tool above the fold, honest privacy, and clear supporting content. Everything technical is generated from the tool registry, so every tool page gets the same correct treatment.
 
 ---
 
@@ -22,7 +22,7 @@ KeptLocal wins search by being the best page for one task: a fast tool above the
 | Element | Source | Implementation |
 |---|---|---|
 | URL | `slug` | `/<slug>`, flat, no trailing slash; one static HTML file per published tool (`generateStaticParams`, `dynamicParams = false`) |
-| `<title>` | `seo.title` (≤ 65 chars, unique) | `title.absolute`, so the layout's "· KeptLocal" template is not added twice |
+| `<title>` | `seo.title` (≤ 65 chars, unique) | `title.absolute`, so the layout's "· QuietBench" template is not added twice |
 | Meta description | `seo.description` (70–160 chars, unique) | `generateMetadata` → `toolMetadata()` in `src/lib/seo.ts` |
 | Canonical | `SITE_URL` + `/<slug>` | `alternates.canonical`; `SITE_URL` from `NEXT_PUBLIC_SITE_URL` |
 | Open Graph / Twitter | title, description, URL, site name, locale | `summary_large_image` card |

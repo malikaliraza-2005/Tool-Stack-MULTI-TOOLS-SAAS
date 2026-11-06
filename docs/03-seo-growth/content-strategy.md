@@ -6,7 +6,7 @@
 | **Status** | Guides system built (P8-T11); 3 guides published (P8-T12) |
 | **Related** | [keyword-research.md](keyword-research.md) · [page-seo-specs.md](page-seo-specs.md) · [geo-strategy.md](geo-strategy.md) · [content-voice-ux-copy.md](../02-design/content-voice-ux-copy.md) |
 
-KeptLocal's content has one job: help someone finish the task they searched for. Tool pages carry the "how to use this tool" content; **guides** answer the questions around a task that a tool page shouldn't, such as device settings, formats and safety. Every guide leads to a tool, and every claim in it is either checked against our code or cited.
+QuietBench's content has one job: help someone finish the task they searched for. Tool pages carry the "how to use this tool" content; **guides** answer the questions around a task that a tool page shouldn't, such as device settings, formats and safety. Every guide leads to a tool, and every claim in it is either checked against our code or cited.
 
 ---
 
@@ -34,7 +34,7 @@ Published (P8-T12), each from keyword-research findings:
 
 Backlog, in order (each needs a matching tool and sources):
 
-1. **Web image formats compared** (JPG, PNG, WebP, AVIF) with KeptLocal's own measurements: same photos through Compress Image, sizes and encode times recorded with device and date. Original data is the strongest content we can offer (geo-strategy §2).
+1. **Web image formats compared** (JPG, PNG, WebP, AVIF) with QuietBench's own measurements: same photos through Compress Image, sizes and encode times recorded with device and date. Original data is the strongest content we can offer (geo-strategy §2).
 2. **How to verify a file checksum** (hash-generator): "verify checksum", "sha256 decrypt" misconceptions (§3.3).
 3. **Is it safe to merge, sign or convert PDFs online?** (merge-pdf, sign-pdf): the "is … safe" cluster (§2.1), with how to check any site in DevTools.
 4. **How to compress an image to a target size** (compress-image): the size-target cluster (§2.5), answered honestly with the quality slider and Longest side, since there is no target-size mode.
@@ -52,7 +52,7 @@ Promote a topic only when Search Console shows impressions for it after launch (
 
 Each guide, before publishing:
 
-1. **Facts from code** (KeptLocal behaviour, labels, limits) are checked against the code and the tool's reviewed content, never the spec alone.
+1. **Facts from code** (QuietBench behaviour, labels, limits) are checked against the code and the tool's reviewed content, never the spec alone.
 2. **Facts from outside** (device steps, standards, browser support) come from a primary source: the vendor's own help page, the RFC or standard, or a dataset such as Can I use. Cite it in `sources`. If no primary source confirms a claim, cut it or soften it (Phase 8 cut the Windows "Remove Properties" steps: only forum threads, with reports of it failing on location data).
 3. **Examples are real:** tokens are generated and signed, timestamps converted, outputs produced by the tool.
 4. **Voice:** content-voice-ux-copy.md. No hype, no "100% secure", no claims the CSP and code don't guarantee.

@@ -24,7 +24,7 @@ export function ServiceWorker() {
       if (cancelled) return;
       const sw = new Serwist(SW_URL, { scope: "/", type: "classic" });
       sw.addEventListener("waiting", () => {
-        notify.info("A new version of KeptLocal is available", {
+        notify.info("A new version of QuietBench is available", {
           description:
             "Refresh to update. Finish what you’re doing first: refreshing clears the page.",
           persistent: true,
