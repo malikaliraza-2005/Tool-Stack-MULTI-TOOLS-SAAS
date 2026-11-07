@@ -1,6 +1,7 @@
 // Metadata and JSON-LD generated from the registry (architecture §12).
 // Everything here is built from registry data, never from user content.
 
+import { OG_SIZE } from "@/lib/og";
 import type { Metadata } from "next";
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from "@/config/site";
 import type { GuideMeta } from "@/guides/types";
@@ -17,6 +18,22 @@ export function absoluteUrl(path: string): string {
 
 export function toolPath(tool: Pick<ToolDefinition, "slug">): string {
   return `/${tool.slug}`;
+}
+
+/**
+ * The shared Open Graph image (app/opengraph-image.tsx) for pages without their
+ * own. Pages that set `openGraph` don't inherit the root file, so it is explicit.
+ */
+function sharedOgImage() {
+  return [
+    {
+      url: absoluteUrl("/opengraph-image"),
+      width: OG_SIZE.width,
+      height: OG_SIZE.height,
+      type: "image/png",
+      alt: "OfflineBench: private PDF, image and developer tools",
+    },
+  ];
 }
 
 /** Title, description, canonical, Open Graph and Twitter card for a tool page. */
@@ -114,8 +131,16 @@ export function homeMetadata(seo: { title: string; description: string }): Metad
     title: { absolute: title },
     description,
     alternates: { canonical: url },
-    openGraph: { type: "website", url, title, description, siteName: SITE_NAME, locale: "en_US" },
-    twitter: { card: "summary", title, description },
+    openGraph: {
+      type: "website",
+      url,
+      title,
+      description,
+      siteName: SITE_NAME,
+      locale: "en_US",
+      images: sharedOgImage(),
+    },
+    twitter: { card: "summary_large_image", title, description, images: sharedOgImage() },
   };
 }
 
@@ -156,8 +181,16 @@ export function sitePageMetadata(page: SitePageSeo): Metadata {
     title: { absolute: title },
     description,
     alternates: { canonical: url },
-    openGraph: { type: "website", url, title, description, siteName: SITE_NAME, locale: "en_US" },
-    twitter: { card: "summary", title, description },
+    openGraph: {
+      type: "website",
+      url,
+      title,
+      description,
+      siteName: SITE_NAME,
+      locale: "en_US",
+      images: sharedOgImage(),
+    },
+    twitter: { card: "summary_large_image", title, description, images: sharedOgImage() },
   };
 }
 
@@ -213,8 +246,9 @@ export function guideMetadata(guide: GuideMeta): Metadata {
       publishedTime: guide.published,
       modifiedTime: guide.updated,
       authors: [guide.author],
+      images: sharedOgImage(),
     },
-    twitter: { card: "summary", title, description },
+    twitter: { card: "summary_large_image", title, description, images: sharedOgImage() },
   };
 }
 
@@ -240,6 +274,8 @@ export function guideJsonLd(guide: GuideMeta): JsonLdNode {
     description: guide.description,
     url,
     mainEntityOfPage: url,
+    // The shared Open Graph image (app/opengraph-image.tsx).
+    image: absoluteUrl("/opengraph-image"),
     datePublished: guide.published,
     dateModified: guide.updated,
     author: { "@type": "Person", name: guide.author, url: absoluteUrl("/about") },
@@ -290,8 +326,16 @@ export function hubMetadata(category: ToolCategory): Metadata {
     title: { absolute: title },
     description,
     alternates: { canonical: url },
-    openGraph: { type: "website", url, title, description, siteName: SITE_NAME, locale: "en_US" },
-    twitter: { card: "summary", title, description },
+    openGraph: {
+      type: "website",
+      url,
+      title,
+      description,
+      siteName: SITE_NAME,
+      locale: "en_US",
+      images: sharedOgImage(),
+    },
+    twitter: { card: "summary_large_image", title, description, images: sharedOgImage() },
   };
 }
 

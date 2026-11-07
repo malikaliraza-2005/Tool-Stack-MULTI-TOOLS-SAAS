@@ -26,7 +26,7 @@ OfflineBench wins search by being the best page for one task: a fast tool above 
 | Meta description | `seo.description` (70–160 chars, unique) | `generateMetadata` → `toolMetadata()` in `src/lib/seo.ts` |
 | Canonical | `SITE_URL` + `/<slug>` | `alternates.canonical`; `SITE_URL` from `NEXT_PUBLIC_SITE_URL` |
 | Open Graph / Twitter | title, description, URL, site name, locale | `summary_large_image` card |
-| OG image | generated per tool | `app/[tool]/opengraph-image.tsx`: 1200×630 PNG at build time (brand mark, tool name, tagline, "0 bytes uploaded"); served as `image/png` via `public/_headers` |
+| OG image | generated per tool, one shared image for every other page | `app/[tool]/opengraph-image.tsx`: 1200×630 PNG at build time (brand mark, tool name, tagline, "0 bytes uploaded"). `app/opengraph-image.tsx`: the same card for home, hubs, site pages and guides, set by the metadata helpers in `src/lib/seo.ts` and used as the guides' Article `image`. Served as `image/png` via `public/_headers` |
 | H1 + tagline | `seo.h1`, `tagline` | `ToolPage` |
 | Breadcrumbs | category hub | Visible breadcrumbs + `BreadcrumbList` |
 | JSON-LD | registry | One `@graph`: `BreadcrumbList`, `WebApplication` (free offer, `operatingSystem: "Any (web browser)"`), `FAQPage` (only when FAQs exist) |
