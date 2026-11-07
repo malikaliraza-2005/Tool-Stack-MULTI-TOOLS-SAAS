@@ -4,6 +4,28 @@ import { expect, test } from "./fixtures";
 // The origin comes from NEXT_PUBLIC_SITE_URL at build time, so tests compare
 // against the canonical URL instead of hard-coding it.
 
+test("every sitemap page has a large social card with a PNG image", async ({ request }) => {
+  const xml = await (await request.get("/sitemap.xml")).text();
+  const paths = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]!).pathname);
+  expect(paths.length).toBeGreaterThan(0);
+  const missing: string[] = [];
+  for (const path of paths) {
+    const html = await (await request.get(path)).text();
+    const image = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+    const card = html.match(/<meta name="twitter:card" content="([^"]+)"/)?.[1];
+    if (!image || card !== "summary_large_image") {
+      missing.push(`${path}: image ${image ?? "none"}, card ${card ?? "none"}`);
+      continue;
+    }
+    const url = new URL(image);
+    const res = await request.get(url.pathname + url.search);
+    if (res.status() !== 200 || res.headers()["content-type"] !== "image/png") {
+      missing.push(`${path}: ${url.pathname} → ${res.status()} ${res.headers()["content-type"]}`);
+    }
+  }
+  expect(missing).toEqual([]);
+});
+
 // `short`: the shortName the visible breadcrumb uses, when the tool has one.
 const TOOLS: { slug: string; name: string; short?: string; hub: string }[] = [
   { slug: "merge-pdf", name: "Merge PDF", hub: "PDF tools" },

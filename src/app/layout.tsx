@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Providers } from "@/components/layout/Providers";
 import { SITE_NAME, SITE_URL } from "@/config/site";
+import { GeistMono, GeistSans } from "@/lib/fonts";
 import { STARTUP_NOTICE_ID, startupCheckScript } from "@/lib/startup-check";
 import { THEME_BG, themeInitScript } from "@/lib/theme";
 import "@/styles/globals.css";

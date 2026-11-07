@@ -101,7 +101,7 @@ Measured 2026-11-02 with `lhci collect` on a quiet machine (3 runs per URL; medi
 Findings:
 - **LCP is simulated JavaScript time, not a late paint.** In the observed (unthrottled) trace, FCP and LCP are both ≈ 0.3 s: the H1 is in the static HTML and paints on the first frame. Lighthouse's simulated slow phone attributes ≈ 0.8 s of script evaluation (mostly the Next.js runtime chunk) to the LCP, which puts it at 2.8–3.9 s. The 2.5 s target can't be met without shipping less framework code.
 - **Initial JS** (from the built HTML, gzipped): 214 KB on every page before page code, of which ≈ 132 KB is Next.js and React. The shell adds Radix Tooltip with Popper (≈ 20 KB), Motion (≈ 13 KB) and the theme menu (≈ 6 KB). The polyfills chunk (39 KB) is `noModule` and never loads in supported browsers. Lighthouse's larger figures include the tool UI chunk and `<Link>` prefetches loaded after `load`.
-- **Not done, and why:** loading tooltips or the theme menu on intent would swap the button under the user's focus (focus loss); ≈ 25 KB isn't worth that risk. Geist fonts are not preloaded; with `font-display: swap` and size-adjusted fallbacks they don't affect LCP or CLS.
+- **Not done, and why:** loading tooltips or the theme menu on intent would swap the button under the user's focus (focus loss); ≈ 25 KB isn't worth that risk. Fonts: §2.4.
 - **Interaction latency (P9-T10)**, `npm run e2e:inp` (Event Timing API, Chromium, CPU slowed 4×, one worker; worst interaction of 3 runs):
 
   | Interaction | Before | After |
@@ -113,6 +113,25 @@ Findings:
 
   Two fixes: (1) the sliding indicators of `SegmentedControl` and `Tabs` are memoized, because a Motion `layoutId` element measures the page (`measureScroll`) every time it renders, and tool UIs re-render on every keystroke; (2) `CodeEditor`'s `setValue` replaces only the changed span, so the output editor and its parser update incrementally instead of re-parsing the whole document. Moving JSON formatting to the worker for inputs over 32 KB made no difference and was reverted. Typing inside one very long line stays CodeMirror's slow case (it redraws the line on every key); formatted JSON is at the 200 ms budget on this lab setup. The full E2E suite only logs these timings (parallel workers distort them).
 - Field INP and real mid-range-phone traces remain P9-T11.
+
+## 2.4 Font loading (P9-T03, owner decision 2026-11-07)
+
+Geist uses `font-display: optional` (`src/lib/fonts.ts`), with both files preloaded. The `geist` package fixes `swap`, so the same files are declared directly.
+
+**Why:** with `swap`, a late font re-wraps the H1 or tagline on phones and pushes the workspace below it. Measured CLS was about 0.21 against the 0.1 budget. It depends on the page and width (`/unix-timestamp-converter` and `/base64-encode-decode` at 412 px, `/url-encode-decode` at 390 px). The size-adjusted fallback doesn't prevent it, because individual letter widths still differ.
+
+**Comparison** (Chromium, CPU slowed 4×, empty cache, 3 runs of 5 pages per connection; `swap` on production, `optional` locally with the preload tags added by hand):
+
+| Connection | `swap` + preload: worst CLS | `optional` + preload: worst CLS | Geist on first page with `optional` |
+|---|---|---|---|
+| No throttling | 0 | 0 | 15 of 15 |
+| 4G | 0 | 0 | 14 of 15 |
+| Slow 4G | 0.209 | 0 | 6 of 15 |
+| Fast 3G | 0.213 | 0 | 5 of 15 |
+
+**Trade-off accepted:** on a slow first visit the first page can keep the fallback; the next full page load used Geist in the case tested. A late font (1.2 s) across all 31 pages at 7 phone widths gave a worst CLS of 0.007 (217 loads).
+
+**Measuring on Windows:** a local Windows build leaves out the font preload tags (Next's font manifest is empty there), while Cloudflare's Linux build includes them. Local font timing is therefore pessimistic; check font behaviour on a preview.
 
 ## 3. Rules that keep us inside the budgets
 
