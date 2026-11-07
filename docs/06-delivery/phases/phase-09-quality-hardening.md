@@ -29,6 +29,7 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 - [ ] **P9-T02** Large-file and memory testing on mobile; confirm limits and error messages. From the P8-T04 content review: registry `limits` are not enforced on pasted text in jwt-decoder (64 KB / 1 MB) and regex-tester (1 MB / 10 MB), and json-formatter and base64-encode-decode enforce 50 MB only on opened files. Enforce them or change the registry. Going over a file-count limit (e.g. 101 files in merge-pdf) shows a byte-size message (`src/lib/files/limits.ts`); give it its own message.
   - *Done (code):* `checkTextLimits` enforces the registry hard limit on pasted text in all four tools (UTF-8 bytes); `maxFiles` now has its own `tooManyFiles` message. Mobile large-file and memory testing still to do.
 - [ ] **P9-T03** Fix all P0/P1 bugs; log the rest.
+  - *Progress (2026-11-07):* fixed the layout shift from the font swap on slow connections (CLS about 0.21 on `/unix-timestamp-converter` and `/base64-encode-decode`) with `font-display: optional` ([performance.md §2.4](../../05-quality/performance.md)). Logged, not fixed: the homepage hero stays white during drag-over because its soft accent fill is missing.
 
 ### Accessibility
 - [x] **P9-T04** axe on every page (both themes): zero violations.
@@ -53,9 +54,10 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
   - *Progress:* fixed the 404 copy ("hasn't been built yet" no longer applies with all 19 tools live; content-voice-ux-copy and ui-ux-specification updated). The owner's second read remains.
 
 ### Security & privacy
-- [ ] **P9-T13** Security review: CSP verified on production headers; no `dangerouslySetInnerHTML` with user content; malicious file fixtures (malformed PDF, decompression bombs, huge dimensions) handled safely.
+- [x] **P9-T13** Security review: CSP verified on production headers; no `dangerouslySetInnerHTML` with user content; malicious file fixtures (malformed PDF, decompression bombs, huge dimensions) handled safely.
   - *Progress:* static review: `dangerouslySetInnerHTML` only for the theme and startup scripts (constants) and JSON-LD (escaped by `serializeJsonLd`). Found and fixed: jpg-to-pdf didn't apply the pixel limit, so a small PNG declaring a huge image would be decoded; it now uses `checkPixels` with `MAX_PIXELS` (moved to `src/lib/image/pipeline.ts`), with unit and E2E tests. Hostile PDFs (`src/lib/pdf/hostile.test.ts`): a self-containing page tree fails in 16 ms as damaged, a `/Count` of a billion is ignored, a 200-inch page loads (rendering limits apply), a 512 MB deflate bomb is copied without being inflated, garbage after the header is damaged. Still to do: CSP on production headers (needs the deployment).
   - *Progress (2026-11-06):* headers checked on the live preview (`rename-offlinebench.sprigkit.pages.dev`): Content-Security-Policy, Referrer-Policy, X-Content-Type-Options, Permissions-Policy and Cross-Origin-Opener-Policy present; 404 returns 404; `/merge-pdf.html` redirects to `/merge-pdf`; `/_headers` is not served; OG images are `image/png`. Repeat on the production domain at launch.
+  - *Done (2026-11-07):* the same headers checked on production (`offlinebench.pages.dev`), and a browser run over all 31 sitemap pages found no CSP violations, page errors or cross-origin requests.
 - [x] **P9-T14** Privacy verification: no-network E2E for all 19 tools; localStorage contains no user content; analytics sends no content.
   - *Progress:* no-network already runs on every E2E test (`noNetwork` fixture). New `noStoredContent` fixture fails any test that leaves a storage key outside the allow-list (theme, tool options, favorites, recent, opt-in signature); stored option schemas hold no content (only flags, time zone, colour). Analytics: none at launch (P9-T19), so nothing to send.
 - [x] **P9-T15** `npm audit` clean (or documented exceptions); license gate green; Licenses page current. Owner decides on `pako` (Zlib): add Zlib to the allow-list or keep the named exception ([dependencies-licenses.md §3.1](../../04-architecture/dependencies-licenses.md)).
@@ -64,9 +66,11 @@ All gates passing; issues fixed; launch checklist and analytics plan written.
 ### SEO
 - [ ] **P9-T16** Crawl the preview (free crawler or custom script): no broken links, correct canonicals, no orphan pages, sitemap complete. Run Google's Rich Results Test and the Schema.org validator on one page of each type (home, hub, tool, site page, guide index, guide), deferred from P3-T07 and P8-T14; `e2e/structured-data.spec.ts` already checks every page locally.
   - *Progress:* `e2e/crawl.spec.ts` crawls the local build from `/`: no broken internal links, canonicals match, no orphan pages. The crawl of the preview and the Rich Results Test remain.
-- [ ] **P9-T17** Verify production build will be indexable (no stray `noindex`) and previews are not.
+  - *Progress (2026-11-07):* preview and production crawled: 31 of 31 sitemap pages, no broken links, orphans, canonical problems or duplicate titles and descriptions; all 9 external links work. Owner ran the Rich Results Test on one page of each type: all valid. Its non-critical notes: software apps have no ratings (leave them: ratings are never invented); guides had no Article `image` (added, re-test on the preview). The Schema.org validator remains.
+- [x] **P9-T17** Verify production build will be indexable (no stray `noindex`) and previews are not.
   - *Progress:* only 404, `_not-found` and `_gallery` carry `noindex`; `*.pages.dev` gets `X-Robots-Tag: noindex`. A production build (`CF_PAGES_BRANCH=main`) without an `https://` `NEXT_PUBLIC_SITE_URL` now fails (`next.config.ts`). Check headers on production at launch.
   - *Progress (2026-11-06):* the preview host sends `X-Robots-Tag: noindex` as intended.
+  - *Done (2026-11-07):* no `noindex` header or meta tag on production's public pages; only `_gallery` and the 404 page carry one.
 
 ### Launch preparation
 - [ ] **P9-T18** Write `06-delivery/launch-checklist.md` and do a dry run.
@@ -81,7 +85,7 @@ launch-checklist.md · analytics-monitoring.md · browser-device-support.md (fin
 - [ ] All tools pass the Definition of Done on the full device matrix.
 - [ ] Zero axe violations; manual keyboard and screen-reader passes complete.
 - [ ] Lighthouse budgets enforced and passing on every page type.
-- [ ] No-network test passes for all tools; CSP verified in production.
+- [x] No-network test passes for all tools; CSP verified in production.
 - [ ] No known P0/P1 bugs.
 - [ ] Launch checklist dry run complete.
 

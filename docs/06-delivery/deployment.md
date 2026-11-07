@@ -28,7 +28,7 @@ Needs the Cloudflare dashboard and a pushed GitHub repository.
 
    | Setting | Value |
    |---|---|
-   | Project name | `offlinebench` (gives `sprigkit.pages.dev`) |
+   | Project name | `offlinebench` (gives `offlinebench.pages.dev`) |
    | Production branch | `main` |
    | Framework preset | None |
    | Build command | `npm run build` |
@@ -46,10 +46,10 @@ Needs the Cloudflare dashboard and a pushed GitHub repository.
 On a preview URL:
 
 ```
-curl -sI https://<preview>.sprigkit.pages.dev/ | grep -iE "content-security|x-robots|referrer|nosniff|permissions|cross-origin"
-curl -sI https://<preview>.sprigkit.pages.dev/does-not-exist   # expect 404
-curl -sI https://<preview>.sprigkit.pages.dev/index.html       # expect redirect to /
-curl -sI https://<preview>.sprigkit.pages.dev/_headers         # expect 404 (not served)
+curl -sI https://<preview>.offlinebench.pages.dev/ | grep -iE "content-security|x-robots|referrer|nosniff|permissions|cross-origin"
+curl -sI https://<preview>.offlinebench.pages.dev/does-not-exist   # expect 404
+curl -sI https://<preview>.offlinebench.pages.dev/index.html       # expect redirect to /
+curl -sI https://<preview>.offlinebench.pages.dev/_headers         # expect 404 (not served)
 ```
 
 Check:
