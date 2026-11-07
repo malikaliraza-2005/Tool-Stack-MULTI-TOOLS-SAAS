@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-11-01 (Phase 7: homepage, hubs, command palette search) |
+| **Last updated** | 2026-11-06 (homepage and hub motion) |
 | **Related** | [design-system.md §10](design-system.md#10-layout-patterns) · [information-architecture.md](information-architecture.md) · [tool-specifications.md](../04-architecture/tool-specifications.md) · [motion-design.md](motion-design.md) |
 
 Screen-level layouts. Component behaviour and tokens are in [design-system.md](design-system.md); tool behaviour is in [tool-specifications.md](../04-architecture/tool-specifications.md). Sections marked **Planned** are specified now and built in the phase noted.
@@ -69,6 +69,10 @@ Privacy strip · All tools (3 columns) · Popular tools (4 cards) · FAQ · foot
 
 **Entrance (P7-T08):** the subline, hero surface, privacy strip and index rise 8px and fade in (`animate-rise-in`, `--dur-standard`), 40ms apart (`stagger`). The headline isn't animated (it is the LCP element). It is CSS only, so input works from the first frame. With reduced motion there is no delay and no movement.
 
+**Signature (design-system §7.6):** once per page load, after the entrance, a file drops into the drop tile, a check appears and "Nothing is uploaded." is underlined. Below `sm` the tile is hidden, so only the divider sweep and the underline play. It stops as soon as the user focuses the search field, pastes, drags or chooses a file.
+
+**On scroll and hover:** index rows and popular cards rise in as they scroll into view. While a file is dragged over the page, the drop tile also lifts and the divider turns accent. Popular cards lift 2px on hover.
+
 ## 3b. Offline and updates (built, Phase 7)
 
 - No offline banner or install pop-up. Pages open offline after the first visit; the homepage FAQ explains what works offline and how to install.
@@ -77,7 +81,7 @@ Privacy strip · All tools (3 columns) · Popular tools (4 cards) · FAQ · foot
 
 ## 3a. Category hubs (built, Phase 7)
 
-`/pdf-tools`, `/image-tools`, `/developer-tools`: breadcrumbs (OfflineBench › PDF tools), H1 and intro with the PrivacyMeter, "6 PDF tools" as cards (icon, name, full tagline; 3 columns on `lg`), then **Guides** (4 links to tools' "How to use" sections) and **More tools** (the other hubs) side by side on `lg`.
+`/pdf-tools`, `/image-tools`, `/developer-tools`: breadcrumbs (OfflineBench › PDF tools), H1 and intro with the PrivacyMeter, "6 PDF tools" as cards (icon, name, full tagline; 3 columns on `lg`; they rise in on load with `stagger` and lift 2px on hover), then **Guides** (4 links to tools' "How to use" sections) and **More tools** (the other hubs) side by side on `lg`.
 
 ## 4. Tool page (built, Phase 3)
 

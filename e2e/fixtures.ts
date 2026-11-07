@@ -152,7 +152,12 @@ export async function expectNoA11yViolations(page: Page) {
   // switch, colors are mid-transition and axe would measure mixed themes.
   // Endless ones (spinners) are skipped. Two frames first, so transitions a
   // just-emulated color scheme starts have begun before they are collected.
+  // Items waiting to scroll into view are shown first: axe skips transparent
+  // elements, so their contrast would otherwise go unchecked.
   await page.evaluate(async () => {
+    for (const item of document.querySelectorAll('[data-reveal="pending"]')) {
+      item.removeAttribute("data-reveal");
+    }
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     await Promise.all(
       document

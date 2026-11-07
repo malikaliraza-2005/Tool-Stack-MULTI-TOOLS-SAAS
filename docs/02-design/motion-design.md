@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-14 (Phase 3: tool components) |
+| **Last updated** | 2026-11-06 (hero signature, scroll reveals, card lift) |
 | **Related** | [design-system.md §7](design-system.md#7-motion) (tokens and binding rules) · [accessibility.md](accessibility.md) |
 
 The tokens and the seven acceptance rules in design-system §7 are binding. This document records **how each interaction moves** and which technique implements it. Tool-specific choreography (drop zone, file list reorder, result reveal, comparison slider) is added in Phases 3–6 when those components are built.
@@ -17,6 +17,7 @@ The tokens and the seven acceptance rules in design-system §7 are binding. This
 | CSS keyframes on Radix `data-state` | Dialog, sheet, popover, dropdown, select, tooltip, toast | Radix delays unmount until `animationend`, so exits animate without a presence library |
 | Motion `m` + `layoutId` | Sliding indicators (SegmentedControl pill, Tabs underline); later drag/reorder | Layout animation between two positions needs measurement (FLIP); Motion animates it with transforms |
 | View Transitions API | Theme change, page navigation | Progressive enhancement; instant elsewhere |
+| `IntersectionObserver` + CSS keyframes (`ScrollReveal`, `data-reveal`) | Homepage rows and cards as they scroll in | Plays as a real animation in every browser, unlike scroll-driven CSS, which only follows the scrollbar and is missing in Firefox. One small observer; without JavaScript content stays visible |
 
 **Motion bundle.** `LazyMotion strict` + `m` only. The `domMax` feature set is loaded asynchronously (`src/components/motion/features.ts`) after hydration; until it arrives, indicators simply jump. `domMax` rather than `domAnimation` because `layoutId` needs layout features.
 
@@ -47,6 +48,11 @@ The tokens and the seven acceptance rules in design-system §7 are binding. This
 | FileList reorder (Phase 3) | layout (transform), Motion `layout="position"` | spring (design-system §7.2) | rows slide to their new place; the dragged row follows the pointer with `--shadow-2` | no layout animation (`reducedMotion="user"`) |
 | ResultPanel reveal (Phase 3) | opacity + transform | `--dur-standard`, `--ease-out` | rise 8px | opacity only, `--dur-instant` |
 | JSON tree chevron (Phase 3) | `rotate` | `--dur-instant` | 90° | instant |
+| Homepage hero signature | opacity + transform | `--dur-signature`, once per page load | see design-system §7.6 | none |
+| Homepage hero drag-over | border, background, shadow; `scale`, `translate` | `--dur-quick` colors, `--dur-instant` movement | surface scale 1.01, drop tile lifts 4px, divider turns accent | instant |
+| Homepage index rows, popular cards entering | opacity + transform, plays once on scrolling into view | `--dur-page`, `--ease-out`, `--dur-stagger` | rise 12px | none |
+| Hub tool cards on load | opacity + transform | `--dur-standard`, `--ease-out`, `stagger` | rise 8px; first six staggered | instant |
+| Popular and hub card hover | border, shadow; `translate` | `--dur-quick` colors, `--dur-instant` movement | lift 2px; Merge PDF's pages slide together | instant |
 
 ## 3. Page transitions
 

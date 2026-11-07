@@ -32,7 +32,7 @@ export function ToolIndex({ tools }: { tools: ToolDefinition[] }) {
               </div>
               <ol>
                 {listed.map((tool, index) => (
-                  <li key={tool.slug} className="border-b border-border">
+                  <li key={tool.slug} data-reveal="" className="border-b border-border">
                     <Link
                       href={`/${tool.slug}`}
                       className="group grid grid-cols-[auto_1fr] gap-x-4 rounded-sm py-3 transition-control hover:bg-surface-2 focus-visible:bg-surface-2"

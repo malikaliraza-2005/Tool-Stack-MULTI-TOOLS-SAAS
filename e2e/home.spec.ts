@@ -154,6 +154,64 @@ test.describe("homepage", () => {
   });
 });
 
+test.describe("homepage motion", () => {
+  const signatureAnimations = (page: Page) =>
+    page.evaluate(
+      () =>
+        document
+          .getAnimations()
+          .filter((animation) => (animation as CSSAnimation).animationName?.startsWith("sig-"))
+          .length,
+    );
+
+  test("the hero signature plays and stops when the user starts", async ({ page }) => {
+    await ready(page);
+    expect(await signatureAnimations(page)).toBeGreaterThan(0);
+    // It never blocks input: the field takes focus straight away.
+    await search(page).click();
+    await expect(search(page)).toBeFocused();
+    await expect(page.locator("[data-signature]")).toHaveCount(0);
+    expect(await signatureAnimations(page)).toBe(0);
+  });
+
+  test("the hero signature doesn't replay on returning to the page", async ({ page }) => {
+    await ready(page);
+    await page
+      .getByRole("link", { name: /Merge PDF/ })
+      .first()
+      .click();
+    await expect(page).toHaveURL(/\/merge-pdf$/);
+    await page.goBack();
+    await expect(search(page)).toBeVisible();
+    await expect(page.locator("[data-signature]")).toHaveCount(0);
+  });
+
+  test("nothing moves with reduced motion", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await ready(page);
+    expect(await signatureAnimations(page)).toBe(0);
+    await expect(page.locator('[data-reveal="pending"]')).toHaveCount(0);
+  });
+
+  test("popular cards play their entrance when scrolled into view", async ({ page }) => {
+    await ready(page);
+    const card = page.getByRole("region", { name: "Popular tools" }).getByRole("listitem").first();
+    await expect(card).toHaveAttribute("data-reveal", "pending");
+    await expect(card).toHaveCSS("opacity", "0");
+    await card.evaluate((element) => element.scrollIntoView({ block: "center" }));
+    await expect(card).toHaveAttribute("data-reveal", "in");
+    await expect(card).toHaveCSS("opacity", "1");
+  });
+
+  test("a card reached with the keyboard is visible", async ({ page }) => {
+    await ready(page);
+    const link = page.getByRole("region", { name: "Popular tools" }).getByRole("link").first();
+    await link.focus();
+    await expect(link).toBeFocused();
+    await expect(link.locator("xpath=..")).toHaveCSS("opacity", "1");
+  });
+});
+
 test.describe("category hubs", () => {
   for (const [path, name, count] of [
     ["/pdf-tools", "PDF tools", 6],

@@ -1,6 +1,8 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { cn } from "@/lib/cn";
+import { staggerStyle } from "@/lib/motion";
 import type { ToolDefinition } from "@/tools/types";
 import { firstSentence } from "./summary";
 
@@ -15,14 +17,18 @@ const PREVIEWS: Record<string, ReactNode> = {
   "merge-pdf": (
     <div className="flex items-center gap-3">
       <div className="flex -space-x-5">
-        {[0, 1, 2].map((page) => (
+        {/* On hover the pages slide together, as they do when merged. */}
+        {["group-hover:translate-x-2", "group-hover:translate-x-1", ""].map((slide) => (
           <span
-            key={page}
-            className="h-14 w-11 rounded-sm border border-border-strong bg-surface"
+            key={slide}
+            className={cn(
+              "h-14 w-11 rounded-sm border border-border-strong bg-surface transition-control",
+              slide,
+            )}
           />
         ))}
       </div>
-      <ArrowRight className="size-4 text-fg-subtle" />
+      <ArrowRight className="size-4 text-fg-subtle transition-control group-hover:translate-x-0.5" />
       <span className="flex h-14 w-11 items-end justify-center rounded-sm border border-accent bg-surface pb-1 font-mono text-micro text-accent-text">
         PDF
       </span>
@@ -45,7 +51,7 @@ const PREVIEWS: Record<string, ReactNode> = {
       <span className="rounded-sm border border-border-strong bg-surface px-2 py-1 text-fg">
         HEIC
       </span>
-      <ArrowRight className="size-4 text-fg-subtle" />
+      <ArrowRight className="size-4 text-fg-subtle transition-control group-hover:translate-x-0.5" />
       <span className="rounded-sm border border-accent bg-surface px-2 py-1 text-accent-text">
         JPG
       </span>
@@ -71,11 +77,11 @@ export function PopularTools({ tools }: { tools: ToolDefinition[] }) {
         Popular tools
       </h2>
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {popular.map((tool) => (
-          <li key={tool.slug}>
+        {popular.map((tool, index) => (
+          <li key={tool.slug} data-reveal="" style={staggerStyle(index)}>
             <Link
               href={`/${tool.slug}`}
-              className="group flex h-full flex-col gap-4 rounded-lg border border-border bg-surface p-4 shadow-1 transition-control hover:border-border-strong"
+              className="group flex h-full flex-col gap-4 rounded-lg border border-border bg-surface p-4 shadow-1 transition-control hover:-translate-y-0.5 hover:border-border-strong hover:shadow-2"
             >
               <div
                 aria-hidden

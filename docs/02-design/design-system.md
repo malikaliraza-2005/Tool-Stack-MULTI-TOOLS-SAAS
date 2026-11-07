@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Last updated** | 2026-10-13 |
+| **Last updated** | 2026-11-06 (hero signature, §7.6) |
 | **Status** | v0.2 (Phase 2). Tokens implemented in `src/styles/globals.css`; color values adjusted for contrast (§2.3). Visual direction approved by the owner (M2, 2026-10-13) |
 | **Related** | [product.md](../01-product/product.md) · [architecture.md](../04-architecture/architecture.md) |
 
@@ -199,6 +199,7 @@ Motion explains change: where something came from, what happened, what to do nex
 | `--dur-exit` | 120ms | Exits of overlays and pages (rule 3: faster than entrances) |
 | `--dur-loop` | 900ms | Loop period of loading indicators only (spinner; indeterminate bar ×2). Not a transition duration; stops when work ends |
 | `--dur-stagger` | 40ms | Delay between staggered entrances (§7.3). The `stagger` utility multiplies it by `--stagger-index` (0–5); reduced motion drops the delay. Used with `animate-rise-in` (8px rise, `--dur-standard`) |
+| `--dur-signature` | 1800ms | The homepage hero signature only (§7.6). Not a transition duration; never use it elsewhere |
 
 Use them as `duration-(--dur-quick)` in Tailwind; the `transition-control` utility applies `--dur-quick` to color changes and `--dur-instant` to transforms (press). The same values are mirrored for Motion in `src/lib/motion.ts` (kept equal by `tokens.test.ts`).
 
@@ -234,6 +235,13 @@ Use them as `duration-(--dur-quick)` in Tailwind; the `transition-control` utili
 | Layout animation (sliding indicators), reorder, drag | Motion for React via `LazyMotion` + `m`. Features are `domMax` (layout animations need it), **loaded asynchronously** after hydration so the initial bundle only carries `m`. `MotionConfig reducedMotion="user"` |
 
 Choreography per interaction: [motion-design.md](motion-design.md).
+
+### 7.6 The hero signature (the one exception)
+Approved by the owner on 2026-11-06. One homepage sequence may exceed the §7.1 duration limit and the §7.3 travel limit, because it shows the product's promise: a file drops into the drop tile, is handled on the spot, and "Nothing is uploaded." is underlined. No other animation gets this exception.
+
+- **Limits:** `--dur-signature` (1800ms) and 112px of travel, once per page load, never replayed on returning to the page.
+- **Rules that still apply:** `transform` and `opacity` only; decorative (`aria-hidden`, `pointer-events: none`); never blocks input, and stops as soon as the user focuses the search field, pastes, drags or chooses a file; absent with reduced motion; the headline (LCP) stays still.
+- **Build:** CSS keyframes in `globals.css` on one shared timeline, started by `data-signature` after hydration. Every part returns to its resting state.
 
 ---
 

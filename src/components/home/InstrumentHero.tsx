@@ -1,9 +1,9 @@
 "use client";
 
 import type Fuse from "fuse.js";
-import { ArrowRight, FileUp, Search, X } from "lucide-react";
+import { ArrowRight, Check, FileUp, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useEffectEvent, useId, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
 import { ToolIcon } from "@/components/tool/ToolIcon";
 import { buttonClasses } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
@@ -11,6 +11,7 @@ import { cn } from "@/lib/cn";
 import { formatBytes, plural } from "@/lib/files/format";
 import { describeKind, sniffFile } from "@/lib/files/sniff";
 import { handOff, type Handoff } from "@/lib/handoff";
+import { staggerStyle } from "@/lib/motion";
 import { SEARCH_OPTIONS, searchTools } from "@/tools/search-index";
 import {
   suggestForFiles,
@@ -36,9 +37,11 @@ type Panel =
   | { kind: "paste"; text: string; options: { tool: HeroTool; detector: string }[] }
   | { kind: "opening"; name: string };
 
-/** Stagger the first six items (design-system §7.3); the rest appear together. */
-const staggerStyle = (index: number) =>
-  ({ "--stagger-index": Math.min(index, 5) }) as CSSProperties;
+/** The hero signature (design-system §7.6) plays once per page load, not on every return. */
+let signaturePlayed = false;
+
+/** The user has started something: the signature gets out of the way. */
+const stopSignature = (surface: HTMLElement | null) => surface?.removeAttribute("data-signature");
 
 function isEditable(target: EventTarget | null): boolean {
   return (
@@ -61,6 +64,7 @@ export function InstrumentHero({ tools }: { tools: HeroTool[] }) {
   const [panel, setPanel] = useState<Panel>({ kind: "idle" });
   const [dragging, setDragging] = useState(false);
   const [fuse, setFuse] = useState<Fuse<HeroTool> | null>(null);
+  const surface = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const panelHeading = useRef<HTMLHeadingElement>(null);
@@ -69,6 +73,7 @@ export function InstrumentHero({ tools }: { tools: HeroTool[] }) {
 
   // Fuse.js loads on intent (focus or typing), not with the page.
   function loadSearch() {
+    stopSignature(surface.current);
     if (fuse) return;
     void import("fuse.js").then(({ default: FuseSearch }) =>
       setFuse(new FuseSearch(tools, SEARCH_OPTIONS)),
@@ -87,6 +92,7 @@ export function InstrumentHero({ tools }: { tools: HeroTool[] }) {
 
   async function receiveFiles(files: File[]) {
     if (files.length === 0) return;
+    stopSignature(surface.current);
     setQuery("");
     const dropped = await Promise.all(
       files.map(async (file) => ({
@@ -99,6 +105,7 @@ export function InstrumentHero({ tools }: { tools: HeroTool[] }) {
 
   /** True when the text was recognised (and so not pasted into the search field). */
   function receiveText(text: string): boolean {
+    stopSignature(surface.current);
     const suggestion = suggestForText(tools, text);
     if (suggestion.action === "open") {
       open(suggestion.tool, { text, source: suggestion.detector });
@@ -131,6 +138,7 @@ export function InstrumentHero({ tools }: { tools: HeroTool[] }) {
     const enter = (event: DragEvent) => {
       if (!hasFiles(event)) return;
       event.preventDefault();
+      stopSignature(surface.current);
       dragDepth.current += 1;
       setDragging(true);
     };
@@ -163,6 +171,14 @@ export function InstrumentHero({ tools }: { tools: HeroTool[] }) {
       window.removeEventListener("drop", drop);
       document.removeEventListener("paste", paste);
     };
+  }, []);
+
+  // Started after hydration, so it never plays over input already under way
+  // (the early-input effect below stops it again). No cleanup: it plays once.
+  useEffect(() => {
+    if (signaturePlayed) return;
+    signaturePlayed = true;
+    surface.current?.setAttribute("data-signature", "");
   }, []);
 
   // Input from the static HTML before hydration fired no React event.
@@ -211,6 +227,7 @@ export function InstrumentHero({ tools }: { tools: HeroTool[] }) {
   return (
     <div className="flex flex-col gap-3">
       <div
+        ref={surface}
         data-dragging={dragging || undefined}
         className={cn(
           "overflow-hidden rounded-xl border bg-surface shadow-1 transition-control",
@@ -285,15 +302,37 @@ export function InstrumentHero({ tools }: { tools: HeroTool[] }) {
             No tools match “{trimmed}”. Try “PDF”, “compress”, “HEIC” or “JSON”.
           </p>
         )}
-        <div className="flex flex-col items-start gap-3 border-t border-dashed border-border-strong px-4 py-4 sm:flex-row sm:items-center md:px-5">
+        <div
+          className={cn(
+            "relative flex flex-col items-start gap-3 border-t border-dashed px-4 py-4 transition-control sm:flex-row sm:items-center md:px-5",
+            dragging ? "border-accent" : "border-border-strong",
+          )}
+        >
+          <span
+            aria-hidden
+            className="sig-sweep pointer-events-none absolute inset-x-0 -top-px h-0.5 origin-left bg-accent opacity-0"
+          />
           <span
             aria-hidden
             className={cn(
-              "hidden size-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-fg-muted sm:inline-flex [&_svg]:size-5",
-              dragging && "text-accent-text",
+              "relative hidden size-10 shrink-0 items-center justify-center rounded-md border bg-surface transition-control sm:inline-flex [&_svg]:size-5",
+              dragging
+                ? "-translate-y-1 border-accent text-accent-text shadow-2"
+                : "border-border text-fg-muted",
             )}
           >
-            <FileUp />
+            <span className="sig-glow pointer-events-none absolute -inset-px rounded-md border border-accent bg-accent-soft opacity-0" />
+            <span className="sig-ring pointer-events-none absolute -inset-px rounded-md border border-success opacity-0" />
+            <span className="sig-icon relative inline-flex">
+              <FileUp />
+            </span>
+            <Check className="sig-check pointer-events-none absolute text-success opacity-0" />
+            {/* The file that drops in: a small token-drawn page, no real content. */}
+            <span className="sig-file pointer-events-none absolute flex h-7 w-5.5 flex-col gap-1 rounded-sm border border-accent bg-surface px-1 pt-2 opacity-0 shadow-1">
+              <span className="h-px bg-border-strong" />
+              <span className="h-px bg-border-strong" />
+              <span className="h-px w-2/3 bg-border-strong" />
+            </span>
           </span>
           <p id={ids.hint} className="flex grow flex-col gap-0.5">
             <span className="text-ui text-fg">
@@ -302,7 +341,14 @@ export function InstrumentHero({ tools }: { tools: HeroTool[] }) {
                 : "Or drop files anywhere on this page"}
             </span>
             <span className="text-small text-fg-muted">
-              PDFs, photos (JPG, PNG, WebP, HEIC), JSON, or any file to hash. Nothing is uploaded.
+              PDFs, photos (JPG, PNG, WebP, HEIC), JSON, or any file to hash.{" "}
+              <span className="relative inline-block">
+                Nothing is uploaded.
+                <span
+                  aria-hidden
+                  className="sig-underline absolute inset-x-0 bottom-0 h-px origin-left bg-accent opacity-0"
+                />
+              </span>
             </span>
           </p>
           <input

@@ -2,6 +2,8 @@
 // src/styles/globals.css are the source of truth; tokens.test.ts keeps these
 // values in sync with them.
 
+import type { CSSProperties } from "react";
+
 /** Durations in seconds (Motion's unit). */
 export const duration = {
   instant: 0.1,
@@ -25,6 +27,10 @@ export const spring = { type: "spring", stiffness: 500, damping: 40, mass: 1 } a
 
 /** Moving between two on-screen positions, e.g. sliding indicators. */
 export const slide = { duration: duration.standard, ease: ease.inOut } as const;
+
+/** Stagger the first six items (§7.3); the rest appear together. */
+export const staggerStyle = (index: number) =>
+  ({ "--stagger-index": Math.min(index, 5) }) as CSSProperties;
 
 export const prefersReducedMotion = (): boolean =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;

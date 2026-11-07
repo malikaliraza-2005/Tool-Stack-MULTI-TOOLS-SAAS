@@ -6,6 +6,7 @@ import { HOME_FAQS, HOME_SEO } from "@/components/home/home-content";
 import { InstrumentHero } from "@/components/home/InstrumentHero";
 import { PopularTools } from "@/components/home/PopularTools";
 import { PrivacyStrip } from "@/components/home/PrivacyStrip";
+import { ScrollReveal } from "@/components/home/ScrollReveal";
 import { ToolIndex } from "@/components/home/ToolIndex";
 import { JsonLd } from "@/components/tool/JsonLd";
 import { ToolFaq } from "@/components/tool/ToolFaq";
@@ -50,6 +51,7 @@ export default function Home() {
         <PopularTools tools={tools} />
         <ToolFaq faqs={HOME_FAQS} />
       </Container>
+      <ScrollReveal />
     </>
   );
 }

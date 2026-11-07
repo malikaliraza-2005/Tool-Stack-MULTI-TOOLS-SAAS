@@ -96,6 +96,8 @@
   --dur-loop: 900ms;
   /* Delay between staggered entrances, at most ~6 items (§7.3). */
   --dur-stagger: 40ms;
+  /* The homepage hero signature only (§7.6): one sequence, once per page load. */
+  --dur-signature: 1800ms;
 
   /* Focus ring (§9). */
   --focus-ring-width: 2px;
@@ -365,6 +367,29 @@
 }
 
 /*
+ * Scroll reveal (§7.3): ScrollReveal marks items below the viewport "pending"
+ * and "in" once they scroll into view. A 12px rise at --dur-page, with
+ * `--stagger-index` for items that arrive together. In print, with reduced
+ * motion or without JavaScript, content simply stays visible.
+ */
+@media screen and (prefers-reduced-motion: no-preference) {
+  [data-reveal="pending"] {
+    opacity: 0;
+  }
+  [data-reveal="in"] {
+    animation: reveal-in var(--dur-page) var(--ease-out) both;
+    animation-delay: calc(var(--dur-stagger) * var(--stagger-index, 0));
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/*
  * The one background detail allowed, on the homepage hero only (§5): a fine,
  * static dot grid that fades out from the top. Barely above the page color.
  */
@@ -471,6 +496,193 @@
   }
   ::view-transition-old(site-header) {
     display: none;
+  }
+}
+
+/*
+ * Hero signature (design-system §7.6): a file drops into the drop tile, is
+ * handled on the spot, and "Nothing is uploaded." is underlined. InstrumentHero
+ * sets `data-signature` once per page load. Every part shares one timeline and
+ * returns to its resting state, so nothing depends on the animation finishing.
+ * Decorative, `pointer-events: none`, and absent with reduced motion.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  [data-signature] {
+    --signature-delay: calc(var(--dur-stagger) * 2 + var(--dur-standard));
+  }
+  [data-signature] .sig-file {
+    animation: sig-file var(--dur-signature) linear var(--signature-delay);
+  }
+  [data-signature] .sig-icon {
+    animation: sig-icon var(--dur-signature) linear var(--signature-delay);
+  }
+  [data-signature] .sig-glow {
+    animation: sig-glow var(--dur-signature) linear var(--signature-delay);
+  }
+  [data-signature] .sig-check {
+    animation: sig-check var(--dur-signature) linear var(--signature-delay);
+  }
+  [data-signature] .sig-ring {
+    animation: sig-ring var(--dur-signature) linear var(--signature-delay);
+  }
+  [data-signature] .sig-sweep {
+    animation: sig-sweep var(--dur-signature) linear var(--signature-delay);
+  }
+  [data-signature] .sig-underline {
+    animation: sig-underline var(--dur-signature) linear var(--signature-delay);
+  }
+  /* The landing needs the tile, which is hidden below `sm`. */
+  @media (min-width: 40rem) {
+    [data-signature] {
+      animation: sig-landing var(--dur-signature) linear var(--signature-delay);
+    }
+  }
+}
+
+@keyframes sig-file {
+  0% {
+    opacity: 1;
+    transform: translateY(-112px) rotate(-8deg);
+    animation-timing-function: var(--ease-in);
+  }
+  22% {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+    animation-timing-function: var(--ease-out);
+  }
+  26% {
+    opacity: 1;
+    transform: scale(1.06, 0.94);
+    animation-timing-function: var(--ease-out);
+  }
+  30%,
+  56% {
+    opacity: 1;
+    transform: scale(1);
+    animation-timing-function: var(--ease-in);
+  }
+  62%,
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes sig-landing {
+  0%,
+  20% {
+    transform: scale(1);
+    animation-timing-function: var(--ease-out);
+  }
+  26% {
+    transform: scale(1.01);
+    animation-timing-function: var(--ease-out);
+  }
+  36%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes sig-icon {
+  0%,
+  16% {
+    opacity: 1;
+  }
+  22%,
+  88% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes sig-glow {
+  0%,
+  18% {
+    opacity: 0;
+  }
+  24%,
+  84% {
+    opacity: 1;
+  }
+  92%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sig-check {
+  0%,
+  56% {
+    opacity: 0;
+    transform: scale(0.5);
+    animation-timing-function: var(--ease-out);
+  }
+  64%,
+  84% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes sig-ring {
+  0%,
+  56% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  58% {
+    opacity: 0.7;
+    transform: scale(1);
+    animation-timing-function: var(--ease-out);
+  }
+  84%,
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+@keyframes sig-sweep {
+  0%,
+  22% {
+    opacity: 1;
+    transform: scaleX(0);
+    animation-timing-function: var(--ease-in-out);
+  }
+  58% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  72%,
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes sig-underline {
+  0%,
+  58% {
+    opacity: 1;
+    transform: scaleX(0);
+    animation-timing-function: var(--ease-out);
+  }
+  70%,
+  92% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
   }
 }
 
