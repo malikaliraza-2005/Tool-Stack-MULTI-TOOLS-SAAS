@@ -35,7 +35,7 @@ Work from the current phase's task checklist. Tick tasks when done and reference
 3. **Only permissive licenses.** Allowed: MIT, ISC, BSD, Apache-2.0, Zlib, OFL (fonts). LGPL/MPL need review. GPL, AGPL, and non-commercial licenses are forbidden. Record every new dependency in [docs/04-architecture/dependencies-licenses.md](docs/04-architecture/dependencies-licenses.md).
 4. **Never store user content** (files, text, tokens) in localStorage, URLs, logs, or analytics. Only preferences/options. Sole exception: sign-pdf's opt-in "Remember my signature" (tool-specifications §3.6).
 5. **Use design tokens only.** No hard-coded colors, sizes, radii, shadows, durations, or easings. See [docs/02-design/design-system.md](docs/02-design/design-system.md).
-6. **Motion:** animate `transform`/`opacity`; respect `prefers-reduced-motion`; never block input; durations from tokens (≤ 380ms).
+6. **Motion:** animate `transform`/`opacity`; respect `prefers-reduced-motion`; never block input; durations from tokens (≤ 380ms). Sole exception: the homepage hero signature (design-system §7.6).
 7. **Accessibility:** keyboard-operable everything (including drag-and-drop alternatives), visible focus, labelled controls, WCAG 2.2 AA contrast.
 8. **Do not create documentation, new tools, or features beyond what the task asks.** If a doc needs to change because of your work, update it in the same change and say so.
 

@@ -8,6 +8,7 @@ import { TextLink } from "@/components/tool/content";
 import { ToolIcon } from "@/components/tool/ToolIcon";
 import { SITE_NAME } from "@/config/site";
 import { guidesForTools } from "@/guides/registry";
+import { staggerStyle } from "@/lib/motion";
 import { guidePath, hubJsonLd } from "@/lib/seo";
 import { HUBS } from "@/tools/hubs";
 import { CATEGORIES, CATEGORY_ORDER, publishedTools } from "@/tools/registry";
@@ -47,11 +48,11 @@ export function CategoryHub({ category }: { category: ToolCategory }) {
             {tools.length} {name}
           </h2>
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {tools.map((tool) => (
-              <li key={tool.slug}>
+            {tools.map((tool, index) => (
+              <li key={tool.slug} className="stagger animate-rise-in" style={staggerStyle(index)}>
                 <Link
                   href={`/${tool.slug}`}
-                  className="group flex h-full gap-4 rounded-lg border border-border bg-surface p-4 shadow-1 transition-control hover:border-border-strong"
+                  className="group flex h-full gap-4 rounded-lg border border-border bg-surface p-4 shadow-1 transition-control hover:-translate-y-0.5 hover:border-border-strong hover:shadow-2"
                 >
                   <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface-2 text-fg-muted">
                     <ToolIcon name={tool.icon} className="size-5" />
